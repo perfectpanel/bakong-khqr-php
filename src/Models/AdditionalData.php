@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__ . '/Constants.php';
-require_once __DIR__ . '/TagLengthString.php';
-
 use KHQR\EMV;
 use KHQR\TagLengthString;
 

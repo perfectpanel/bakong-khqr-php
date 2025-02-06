@@ -1,7 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../src/BakongKHQR.php';
-require_once __DIR__ . '/../src/IndividualInfo.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $individualInfo = new IndividualInfo(
 	bakongAccountID: 'jonhsmith@devb',

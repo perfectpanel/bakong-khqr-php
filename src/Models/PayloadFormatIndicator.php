@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/TagLengthString.php';
-
 use KHQR\TagLengthString;
 
 class PayloadFormatIndicator extends TagLengthString

@@ -1,28 +1,9 @@
 <?php
 
-require_once __DIR__ . '/AdditionalData.php';
-require_once __DIR__ . '/Constants.php';
-require_once __DIR__ . '/CountryCode.php';
-require_once __DIR__ . '/CRCValidation.php';
-require_once __DIR__ . '/GlobalUniqueIdentifier.php';
-require_once __DIR__ . '/KHQRResponse.php';
-require_once __DIR__ . '/MerchantCategoryCode.php';
-require_once __DIR__ . '/MerchantCity.php';
-require_once __DIR__ . '/MerchantInformationLanguageTemplate.php';
-require_once __DIR__ . '/MerchantName.php';
-require_once __DIR__ . '/PayloadFormatIndicator.php';
-require_once __DIR__ . '/PointOfInitiationMethod.php';
-require_once __DIR__ . '/TimeStamp.php';
-require_once __DIR__ . '/TransactionAmount.php';
-require_once __DIR__ . '/TransactionCurrency.php';
-require_once __DIR__ . '/UnionpayMerchantAccount.php';
-require_once __DIR__ . '/Utils.php';
-
 use KHQR\EMV;
 use KHQR\KHQRData;
 use KHQR\KHQRResponse;
 use KHQR\Utils;
-use const KHQR\KHQRTag;
 
 class BakongKHQR
 {

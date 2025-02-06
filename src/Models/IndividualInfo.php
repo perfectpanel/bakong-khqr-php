@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__ . '/Utils.php';
-require_once __DIR__ . '/MerchantInfo.php';
-
 use KHQR\KHQRData;
 use KHQR\Utils;
 

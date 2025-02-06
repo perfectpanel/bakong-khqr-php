@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/KHQRException.php';
-
 use KHQR\EMV;
 use KHQR\TagLengthString;
 
