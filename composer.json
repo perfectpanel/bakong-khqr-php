@@ -1,0 +1,19 @@
+{
+    "name": "forcefidele/bakong-khqr-php",
+    "description": "A PHP implementation of the Bakong KHQR SDK",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "KHQR\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    },
+	"scripts": {
+        "test": "phpunit"
+    }
+}
