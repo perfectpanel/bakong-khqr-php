@@ -1,7 +1,11 @@
 <?php
 
-use KHQR\KHQRData;
-use KHQR\TagLengthString;
+declare(strict_types=1);
+
+namespace KHQR\Models;
+
+use KHQR\Helpers\KHQRData;
+use KHQR\Exceptions\KHQRException;
 
 class TransactionCurrency extends TagLengthString
 {

@@ -1,7 +1,11 @@
 <?php
 
-use KHQR\EMV;
-use KHQR\TagLengthString;
+declare(strict_types=1);
+
+namespace KHQR\Models;
+
+use KHQR\Helpers\EMV;
+use KHQR\Exceptions\KHQRException;
 
 class MerchantCategoryCode extends TagLengthString
 {

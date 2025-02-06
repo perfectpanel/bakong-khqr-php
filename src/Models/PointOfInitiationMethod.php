@@ -1,6 +1,10 @@
 <?php
 
-use KHQR\TagLengthString;
+declare(strict_types=1);
+
+namespace KHQR\Models;
+
+use KHQR\Exceptions\KHQRException;
 
 class PointOfInitiationMethod extends TagLengthString
 {

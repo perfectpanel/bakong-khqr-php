@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace KHQR\Models;
+
 class SourceInfo
 {
 	public ?string $appIconUrl;

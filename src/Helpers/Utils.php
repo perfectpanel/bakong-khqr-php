@@ -1,8 +1,10 @@
 <?php
 
-namespace KHQR;
+declare(strict_types=1);
 
-use KHQRException;
+namespace KHQR\Helpers;
+
+use KHQR\Exceptions\KHQRException;
 
 abstract class Utils
 {

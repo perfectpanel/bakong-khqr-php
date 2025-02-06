@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+namespace KHQR\Exceptions;
+
+use Exception;
+
 class KHQRException extends Exception
 {
 	// Define error constants

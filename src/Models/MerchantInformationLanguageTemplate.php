@@ -1,7 +1,11 @@
 <?php
 
-use KHQR\EMV;
-use KHQR\TagLengthString;
+declare(strict_types=1);
+
+namespace KHQR\Models;
+
+use KHQR\Exceptions\KHQRException;
+use KHQR\Helpers\EMV;
 
 class MerchantInformationLanguageTemplate extends TagLengthString
 {

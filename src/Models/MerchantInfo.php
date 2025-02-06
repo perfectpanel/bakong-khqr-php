@@ -1,7 +1,13 @@
 <?php
 
-use KHQR\KHQRData;
-use KHQR\Utils;
+declare(strict_types=1);
+
+namespace KHQR\Models;
+
+use KHQR\Helpers\KHQRData;
+use KHQR\Helpers\Utils;
+
+use InvalidArgumentException;
 
 class MerchantInfo
 {
@@ -13,7 +19,7 @@ class MerchantInfo
 	// Optional parameters
 	public ?string $acquiringBank;
 	public ?string $accountInformation;
-	public ?string $currency;
+	public ?int $currency;
 	public ?float $amount;
 	public ?string $billNumber;
 	public ?string $storeLabel;
@@ -32,7 +38,7 @@ class MerchantInfo
 		string $merchantID,
 		string $acquiringBank,
 		string $accountInformation = null,
-		string $currency = null,
+		int $currency = null,
 		float $amount = 0.0,
 		string $billNumber = null,
 		string $storeLabel = null,

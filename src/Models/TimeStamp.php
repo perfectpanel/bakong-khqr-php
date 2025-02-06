@@ -1,6 +1,8 @@
 <?php
 
-use KHQR\TagLengthString;
+declare(strict_types=1);
+
+namespace KHQR\Models;
 
 class TimeStamp extends TagLengthString
 {

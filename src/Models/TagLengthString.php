@@ -1,6 +1,8 @@
 <?php
 
-namespace KHQR;
+declare(strict_types=1);
+
+namespace KHQR\Models;
 
 class TagLengthString
 {

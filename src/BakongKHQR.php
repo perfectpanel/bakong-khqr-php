@@ -1,12 +1,45 @@
 <?php
 
-use KHQR\EMV;
-use KHQR\KHQRData;
-use KHQR\KHQRResponse;
-use KHQR\Utils;
+declare(strict_types=1);
+
+namespace KHQR;
+
+use KHQR\Api\DeepLink;
+use KHQR\Exceptions\KHQRException;
+use KHQR\Helpers\EMV;
+use KHQR\Helpers\KHQRData;
+use KHQR\Helpers\Utils;
+use KHQR\Models\AdditionalData;
+use KHQR\Models\CountryCode;
+use KHQR\Models\CRCValidation;
+use KHQR\Models\GlobalUniqueIdentifier;
+use KHQR\Models\IndividualInfo;
+use KHQR\Models\KHQRDeepLinkData;
+use KHQR\Models\KHQRResponse;
+use KHQR\Models\MerchantCategoryCode;
+use KHQR\Models\MerchantCity;
+use KHQR\Models\MerchantInfo;
+use KHQR\Models\MerchantInformationLanguageTemplate;
+use KHQR\Models\MerchantName;
+use KHQR\Models\PayloadFormatIndicator;
+use KHQR\Models\PointOfInitiationMethod;
+use KHQR\Models\SourceInfo;
+use KHQR\Models\TimeStamp;
+use KHQR\Models\TransactionAmount;
+use KHQR\Models\TransactionCurrency;
+use KHQR\Models\UnionpayMerchantAccount;
+
+use Exception;
 
 class BakongKHQR
 {
+	private ?string $apiKey;
+
+	public function __construct(?string $apiKey = null)
+	{
+		$this->apiKey = $apiKey;
+	}
+
 	public static function generateIndividual(IndividualInfo $individualInfo)
 	{
 		$khqr = self::generateKHQR($individualInfo, KHQRData::MERCHANT_TYPE_INDIVIDUAL);

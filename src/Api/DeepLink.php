@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+namespace KHQR\Api;
+
+use Exception;
+use KHQR\Exceptions\KHQRException;
+
 class DeepLink
 {
 	public static function isValidLink(string $link): bool
