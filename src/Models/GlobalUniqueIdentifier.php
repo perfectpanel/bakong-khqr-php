@@ -15,7 +15,7 @@ class GlobalUniqueIdentifier extends TagLengthString
 
     public ?string $accountInformation = null;
 
-    public string $bakongAccountID;
+    public BakongAccountID $bakongAccountID;
 
     public object $data;
 
@@ -41,7 +41,7 @@ class GlobalUniqueIdentifier extends TagLengthString
             $bakongAccountID
         );
 
-        $globalUniqueIdentifier = $bakongAccountId;
+        $globalUniqueIdentifier = (string) $bakongAccountId;
 
         if ($isMerchant) {
             $merchantId = new MerchantId(
