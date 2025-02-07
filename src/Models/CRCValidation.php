@@ -6,10 +6,10 @@ namespace KHQR\Models;
 
 class CRCValidation
 {
-	public bool $isValid;
+    public bool $isValid;
 
-	public function __construct(bool $valid)
-	{
-		$this->isValid = $valid;
-	}
+    public function __construct(bool $valid)
+    {
+        $this->isValid = $valid;
+    }
 }

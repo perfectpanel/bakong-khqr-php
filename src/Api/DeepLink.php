@@ -9,58 +9,60 @@ use KHQR\Exceptions\KHQRException;
 
 class DeepLink
 {
-	public static function isValidLink(string $link): bool
-	{
-		try {
-			$url = parse_url($link);
+    public static function isValidLink(string $link): bool
+    {
+        try {
+            $url = parse_url($link);
 
-			if ($url === false || !isset($url['path']) || $url['path'] != "/v1/generate_deeplink_by_qr") {
-				return false;
-			}
-		} catch (Exception $error) {
-			return false;
-		}
-		return true;
-	}
+            if ($url === false || ! isset($url['path']) || $url['path'] !== '/v1/generate_deeplink_by_qr') {
+                return false;
+            }
+        } catch (Exception $error) {
+            return false;
+        }
 
-	public static function callDeepLinkAPI(string $url, $data)
-	{
-		try {
-			$ch = curl_init($url);
+        return true;
+    }
 
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 45);
+    public static function callDeepLinkAPI(string $url, $data)
+    {
+        try {
+            $ch = curl_init($url);
 
-			$response = curl_exec($ch);
-			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			$curlError = curl_error($ch);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 45);
 
-			curl_close($ch);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
 
-			if ($curlError) {
-				throw new KHQRException(KHQRException::CONNECTION_TIMEOUT);
-			}
+            curl_close($ch);
 
-			$respBody = json_decode($response, true);
+            if ($curlError !== '' && $curlError !== '0') {
+                throw new KHQRException(KHQRException::CONNECTION_TIMEOUT);
+            }
 
-			if ($httpCode !== 200 || $respBody === null) {
-				throw new KHQRException(KHQRException::CONNECTION_TIMEOUT);
-			}
+            $respBody = json_decode($response, true);
 
-			$error = $respBody['errorCode'] ?? null;
+            if ($httpCode !== 200 || $respBody === null) {
+                throw new KHQRException(KHQRException::CONNECTION_TIMEOUT);
+            }
 
-			if ($error == 5) {
-				throw new KHQRException(KHQRException::INVALID_DEEP_LINK_SOURCE_INFO);
-			} else if ($error == 4) {
-				throw new KHQRException(KHQRException::INTERNAL_SERVER_ERROR);
-			}
+            $error = $respBody['errorCode'] ?? null;
+            if ($error == 5) {
+                throw new KHQRException(KHQRException::INVALID_DEEP_LINK_SOURCE_INFO);
+            }
 
-			return $respBody;
-		} catch (Exception $error) {
-			throw new KHQRException(KHQRException::CONNECTION_TIMEOUT);
-		}
-	}
+            if ($error == 4) {
+                throw new KHQRException(KHQRException::INTERNAL_SERVER_ERROR);
+            }
+
+            return $respBody;
+        } catch (Exception $error) {
+            throw new KHQRException(KHQRException::CONNECTION_TIMEOUT);
+        }
+    }
 }
