@@ -8,7 +8,7 @@ use KHQR\BakongKHQR;
 use KHQR\Exceptions\KHQRException;
 use PHPUnit\Framework\TestCase;
 
-class BakongAccountExistTest extends TestCase
+class BakongAccountExistenceTest extends TestCase
 {
     private $testData = [
         [
@@ -18,6 +18,7 @@ class BakongAccountExistTest extends TestCase
                 'account' => 'dave@devb',
             ],
             'errorCode' => null,
+            'bakongAccountExists' => true,
         ],
         [
             'statement' => 'Account not found',
@@ -26,6 +27,7 @@ class BakongAccountExistTest extends TestCase
                 'account' => 'dope@devb',
             ],
             'errorCode' => null,
+            'bakongAccountExists' => false,
         ],
         [
             'statement' => 'Invalid account length',
@@ -53,16 +55,16 @@ class BakongAccountExistTest extends TestCase
         ],
     ];
 
-    protected function setUp(): void
-    {
-        putenv('NODE_TLS_REJECT_UNAUTHORIZED=0');
-    }
-
-    public function test_bakong_account_exist()
+    public function test_bakong_account_existence()
     {
         foreach ($this->testData as $data) {
-            $checkAcc = BakongKHQR::checkBakongAccount($data['data']['url'], $data['data']['account']);
-            $this->assertEquals($data['errorCode'], $checkAcc->status->errorCode, $data['statement']);
+            try {
+                $checkAcc = BakongKHQR::checkBakongAccount($data['data']['url'], $data['data']['account']);
+                $this->assertEquals($data['errorCode'], $checkAcc->status->errorCode, $data['statement']);
+                $this->assertEquals($data['bakongAccountExists'], $checkAcc->data->bakongAccountExists, $data['statement']);
+            } catch (KHQRException $e) {
+                $this->assertEquals($data['errorCode'], $e->getCode(), $data['statement']);
+            }
         }
     }
 }

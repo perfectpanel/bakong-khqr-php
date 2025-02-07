@@ -108,7 +108,7 @@ abstract class Utils
         if (isset($respData['errorCode'])) {
             $error = $respData['errorCode'];
             if ($error == 11) {
-                return ['bakongAccountExisted' => false];
+                return ['bakongAccountExists' => false];
             }
             if ($error == 12) {
                 throw new KHQRException(KHQRException::BAKONG_ACCOUNT_ID_INVALID);
@@ -116,10 +116,10 @@ abstract class Utils
         }
 
         if (isset($respData['responseCode']) && $respData['responseCode'] == 0) {
-            return ['bakongAccountExisted' => true];
+            return ['bakongAccountExists' => true];
         }
 
-        return ['bakongAccountExisted' => false];
+        return ['bakongAccountExists' => false];
     }
 
     private static array $crcTable = [
