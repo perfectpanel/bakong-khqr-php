@@ -13,7 +13,7 @@ abstract class Utils
      */
     public static function isBlank(?string $value): bool
     {
-        return $value === null || trim((string) $value) === '';
+        return $value === null || trim($value) === '';
     }
 
     public static function checkCRCRegExp($crc)
@@ -118,6 +118,7 @@ abstract class Utils
         if (isset($respData['responseCode']) && $respData['responseCode'] == 0) {
             return ['bakongAccountExisted' => true];
         }
+
         return ['bakongAccountExisted' => false];
     }
 

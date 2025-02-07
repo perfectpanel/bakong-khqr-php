@@ -58,7 +58,7 @@ class BakongKHQR
     {
         $decodedData = self::decodeKHQRString($khqrString);
 
-        return new KHQRResponse((object)$decodedData, null);
+        return new KHQRResponse((object) $decodedData, null);
     }
 
     public static function verify(string $KHQRString): CRCValidation
@@ -74,7 +74,7 @@ class BakongKHQR
         $isValidCRC = new CRCValidation($validCRC);
 
         try {
-            if (!$isValidCRC->isValid || strlen($KHQRString) < EMV::INVALID_LENGTH_KHQR) {
+            if (! $isValidCRC->isValid || strlen($KHQRString) < EMV::INVALID_LENGTH_KHQR) {
                 throw new KHQRException(KHQRException::KHQR_INVALID);
             }
 
@@ -108,13 +108,15 @@ class BakongKHQR
         // Call API to generate deep link
         $data = DeepLink::callDeepLinkAPI($url, ['qr' => $qr]);
         $deepLinkData = new KHQRDeepLinkData($data['data']['shortLink']);
+
         return new KHQRResponse($deepLinkData, null);
     }
 
     public static function checkBakongAccount(string $url, string $bakongID): KHQRResponse
     {
         $accountExistResponse = Utils::checkBakongAccountExistence($url, $bakongID);
-        return new KHQRResponse((object)$accountExistResponse, null);
+
+        return new KHQRResponse((object) $accountExistResponse, null);
     }
 
     /**
@@ -130,9 +132,9 @@ class BakongKHQR
      */
     private static function decodeKHQRValidation(string $khqrString): array
     {
-        $allField = array_map(fn($el) => $el['tag'], KHQRData::KHQRTag);
-        $subtag = array_map(fn($obj) => $obj['tag'], array_filter(KHQRData::KHQRTag, fn($el): bool => isset($el['sub']) && $el['sub'] == true));
-        $requiredField = array_map(fn($el) => $el['tag'], array_filter(KHQRData::KHQRTag, fn($el): bool => $el['required'] == true));
+        $allField = array_map(fn ($el): string => $el['tag'], KHQRData::KHQRTag);
+        $subtag = array_map(fn ($obj): string => $obj['tag'], array_filter(KHQRData::KHQRTag, fn ($el): bool => isset($el['sub']) && $el['sub']));
+        $requiredField = array_map(fn ($el): string => $el['tag'], array_filter(KHQRData::KHQRTag, fn ($el): bool => $el['required'] == true));
         $subTagInput = KHQRData::KHQRSubtag['input'];
         $subTagCompare = KHQRData::KHQRSubtag['compare'];
 
@@ -159,7 +161,7 @@ class BakongKHQR
 
             if (in_array($tag, $allField)) {
                 $tags[] = ['tag' => $tag, 'value' => $value];
-                $requiredField = array_filter($requiredField, fn($el): bool => $el != $tag);
+                $requiredField = array_filter($requiredField, fn ($el): bool => $el != $tag);
             }
 
             $khqrString = $slicedString;
@@ -178,14 +180,14 @@ class BakongKHQR
         ];
 
         foreach (
-            array_map(fn($el) => $el['data'], $subTagInput) as $obj
+            array_map(fn ($el): array => $el['data'], $subTagInput) as $obj
         ) {
             $decodeValue = array_merge($decodeValue, $obj);
         }
 
         foreach ($tags as $khqrTag) {
             $tag = $khqrTag['tag'];
-            $khqr = array_filter(KHQRData::KHQRTag, fn($el): bool => $el['tag'] == $tag)[0];
+            $khqr = array_filter(KHQRData::KHQRTag, fn ($el): bool => $el['tag'] == $tag)[0];
             $value = $khqrTag['value'];
             $inputValue = $value;
 
@@ -197,8 +199,8 @@ class BakongKHQR
                     $subtagValue = $cutsubstring['value'];
                     $slicedsubtag = $cutsubstring['slicedString'];
 
-                    $nameSubtag = array_filter($subTagCompare, fn($el): bool => $el['tag'] == $tag);
-                    $nameSubtag = array_filter($nameSubtag, fn($el): bool => $el['subTag'] == $subtag)[0];
+                    $nameSubtag = array_filter($subTagCompare, fn ($el): bool => $el['tag'] == $tag);
+                    $nameSubtag = array_filter($nameSubtag, fn ($el): bool => $el['subTag'] == $subtag)[0];
 
                     if ($nameSubtag != null) {
                         $nameSubtag = $nameSubtag['name'];
@@ -231,9 +233,9 @@ class BakongKHQR
      */
     private static function decodeKHQRString(string $khqrString): array
     {
-        $allField = array_map(fn($el): string => $el['tag'], KHQRData::KHQRTag);
-        $subtag = array_map(fn($obj): string => $obj['tag'], array_filter(KHQRData::KHQRTag, fn($el): bool => isset($el['sub']) && $el['sub'] == true));
-        $requiredField = array_map(fn($el): string => $el['tag'], array_filter(KHQRData::KHQRTag, fn($el): bool => isset($el['required']) && $el['required'] == true));
+        $allField = array_map(fn ($el): string => $el['tag'], KHQRData::KHQRTag);
+        $subtag = array_map(fn ($obj): string => $obj['tag'], array_filter(KHQRData::KHQRTag, fn ($el): bool => isset($el['sub']) && $el['sub']));
+        $requiredField = array_map(fn ($el): string => $el['tag'], array_filter(KHQRData::KHQRTag, fn ($el): bool => isset($el['required']) && $el['required'] == true));
 
         $subTagInput = KHQRData::KHQRSubtag['input'];
         $subTagCompare = KHQRData::KHQRSubtag['compare'];
@@ -263,7 +265,7 @@ class BakongKHQR
 
             if (in_array($tag, $allField)) {
                 $tags[$tag] = $value;
-                $requiredField = array_filter($requiredField, fn($el): bool => $el != $tag);
+                $requiredField = array_filter($requiredField, fn ($el): bool => $el != $tag);
             }
 
             $khqrString = $slicedString;
@@ -278,7 +280,7 @@ class BakongKHQR
 
         foreach (KHQRData::KHQRTag as $khqrTag) {
             $tag = $khqrTag['tag'];
-            $khqr = current(array_filter(KHQRData::KHQRTag, fn($el): bool => $el['tag'] == $tag));
+            $khqr = current(array_filter(KHQRData::KHQRTag, fn ($el): bool => $el['tag'] === $tag));
             $value = $tags[$tag] ?? null;
             $inputValue = $value;
 
@@ -290,7 +292,7 @@ class BakongKHQR
                     $subtagValue = $cutsubstring['value'];
                     $slicedsubtag = $cutsubstring['slicedString'];
 
-                    $nameSubtag = current(array_filter($subTagCompare, fn($el): bool => $el['tag'] == $tag && $el['subTag'] == $subtag));
+                    $nameSubtag = current(array_filter($subTagCompare, fn ($el): bool => $el['tag'] === $tag && $el['subTag'] == $subtag));
 
                     if ($nameSubtag) {
                         $nameSubtag = $nameSubtag['name'];
@@ -425,9 +427,9 @@ class BakongKHQR
                 $khqrNoCrc .= (string) $instance;
             }
 
-            $khqr = $khqrNoCrc . EMV::CRC . EMV::CRC_LENGTH;
+            $khqr = $khqrNoCrc.EMV::CRC.EMV::CRC_LENGTH;
 
-            return $khqr . Utils::crc16($khqr);
+            return $khqr.Utils::crc16($khqr);
         } catch (Exception $error) {
             return $error;
         }

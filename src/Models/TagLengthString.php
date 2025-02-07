@@ -18,11 +18,11 @@ class TagLengthString
         $this->value = $value;
 
         $length = strlen($value);
-        $this->length = $length < 10 ? '0' . $length : (string) $length;
+        $this->length = $length < 10 ? '0'.$length : (string) $length;
     }
 
     public function __toString(): string
     {
-        return $this->tag . $this->length . $this->value;
+        return $this->tag.$this->length.$this->value;
     }
 }

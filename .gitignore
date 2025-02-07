@@ -1,9 +1,6 @@
 # Ignore Composer dependencies
 /vendor/
 
-# Ignore Composer lock file
-composer.lock
-
 # Ignore PHPUnit result cache
 .phpunit.result.cache
 

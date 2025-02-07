@@ -98,7 +98,7 @@ class KHQRException extends Exception
     public const UPI_ACCOUNT_INFORMATION_INVALID_CURRENCY = 'UPI_ACCOUNT_INFORMATION_INVALID_CURRENCY';
 
     // Error codes and messages
-    private const ERRORS = [
+    public const ERRORS = [
         self::BAKONG_ACCOUNT_ID_REQUIRED => [1, 'Bakong Account ID cannot be null or empty'],
         self::MERCHANT_NAME_REQUIRED => [2, 'Merchant name cannot be null or empty'],
         self::BAKONG_ACCOUNT_ID_INVALID => [3, 'Bakong Account ID is invalid'],
