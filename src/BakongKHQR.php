@@ -35,7 +35,7 @@ class BakongKHQR
     public static function generateIndividual(IndividualInfo $individualInfo): \KHQR\Models\KHQRResponse
     {
         $khqr = self::generateKHQR($individualInfo, KHQRData::MERCHANT_TYPE_INDIVIDUAL);
-        $result = (object) [
+        $result = [
             'qr' => $khqr,
             'md5' => md5($khqr),
         ];
@@ -46,7 +46,7 @@ class BakongKHQR
     public static function generateMerchant(MerchantInfo $merchantInfo): \KHQR\Models\KHQRResponse
     {
         $khqr = self::generateKHQR($merchantInfo, KHQRData::MERCHANT_TYPE_MERCHANT);
-        $result = (object) [
+        $result = [
             'qr' => $khqr,
             'md5' => md5($khqr),
         ];
@@ -58,7 +58,7 @@ class BakongKHQR
     {
         $decodedData = self::decodeKHQRString($khqrString);
 
-        return new KHQRResponse((object) $decodedData, null);
+        return new KHQRResponse($decodedData, null);
     }
 
     public static function verify(string $KHQRString): CRCValidation
@@ -116,7 +116,7 @@ class BakongKHQR
     {
         $accountExistResponse = Utils::checkBakongAccountExistence($url, $bakongID);
 
-        return new KHQRResponse((object) $accountExistResponse, null);
+        return new KHQRResponse($accountExistResponse, null);
     }
 
     /**
