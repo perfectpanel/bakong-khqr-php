@@ -23,7 +23,7 @@ abstract class Utils
         return preg_match($crcRegExp, $crc) === 1;
     }
 
-    public static function findTag($object, $tag)
+    public static function findTag(array $object, string $tag)
     {
         foreach ($object as $el) {
             if ($el['tag'] == $tag) {
@@ -38,9 +38,8 @@ abstract class Utils
     {
         $sliceIndex = 2;
 
-        // Get first 2
         $tag = substr($string, 0, $sliceIndex);
-        $length = intval(substr($string, $sliceIndex, $sliceIndex * 2));
+        $length = (int)(substr($string, $sliceIndex, $sliceIndex));
         $value = substr($string, $sliceIndex * 2, $length);
         $slicedString = substr($string, $sliceIndex * 2 + $length);
 
@@ -90,6 +89,7 @@ abstract class Utils
             'Content-Type: application/json',
         ]);
         curl_setopt($ch, CURLOPT_TIMEOUT, 45);
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         // Execute request
         $response = curl_exec($ch);

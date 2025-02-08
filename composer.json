@@ -1,6 +1,7 @@
 {
     "name": "forcefidele/bakong-khqr-php",
     "description": "A pure PHP implementation of the Bakong KHQR SDK",
+    "version": "1.0.17",
     "type": "library",
     "keywords": [
         "bakong",
