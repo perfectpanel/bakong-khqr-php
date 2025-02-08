@@ -15,7 +15,7 @@ class BakongAccountExistenceTest extends TestCase
         try {
             $checkAcc = BakongKHQR::checkBakongAccount($data['data']['url'], $data['data']['account']);
             $this->assertEquals($data['errorCode'], $checkAcc->status->errorCode, $data['statement']);
-            $this->assertEquals($data['bakongAccountExists'], $checkAcc->data->bakongAccountExists, $data['statement']);
+            $this->assertEquals($data['bakongAccountExists'], $checkAcc->data['bakongAccountExists'], $data['statement']);
         } catch (KHQRException $e) {
             $this->assertEquals($data['errorCode'], $e->getCode(), $data['statement']);
         }

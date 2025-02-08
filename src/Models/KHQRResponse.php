@@ -8,9 +8,9 @@ class KHQRResponse
 {
     public object $status;
 
-    public object $data;
+    public $data;
 
-    public function __construct(object $data, ?array $errorObject)
+    public function __construct($data, ?array $errorObject)
     {
         $this->data = $data;
 
