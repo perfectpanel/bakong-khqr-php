@@ -6,11 +6,11 @@ namespace KHQR\Models;
 
 class TagLengthString
 {
-    private string $tag;
+    public string $tag;
 
-    private string $value;
+    public string $value;
 
-    private string $length;
+    public string $length;
 
     public function __construct(string $tag, string $value)
     {
@@ -18,11 +18,11 @@ class TagLengthString
         $this->value = $value;
 
         $length = strlen($value);
-        $this->length = $length < 10 ? '0'.$length : (string) $length;
+        $this->length = $length < 10 ? '0' . $length : (string) $length;
     }
 
     public function __toString(): string
     {
-        return $this->tag.$this->length.$this->value;
+        return $this->tag . $this->length . $this->value;
     }
 }

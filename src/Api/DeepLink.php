@@ -13,15 +13,14 @@ class DeepLink
     {
         try {
             $url = parse_url($link);
-
-            if ($url === false || ! isset($url['path']) || $url['path'] !== '/v1/generate_deeplink_by_qr') {
+            if (!isset($url['path']) || $url['path'] !== '/v1/generate_deeplink_by_qr') {
                 return false;
             }
+
+            return true;
         } catch (Exception $error) {
             return false;
         }
-
-        return true;
     }
 
     public static function callDeepLinkAPI(string $url, $data)

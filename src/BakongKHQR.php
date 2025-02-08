@@ -82,14 +82,16 @@ class BakongKHQR
 
             return new CRCValidation(true);
         } catch (Exception $error) {
+            error_log($error->getMessage());
+            error_log($error->getTraceAsString());
             return new CRCValidation(false);
         }
     }
 
-    public static function generateDeepLink(string $url, string $qr, SourceInfo $sourceInfo): KHQRResponse
+    public static function generateDeepLink(string $url, string $qr, ?SourceInfo $sourceInfo): KHQRResponse
     {
         // Check if URL is valid
-        if (! DeepLink::isValidLink($url)) {
+        if (!DeepLink::isValidLink($url)) {
             throw new KHQRException(KHQRException::INVALID_DEEP_LINK_URL);
         }
 
@@ -187,20 +189,20 @@ class BakongKHQR
 
         foreach ($tags as $khqrTag) {
             $tag = $khqrTag['tag'];
-            $khqr = array_filter(KHQRData::KHQRTag, fn($el): bool => $el['tag'] == $tag)[0];
+            $khqr = current(array_filter(KHQRData::KHQRTag, fn($el): bool => $el['tag'] == $tag));
             $value = $khqrTag['value'];
             $inputValue = $value;
 
             if (in_array($tag, $subtag)) {
-                $inputdata = clone Utils::findTag($subTagInput, $tag)['data'];
+                $inputdata = Utils::findTag($subTagInput, $tag)['data'];
                 while ($value) {
                     $cutsubstring = Utils::cutString($value);
-                    $subtag = $cutsubstring['tag'];
+                    $tempSubtag = $cutsubstring['tag'];
                     $subtagValue = $cutsubstring['value'];
                     $slicedSubtag = $cutsubstring['slicedString'];
 
                     $nameSubtag = array_filter($subTagCompare, fn($el): bool => $el['tag'] == $tag);
-                    $nameSubtag = array_filter($nameSubtag, fn($el): bool => $el['subTag'] == $subtag)[0];
+                    $nameSubtag = array_filter($nameSubtag, fn($el): bool => $el['subTag'] == $tempSubtag)[0];
 
                     if ($nameSubtag != null) {
                         $nameSubtag = $nameSubtag['name'];
@@ -210,7 +212,6 @@ class BakongKHQR
                     $value = $slicedSubtag;
                 }
                 $decodeValue = array_merge($decodeValue, $inputValue);
-                $add = new $khqr['instance']($tag, $inputValue);
             } else {
                 $instance = new $khqr['instance']($tag, $inputValue);
                 $decodeValue[$khqr['type']] = $instance->value;
