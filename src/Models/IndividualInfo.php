@@ -59,4 +59,30 @@ class IndividualInfo extends MerchantInfo
         $this->merchantCityAlternateLanguage = $merchantCityAlternateLanguage;
         $this->upiMerchantAccount = $upiMerchantAccount;
     }
+
+    public static function withOptionalArray(
+        string $bakongAccountID,
+        string $merchantName,
+        string $merchantCity,
+        array $optionalData
+    ) {
+        return new self(
+            bakongAccountID: $bakongAccountID,
+            merchantName: $merchantName,
+            merchantCity: $merchantCity,
+            acquiringBank: $optionalData['acquiringBank'] ?? null,
+            accountInformation: $optionalData['accountInformation'] ?? null,
+            currency: $optionalData['currency'] ?? null,
+            amount: $optionalData['amount'] ?? 0.0,
+            billNumber: $optionalData['billNumber'] ?? null,
+            storeLabel: $optionalData['storeLabel'] ?? null,
+            terminalLabel: $optionalData['terminalLabel'] ?? null,
+            mobileNumber: $optionalData['mobileNumber'] ?? null,
+            purposeOfTransaction: $optionalData['purposeOfTransaction'] ?? null,
+            languagePreference: $optionalData['languagePreference'] ?? null,
+            merchantNameAlternateLanguage: $optionalData['merchantNameAlternateLanguage'] ?? null,
+            merchantCityAlternateLanguage: $optionalData['merchantCityAlternateLanguage'] ?? null,
+            upiMerchantAccount: $optionalData['upiMerchantAccount'] ?? null
+        );
+    }
 }

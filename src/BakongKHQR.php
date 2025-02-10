@@ -324,14 +324,14 @@ class BakongKHQR
     private static function generateKHQR(MerchantInfo $information, string $type)
     {
         if ($type === KHQRData::MERCHANT_TYPE_MERCHANT) {
-            $merchantInfo = (object) [
+            $merchantInfo = [
                 'bakongAccountID' => $information->bakongAccountID,
                 'merchantID' => $information->merchantID,
                 'acquiringBank' => $information->acquiringBank,
                 'isMerchant' => true,
             ];
         } else {
-            $merchantInfo = (object) [
+            $merchantInfo = [
                 'bakongAccountID' => $information->bakongAccountID,
                 'accountInformation' => $information->accountInformation,
                 'acquiringBank' => $information->acquiringBank,

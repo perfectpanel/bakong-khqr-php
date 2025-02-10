@@ -17,7 +17,7 @@ class GlobalUniqueIdentifier extends TagLengthString
 
     public BakongAccountID $bakongAccountID;
 
-    public object $data;
+    public array $data;
 
     public function __construct(string $tag, $valueObject)
     {
@@ -26,11 +26,11 @@ class GlobalUniqueIdentifier extends TagLengthString
         }
 
         // Get value from props object
-        $bakongAccountID = $valueObject->bakongAccountID;
-        $acquiringBank = $valueObject->acquiringBank;
+        $bakongAccountID = $valueObject['bakongAccountID'];
+        $acquiringBank = $valueObject['acquiringBank'];
 
-        $isMerchant = $valueObject->isMerchant;
-        $accountInformation = $valueObject->accountInformation;
+        $isMerchant = $valueObject['isMerchant'];
+        $accountInformation = $valueObject['accountInformation'];
 
         // Creating 3 instances
         // BakongAccountID: 00
@@ -46,14 +46,14 @@ class GlobalUniqueIdentifier extends TagLengthString
         if ($isMerchant) {
             $merchantId = new MerchantId(
                 EMV::MERCHANT_ACCOUNT_INFORMATION_MERCHANT_ID,
-                $valueObject->merchantID
+                $valueObject['merchantID']
             );
             $acquiringBankName = new AcquiringBank(
                 EMV::MERCHANT_ACCOUNT_INFORMATION_ACQUIRING_BANK,
                 $acquiringBank
             );
 
-            if ($valueObject->merchantID !== null) {
+            if ($valueObject['merchantID'] !== null) {
                 $globalUniqueIdentifier .= $merchantId;
             }
             if ($acquiringBank !== null) {
@@ -64,7 +64,7 @@ class GlobalUniqueIdentifier extends TagLengthString
 
             $this->merchantID = $merchantId;
             $this->acquiringBank = $acquiringBankName;
-            $this->data = (object) [
+            $this->data = [
                 'bakongAccountID' => $bakongAccountId,
                 'merchantID' => $merchantId,
                 'acquiringBank' => $acquiringBankName,
@@ -89,7 +89,7 @@ class GlobalUniqueIdentifier extends TagLengthString
             parent::__construct($tag, $globalUniqueIdentifier);
 
             $this->accountInformation = $accountInformation;
-            $this->data = (object) [
+            $this->data = [
                 'bakongAccountID' => $bakongAccountId,
                 'accountInformation' => $accountInformation,
             ];

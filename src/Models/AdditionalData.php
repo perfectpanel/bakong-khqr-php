@@ -9,20 +9,20 @@ use KHQR\Helpers\EMV;
 
 class AdditionalData extends TagLengthString
 {
-    public string $billNumber;
+    public ?BillNumber $billNumber;
 
-    public string $mobileNumber;
+    public ?MobileNumber $mobileNumber;
 
-    public string $storeLabel;
+    public ?StoreLabel $storeLabel;
 
-    public string $terminalLabel;
+    public ?TerminalLabel $terminalLabel;
 
-    public object $data;
+    public array $data;
 
     public function __construct(string $tag, $additionalData = null)
     {
         if ($additionalData == null) {
-            $additionalData = (object) [
+            $additionalData = [
                 'billNumberInput' => null,
                 'mobileNumberInput' => null,
                 'storeLabelInput' => null,
@@ -31,11 +31,11 @@ class AdditionalData extends TagLengthString
         }
 
         // Getting information from additionalData
-        $billNumberInput = $additionalData->billNumber;
-        $mobileNumberInput = $additionalData->mobileNumber;
-        $storeLabelInput = $additionalData->storeLabel;
-        $terminalLabelInput = $additionalData->terminalLabel;
-        $purposeOfTransaction = $additionalData->purposeOfTransaction;
+        $billNumberInput = $additionalData['billNumber'];
+        $mobileNumberInput = $additionalData['mobileNumber'];
+        $storeLabelInput = $additionalData['storeLabel'];
+        $terminalLabelInput = $additionalData['terminalLabel'];
+        $purposeOfTransaction = $additionalData['purposeOfTransaction'];
 
         $billNumber = null;
         $mobileNumber = null;
@@ -79,7 +79,7 @@ class AdditionalData extends TagLengthString
         $this->mobileNumber = $mobileNumber;
         $this->storeLabel = $storeLabel;
         $this->terminalLabel = $terminalLabel;
-        $this->data = (object) [
+        $this->data = [
             'billNumber' => $billNumber,
             'mobileNumber' => $mobileNumber,
             'storeLabel' => $storeLabel,
