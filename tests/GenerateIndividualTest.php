@@ -205,7 +205,6 @@ class GenerateIndividualTest extends TestCase
 			);
 
 			$khqrData = BakongKHQR::generateIndividual($individualInfo);
-			echo $khqrData;
 			$this->assertEquals($data['result'], substr($khqrData->data['qr'], 0, -29), $data['statement']);
 		}
 	}

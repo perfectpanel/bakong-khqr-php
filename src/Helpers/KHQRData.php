@@ -4,19 +4,6 @@ declare(strict_types=1);
 
 namespace KHQR\Helpers;
 
-use KHQR\Models\PayloadFormatIndicator;
-use KHQR\Models\CountryCode;
-use KHQR\Models\GlobalUniqueIdentifier;
-use KHQR\Models\MerchantCategoryCode;
-use KHQR\Models\MerchantCity;
-use KHQR\Models\MerchantInformationLanguageTemplate;
-use KHQR\Models\MerchantName;
-use KHQR\Models\PointOfInitiationMethod;
-use KHQR\Models\TimeStamp;
-use KHQR\Models\TransactionAmount;
-use KHQR\Models\TransactionCurrency;
-use KHQR\Models\UnionpayMerchantAccount;
-
 final class KHQRData
 {
     public const CURRENCY_USD = 840;

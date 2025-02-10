@@ -93,7 +93,7 @@ class BillNumber extends TagLengthString
 {
     public function __construct(string $tag, string $value)
     {
-        if (strlen($value) > EMV::INVALID_LENGTH_BILL_NUMBER || $value === '') {
+        if (mb_strlen($value, 'UTF-8') > EMV::INVALID_LENGTH_BILL_NUMBER || $value === '') {
             throw new KHQRException(KHQRException::BILL_NUMBER_LENGTH_INVALID);
         }
         parent::__construct($tag, $value);
@@ -104,7 +104,7 @@ class StoreLabel extends TagLengthString
 {
     public function __construct(string $tag, string $value)
     {
-        if (strlen($value) > EMV::INVALID_LENGTH_STORE_LABEL || $value === '') {
+        if (mb_strlen($value, 'UTF-8') > EMV::INVALID_LENGTH_STORE_LABEL || $value === '') {
             throw new KHQRException(KHQRException::STORE_LABEL_LENGTH_INVALID);
         }
         parent::__construct($tag, $value);
@@ -115,7 +115,7 @@ class TerminalLabel extends TagLengthString
 {
     public function __construct(string $tag, string $value)
     {
-        if (strlen($value) > EMV::INVALID_LENGTH_TERMINAL_LABEL || $value === '') {
+        if (mb_strlen($value, 'UTF-8') > EMV::INVALID_LENGTH_TERMINAL_LABEL || $value === '') {
             throw new KHQRException(KHQRException::TERMINAL_LABEL_LENGTH_INVALID);
         }
         parent::__construct($tag, $value);
@@ -126,7 +126,7 @@ class MobileNumber extends TagLengthString
 {
     public function __construct(string $tag, string $value)
     {
-        if (strlen($value) > EMV::INVALID_LENGTH_MOBILE_NUMBER || $value === '') {
+        if (mb_strlen($value, 'UTF-8') > EMV::INVALID_LENGTH_MOBILE_NUMBER || $value === '') {
             throw new KHQRException(KHQRException::MOBILE_NUMBER_LENGTH_INVALID);
         }
         parent::__construct($tag, $value);
@@ -137,7 +137,7 @@ class PurposeOfTransaction extends TagLengthString
 {
     public function __construct(string $tag, string $value)
     {
-        if (strlen($value) > EMV::INVALID_LENGTH_PURPOSE_OF_TRANSACTION || $value === '') {
+        if (mb_strlen($value, 'UTF-8') > EMV::INVALID_LENGTH_PURPOSE_OF_TRANSACTION || $value === '') {
             throw new KHQRException(KHQRException::PURPOSE_OF_TRANSACTION_LENGTH_INVALID);
         }
         parent::__construct($tag, $value);

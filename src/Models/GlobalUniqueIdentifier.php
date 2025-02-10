@@ -129,7 +129,7 @@ class AccountInformation extends TagLengthString
 {
     public function __construct(string $tag, string $value)
     {
-        if (strlen($value) > EMV::INVALID_LENGTH_ACCOUNT_INFORMATION) {
+        if (mb_strlen($value, 'UTF-8') > EMV::INVALID_LENGTH_ACCOUNT_INFORMATION) {
             throw new KHQRException(KHQRException::ACCOUNT_INFORMATION_LENGTH_INVALID);
         }
         parent::__construct($tag, $value);
@@ -143,7 +143,7 @@ class MerchantId extends TagLengthString
         if ($value === '' || $value === '0') {
             throw new KHQRException(KHQRException::MERCHANT_ID_REQUIRED);
         }
-        if (strlen($value) > EMV::INVALID_LENGTH_MERCHANT_ID) {
+        if (mb_strlen($value, 'UTF-8') > EMV::INVALID_LENGTH_MERCHANT_ID) {
             throw new KHQRException(KHQRException::MERCHANT_ID_LENGTH_INVALID);
         }
         parent::__construct($tag, $value);
@@ -157,7 +157,7 @@ class AcquiringBank extends TagLengthString
         if ($value === '' || $value === '0') {
             throw new KHQRException(KHQRException::ACQUIRING_BANK_REQUIRED);
         }
-        if (strlen($value) > EMV::INVALID_LENGTH_ACQUIRING_BANK) {
+        if (mb_strlen($value, 'UTF-8') > EMV::INVALID_LENGTH_ACQUIRING_BANK) {
             throw new KHQRException(KHQRException::ACQUIRING_BANK_LENGTH_INVALID);
         }
         parent::__construct($tag, $value);

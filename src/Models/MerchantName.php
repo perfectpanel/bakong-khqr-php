@@ -14,7 +14,7 @@ class MerchantName extends TagLengthString
         if ($value === '' || $value == null) {
             throw new KHQRException(KHQRException::MERCHANT_NAME_REQUIRED);
         }
-        if (strlen($value) > EMV::INVALID_LENGTH_MERCHANT_NAME) {
+        if (mb_strlen($value, 'UTF-8') > EMV::INVALID_LENGTH_MERCHANT_NAME) {
             throw new KHQRException(KHQRException::MERCHANT_NAME_LENGTH_INVALID);
         }
         parent::__construct($tag, $value);

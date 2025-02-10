@@ -17,7 +17,7 @@ class TagLengthString
         $this->tag = $tag;
         $this->value = $value;
 
-        $length = strlen($value);
+        $length = mb_strlen($value, 'UTF-8');
         $this->length = $length < 10 ? '0' . $length : (string) $length;
     }
 

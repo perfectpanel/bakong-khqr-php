@@ -9,7 +9,7 @@ use KHQR\Helpers\EMV;
 
 class MerchantInformationLanguageTemplate extends TagLengthString
 {
-    public object $data;
+    public array $data;
 
     /**
      * @param  array<string, string|null>  $value
@@ -63,7 +63,7 @@ class MerchantNameAlternateLanguage extends TagLengthString
 {
     public function __construct(string $tag, string $value)
     {
-        if (strlen($value) > EMV::INVALID_LENGTH_MERCHANT_NAME_ALTERNATE_LANGUAGE || $value === '') {
+        if (mb_strlen($value, 'UTF-8') > EMV::INVALID_LENGTH_MERCHANT_NAME_ALTERNATE_LANGUAGE || $value === '') {
             throw new KHQRException(KHQRException::MERCHANT_NAME_ALTERNATE_LANGUAGE_LENGTH_INVALID);
         }
         parent::__construct($tag, $value);
@@ -74,7 +74,7 @@ class MerchantCityAlternateLanguage extends TagLengthString
 {
     public function __construct(string $tag, string $value)
     {
-        if (strlen($value) > EMV::INVALID_LENGTH_MERCHANT_CITY_ALTERNATE_LANGUAGE || $value === '') {
+        if (mb_strlen($value, 'UTF-8') > EMV::INVALID_LENGTH_MERCHANT_CITY_ALTERNATE_LANGUAGE || $value === '') {
             throw new KHQRException(KHQRException::MERCHANT_CITY_ALTERNATE_LANGUAGE_LENGTH_INVALID);
         }
         parent::__construct($tag, $value);

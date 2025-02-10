@@ -396,13 +396,21 @@ class BakongKHQR
                         throw new KHQRException(KHQRException::TRANSACTION_AMOUNT_INVALID);
                     }
                 } else {
-                    $amountSplit = explode('.', (string) $amountInput);
-                    if (isset($amountSplit[1]) && strlen($amountSplit[1]) > 2) {
-                        throw new KHQRException(KHQRException::TRANSACTION_AMOUNT_INVALID);
+                    // Removing trailing zeros after the decimal point
+                    if (floor($amountInput) == $amountInput) {
+                        $amountInput = floor($amountInput);
                     }
-                    $amountInput = number_format($amountInput, 2, '.', '');
+
+                    $amountSplit = explode('.', (string) $amountInput);
+                    if (isset($amountSplit[1])) {
+                        if (strlen($amountSplit[1]) > 2) {
+                            throw new KHQRException(KHQRException::TRANSACTION_AMOUNT_INVALID);
+                        }
+
+                        $amountInput = number_format($amountInput, 2, '.', '');
+                    }
                 }
-                $KHQRInstances[] = new TransactionAmount(EMV::TRANSACTION_AMOUNT, $amountInput);
+                $KHQRInstances[] = new TransactionAmount(EMV::TRANSACTION_AMOUNT, (string) $amountInput);
             }
 
             $countryCode = new CountryCode(EMV::COUNTRY_CODE, EMV::DEFAULT_COUNTRY_CODE);
