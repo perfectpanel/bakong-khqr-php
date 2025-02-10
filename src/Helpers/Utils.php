@@ -69,7 +69,7 @@ abstract class Utils
     public static function checkBakongAccountExistence(string $url, string $accountID)
     {
         // Check account ID length
-        if (strlen($accountID, 'UTF-8') > EMV::INVALID_LENGTH_BAKONG_ACCOUNT) {
+        if (strlen($accountID) > EMV::INVALID_LENGTH_BAKONG_ACCOUNT) {
             throw new KHQRException(KHQRException::BAKONG_ACCOUNT_ID_LENGTH_INVALID);
         }
 
