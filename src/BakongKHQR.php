@@ -443,8 +443,8 @@ class BakongKHQR
             $khqr = $khqrNoCrc . EMV::CRC . EMV::CRC_LENGTH;
 
             return $khqr . Utils::crc16($khqr);
-        } catch (Exception $error) {
-            return $error;
+        } catch (Exception $e) {
+            throw $e;
         }
     }
 }

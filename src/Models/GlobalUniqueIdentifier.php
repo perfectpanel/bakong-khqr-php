@@ -109,7 +109,7 @@ class BakongAccountID extends TagLengthString
             throw new KHQRException(KHQRException::BAKONG_ACCOUNT_ID_REQUIRED);
         }
 
-        // Validating the bakong account is it is correct
+        // Validating if the bakong account is correct
         // name@bank_domain
         $bakongAccountDivide = explode('@', $bakongAccountID);
         // Validate on length of the bakong account

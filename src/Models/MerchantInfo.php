@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace KHQR\Models;
 
-use InvalidArgumentException;
+use KHQR\Exceptions\KHQRException;
 use KHQR\Helpers\KHQRData;
 use KHQR\Helpers\Utils;
 
@@ -65,24 +65,25 @@ class MerchantInfo
         string $merchantCityAlternateLanguage = null,
         string $upiMerchantAccount = null
     ) {
+
         if (Utils::isBlank($bakongAccountID)) {
-            throw new InvalidArgumentException('`bakongAccountID` cannot be blank');
+            throw new KHQRException(KHQRException::BAKONG_ACCOUNT_ID_REQUIRED);
         }
 
         if (Utils::isBlank($merchantName)) {
-            throw new InvalidArgumentException('`merchantName` cannot be blank');
+            throw new KHQRException(KHQRException::MERCHANT_NAME_REQUIRED);
         }
 
         if (Utils::isBlank($merchantCity)) {
-            throw new InvalidArgumentException('`merchantCity` cannot be blank');
+            throw new KHQRException(KHQRException::MERCHANT_CITY_TAG_REQUIRED);
         }
 
         if (Utils::isBlank($merchantID)) {
-            throw new \InvalidArgumentException('`merchantID` cannot be blank');
+            throw new KHQRException(KHQRException::MERCHANT_ID_REQUIRED);
         }
 
         if (Utils::isBlank($acquiringBank)) {
-            throw new \InvalidArgumentException('`acquiringBank` cannot be blank');
+            throw new KHQRException(KHQRException::ACQUIRING_BANK_REQUIRED);
         }
 
         $this->bakongAccountID = $bakongAccountID;
