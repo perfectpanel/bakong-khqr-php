@@ -9,11 +9,11 @@ use KHQR\Helpers\EMV;
 
 class GlobalUniqueIdentifier extends TagLengthString
 {
-    public ?string $merchantID = null;
+    public ?MerchantId $merchantID = null;
 
-    public ?string $acquiringBank = null;
+    public ?AcquiringBank $acquiringBank = null;
 
-    public ?string $accountInformation = null;
+    public ?AccountInformation $accountInformation = null;
 
     public BakongAccountID $bakongAccountID;
 
@@ -27,10 +27,10 @@ class GlobalUniqueIdentifier extends TagLengthString
 
         // Get value from props object
         $bakongAccountID = $valueObject['bakongAccountID'];
-        $acquiringBank = $valueObject['acquiringBank'];
+        $acquiringBank = isset($valueObject['acquiringBank']) ? $valueObject['acquiringBank'] : null;
 
         $isMerchant = $valueObject['isMerchant'];
-        $accountInformation = $valueObject['accountInformation'];
+        $accountInformation = isset($valueObject['accountInformation']) ? $valueObject['accountInformation'] : null;
 
         // Creating 3 instances
         // BakongAccountID: 00

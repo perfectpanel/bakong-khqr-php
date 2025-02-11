@@ -9,9 +9,43 @@ use KHQR\Exceptions\KHQRException;
 use KHQR\Helpers\KHQRData;
 use KHQR\Helpers\Utils;
 
-class IndividualInfo extends MerchantInfo
+class IndividualInfo
 {
-    // add additional optional parameters to the constructor
+    // Required parameters
+    public string $bakongAccountID;
+
+    public string $merchantName;
+
+    public string $merchantCity;
+
+    // Optional parameters
+    public ?string $acquiringBank;
+
+    public ?string $accountInformation;
+
+    public ?int $currency;
+
+    public ?float $amount;
+
+    public ?string $billNumber;
+
+    public ?string $storeLabel;
+
+    public ?string $terminalLabel;
+
+    public ?string $mobileNumber;
+
+    public ?string $purposeOfTransaction;
+
+    public ?string $languagePreference;
+
+    public ?string $merchantNameAlternateLanguage;
+
+    public ?string $merchantCityAlternateLanguage;
+
+    public ?string $upiMerchantAccount;
+
+
     public function __construct(
         string $bakongAccountID,
         string $merchantName,

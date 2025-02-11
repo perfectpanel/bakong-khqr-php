@@ -90,8 +90,8 @@ class MerchantInfo
         $this->merchantName = $merchantName;
         $this->merchantCity = $merchantCity;
         $this->merchantID = $merchantID;
-        // additional optional parameters
         $this->acquiringBank = $acquiringBank;
+        // optional parameters
         $this->accountInformation = $accountInformation;
         $this->currency = $currency ?? KHQRData::CURRENCY_KHR;
         $this->amount = $amount;
@@ -104,5 +104,34 @@ class MerchantInfo
         $this->merchantNameAlternateLanguage = $merchantNameAlternateLanguage;
         $this->merchantCityAlternateLanguage = $merchantCityAlternateLanguage;
         $this->upiMerchantAccount = $upiMerchantAccount;
+    }
+
+    public static function withOptionalArray(
+        string $bakongAccountID,
+        string $merchantName,
+        string $merchantCity,
+        string $merchantID,
+        string $acquiringBank,
+        array $optionalData
+    ) {
+        return new self(
+            bakongAccountID: $bakongAccountID,
+            merchantName: $merchantName,
+            merchantCity: $merchantCity,
+            merchantID: $merchantID,
+            acquiringBank: $acquiringBank,
+            accountInformation: $optionalData['accountInformation'] ?? null,
+            currency: $optionalData['currency'] ?? null,
+            amount: $optionalData['amount'] ?? 0.0,
+            billNumber: $optionalData['billNumber'] ?? null,
+            storeLabel: $optionalData['storeLabel'] ?? null,
+            terminalLabel: $optionalData['terminalLabel'] ?? null,
+            mobileNumber: $optionalData['mobileNumber'] ?? null,
+            purposeOfTransaction: $optionalData['purposeOfTransaction'] ?? null,
+            languagePreference: $optionalData['languagePreference'] ?? null,
+            merchantNameAlternateLanguage: $optionalData['merchantNameAlternateLanguage'] ?? null,
+            merchantCityAlternateLanguage: $optionalData['merchantCityAlternateLanguage'] ?? null,
+            upiMerchantAccount: $optionalData['upiMerchantAccount'] ?? null
+        );
     }
 }
