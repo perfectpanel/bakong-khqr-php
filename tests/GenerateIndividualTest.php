@@ -191,6 +191,261 @@ class GenerateIndividualTest extends TestCase
 		],
 	];
 
+	private $amountTestData = [
+		[
+			'statement' => 'Amount test 1',
+			'data' => [
+				'required' => [
+					'bakongAccountID' => 'jonhsmith@nbcq',
+					'merchantName' => 'Jonh Smith',
+					'merchantCity' => 'Siam Reap',
+				],
+				'optional' => [
+					'currency' => 116,
+					'amount' => 100,
+					'acquiringBank' => 'Dev Bank',
+					'mobileNumber' => '85512345678',
+					'billNumber' => 'INV-2021-07-65822',
+					'storeLabel' => 'BKK-1',
+					'terminalLabel' => '012345',
+					'accountInformation' => '012345678',
+				],
+			],
+			'result' => '100',
+		],
+		[
+			'statement' => 'Amount test 2',
+			'data' => [
+				'required' => [
+					'bakongAccountID' => 'jonhsmith@nbcq',
+					'merchantName' => 'Jonh Smith',
+					'merchantCity' => 'Siam Reap',
+				],
+				'optional' => [
+					'currency' => 116,
+					'amount' => 100,
+					'acquiringBank' => 'Dev Bank',
+					'mobileNumber' => '85512345678',
+					'billNumber' => 'INV-2021-07-65822',
+					'storeLabel' => 'BKK-1',
+					'terminalLabel' => '012345',
+					'accountInformation' => '012345678',
+				],
+			],
+			'result' => '100',
+		],
+		[
+			'statement' => 'Amount test 3',
+			'data' => [
+				'required' => [
+					'bakongAccountID' => 'jonhsmith@nbcq',
+					'merchantName' => 'Jonh Smith',
+					'merchantCity' => 'Siam Reap',
+				],
+				'optional' => [
+					'currency' => 116,
+					'amount' => 100,
+					'acquiringBank' => 'Dev Bank',
+					'mobileNumber' => '85512345678',
+					'billNumber' => 'INV-2021-07-65822',
+					'storeLabel' => 'BKK-1',
+					'terminalLabel' => '012345',
+					'accountInformation' => '012345678',
+				],
+			],
+			'result' => '100',
+		],
+		[
+			'statement' => 'Amount test 4',
+			'data' => [
+				'required' => [
+					'bakongAccountID' => 'jonhsmith@nbcq',
+					'merchantName' => 'Jonh Smith',
+					'merchantCity' => 'Siam Reap',
+				],
+				'optional' => [
+					'currency' => 116,
+					'amount' => 9999999999,
+					'acquiringBank' => 'Dev Bank',
+					'mobileNumber' => '85512345678',
+					'billNumber' => 'INV-2021-07-65822',
+					'storeLabel' => 'BKK-1',
+					'terminalLabel' => '012345',
+					'accountInformation' => '012345678',
+				],
+			],
+			'result' => '9999999999',
+		],
+		[
+			'statement' => 'Amount test 5',
+			'data' => [
+				'required' => [
+					'bakongAccountID' => 'jonhsmith@nbcq',
+					'merchantName' => 'Jonh Smith',
+					'merchantCity' => 'Siam Reap',
+				],
+				'optional' => [
+					'currency' => 116,
+					'amount' => 10000,
+					'acquiringBank' => 'Dev Bank',
+					'mobileNumber' => '85512345678',
+					'billNumber' => 'INV-2021-07-65822',
+					'storeLabel' => 'BKK-1',
+					'terminalLabel' => '012345',
+					'accountInformation' => '012345678',
+				],
+			],
+			'result' => '10000',
+		],
+		[
+			'statement' => 'Amount test 6',
+			'data' => [
+				'required' => [
+					'bakongAccountID' => 'jonhsmith@nbcq',
+					'merchantName' => 'Jonh Smith',
+					'merchantCity' => 'Siam Reap',
+				],
+				'optional' => [
+					'currency' => 840,
+					'amount' => 1.12,
+					'acquiringBank' => 'Dev Bank',
+					'mobileNumber' => '85512345678',
+					'billNumber' => 'INV-2021-07-65822',
+					'storeLabel' => 'BKK-1',
+					'terminalLabel' => '012345',
+					'accountInformation' => '012345678',
+				],
+			],
+			'result' => '1.12',
+		],
+		[
+			'statement' => 'Amount test 7',
+			'data' => [
+				'required' => [
+					'bakongAccountID' => 'jonhsmith@nbcq',
+					'merchantName' => 'Jonh Smith',
+					'merchantCity' => 'Siam Reap',
+				],
+				'optional' => [
+					'currency' => 840,
+					'amount' => 1000,
+					'acquiringBank' => 'Dev Bank',
+					'mobileNumber' => '85512345678',
+					'billNumber' => 'INV-2021-07-65822',
+					'storeLabel' => 'BKK-1',
+					'terminalLabel' => '012345',
+					'accountInformation' => '012345678',
+				],
+			],
+			'result' => '1000',
+		],
+		[
+			'statement' => 'Amount test 8',
+			'data' => [
+				'required' => [
+					'bakongAccountID' => 'jonhsmith@nbcq',
+					'merchantName' => 'Jonh Smith',
+					'merchantCity' => 'Siam Reap',
+				],
+				'optional' => [
+					'currency' => 840,
+					'amount' => 100.11,
+					'acquiringBank' => 'Dev Bank',
+					'mobileNumber' => '85512345678',
+					'billNumber' => 'INV-2021-07-65822',
+					'storeLabel' => 'BKK-1',
+					'terminalLabel' => '012345',
+					'accountInformation' => '012345678',
+				],
+			],
+			'result' => '100.11',
+		],
+		[
+			'statement' => 'Amount test 9',
+			'data' => [
+				'required' => [
+					'bakongAccountID' => 'jonhsmith@nbcq',
+					'merchantName' => 'Jonh Smith',
+					'merchantCity' => 'Siam Reap',
+				],
+				'optional' => [
+					'currency' => 840,
+					'amount' => 100.12,
+					'acquiringBank' => 'Dev Bank',
+					'mobileNumber' => '85512345678',
+					'billNumber' => 'INV-2021-07-65822',
+					'storeLabel' => 'BKK-1',
+					'terminalLabel' => '012345',
+					'accountInformation' => '012345678',
+				],
+			],
+			'result' => '100.12',
+		],
+		[
+			'statement' => 'Amount test 10',
+			'data' => [
+				'required' => [
+					'bakongAccountID' => 'jonhsmith@nbcq',
+					'merchantName' => 'Jonh Smith',
+					'merchantCity' => 'Siam Reap',
+				],
+				'optional' => [
+					'currency' => 840,
+					'amount' => 12345678901,
+					'acquiringBank' => 'Dev Bank',
+					'mobileNumber' => '85512345678',
+					'billNumber' => 'INV-2021-07-65822',
+					'storeLabel' => 'BKK-1',
+					'terminalLabel' => '012345',
+					'accountInformation' => '012345678',
+				],
+			],
+			'result' => '12345678901',
+		],
+		[
+			'statement' => 'Amount test 11',
+			'data' => [
+				'required' => [
+					'bakongAccountID' => 'jonhsmith@nbcq',
+					'merchantName' => 'Jonh Smith',
+					'merchantCity' => 'Siam Reap',
+				],
+				'optional' => [
+					'currency' => 840,
+					'amount' => 9999999999.99,
+					'acquiringBank' => 'Dev Bank',
+					'mobileNumber' => '85512345678',
+					'billNumber' => 'INV-2021-07-65822',
+					'storeLabel' => 'BKK-1',
+					'terminalLabel' => '012345',
+					'accountInformation' => '012345678',
+				],
+			],
+			'result' => '9999999999.99',
+		],
+		[
+			'statement' => 'Name in UTF-8',
+			'data' => [
+				'required' => [
+					'bakongAccountID' => 'jonhsmith@nbcq',
+					'merchantName' => 'ចន ស្មីន',
+					'merchantCity' => 'Siam Reap',
+				],
+				'optional' => [
+					'currency' => 116,
+					'amount' => 100,
+					'acquiringBank' => 'Dev Bank',
+					'mobileNumber' => '85512345678',
+					'billNumber' => 'INV-2021-07-65822',
+					'storeLabel' => 'BKK-1',
+					'terminalLabel' => '012345',
+					'accountInformation' => '012345678',
+				],
+			],
+			'result' => '100',
+		],
+	];
+
 	public function test_generate_individual_qr()
 	{
 		foreach ($this->testData as $data) {
@@ -206,6 +461,26 @@ class GenerateIndividualTest extends TestCase
 
 			$khqrData = BakongKHQR::generateIndividual($individualInfo);
 			$this->assertEquals($data['result'], substr($khqrData->data['qr'], 0, -29), $data['statement']);
+		}
+	}
+
+	public function test_generate_individual_amount()
+	{
+		foreach ($this->amountTestData as $data) {
+			$requiredData = $data['data']['required'];
+			$optionalData = $data['data']['optional'];
+
+			$individualInfo = IndividualInfo::withOptionalArray(
+				$requiredData['bakongAccountID'],
+				$requiredData['merchantName'],
+				$requiredData['merchantCity'],
+				$optionalData
+			);
+
+			$khqrData = BakongKHQR::generateIndividual($individualInfo);
+			$decodedKhqrData = BakongKHQR::decode($khqrData->data['qr']);
+			// var_dump($decodedKhqrData);
+			$this->assertEquals($data['result'], $decodedKhqrData->data['transactionAmount'], $data['statement']);
 		}
 	}
 }
