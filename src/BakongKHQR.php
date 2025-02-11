@@ -83,7 +83,7 @@ class BakongKHQR
             return new CRCValidation(true);
         } catch (Exception $error) {
             error_log($error->getMessage());
-            error_log($error->getTraceAsString());
+            // error_log($error->getTraceAsString());
             return new CRCValidation(false);
         }
     }
@@ -321,40 +321,40 @@ class BakongKHQR
         return $decodeValue;
     }
 
-    private static function generateKHQR(MerchantInfo $information, string $type)
+    private static function generateKHQR(MerchantInfo|IndividualInfo $info, string $type)
     {
         if ($type === KHQRData::MERCHANT_TYPE_MERCHANT) {
             $merchantInfo = [
-                'bakongAccountID' => $information->bakongAccountID,
-                'merchantID' => $information->merchantID,
-                'acquiringBank' => $information->acquiringBank,
+                'bakongAccountID' => $info->bakongAccountID,
+                'merchantID' => $info->merchantID,
+                'acquiringBank' => $info->acquiringBank,
                 'isMerchant' => true,
             ];
         } else {
             $merchantInfo = [
-                'bakongAccountID' => $information->bakongAccountID,
-                'accountInformation' => $information->accountInformation,
-                'acquiringBank' => $information->acquiringBank,
+                'bakongAccountID' => $info->bakongAccountID,
+                'accountInformation' => $info->accountInformation,
+                'acquiringBank' => $info->acquiringBank,
                 'isMerchant' => false,
             ];
         }
 
         $additionalDataInformation = [
-            'billNumber' => $information->billNumber,
-            'mobileNumber' => $information->mobileNumber,
-            'storeLabel' => $information->storeLabel,
-            'terminalLabel' => $information->terminalLabel,
-            'purposeOfTransaction' => $information->purposeOfTransaction,
+            'billNumber' => $info->billNumber,
+            'mobileNumber' => $info->mobileNumber,
+            'storeLabel' => $info->storeLabel,
+            'terminalLabel' => $info->terminalLabel,
+            'purposeOfTransaction' => $info->purposeOfTransaction,
         ];
 
         $languageInformation = [
-            'languagePreference' => $information->languagePreference,
-            'merchantNameAlternateLanguage' => $information->merchantNameAlternateLanguage,
-            'merchantCityAlternateLanguage' => $information->merchantCityAlternateLanguage,
+            'languagePreference' => $info->languagePreference,
+            'merchantNameAlternateLanguage' => $info->merchantNameAlternateLanguage,
+            'merchantCityAlternateLanguage' => $info->merchantCityAlternateLanguage,
         ];
 
         try {
-            $amount = $information->amount;
+            $amount = $info->amount;
             $payloadFormatIndicator = new PayloadFormatIndicator(EMV::PAYLOAD_FORMAT_INDICATOR, EMV::DEFAULT_PAYLOAD_FORMAT_INDICATOR);
             $QRType = EMV::DYNAMIC_QR;
 
@@ -365,16 +365,16 @@ class BakongKHQR
             $pointOfInitiationMethod = new PointOfInitiationMethod(EMV::POINT_OF_INITIATION_METHOD, $QRType);
 
             $upi = null;
-            if ($information->upiMerchantAccount !== null && $information->upiMerchantAccount !== '' && $information->upiMerchantAccount !== '0') {
-                $upi = new UnionpayMerchantAccount(EMV::UNIONPAY_MERCHANT_ACCOUNT, $information->upiMerchantAccount);
+            if ($info->upiMerchantAccount !== null && $info->upiMerchantAccount !== '' && $info->upiMerchantAccount !== '0') {
+                $upi = new UnionpayMerchantAccount(EMV::UNIONPAY_MERCHANT_ACCOUNT, $info->upiMerchantAccount);
             }
 
             $KHQRType = ($type === KHQRData::MERCHANT_TYPE_MERCHANT) ? EMV::MERCHANT_ACCOUNT_INFORMATION_MERCHANT : EMV::MERCHANT_ACCOUNT_INFORMATION_INDIVIDUAL;
             $globalUniqueIdentifier = new GlobalUniqueIdentifier($KHQRType, $merchantInfo);
             $merchantCategoryCode = new MerchantCategoryCode(EMV::MERCHANT_CATEGORY_CODE, EMV::DEFAULT_MERCHANT_CATEGORY_CODE);
-            $currency = new TransactionCurrency(EMV::TRANSACTION_CURRENCY, $information->currency);
+            $currency = new TransactionCurrency(EMV::TRANSACTION_CURRENCY, $info->currency);
 
-            if ($information->currency == KHQRData::CURRENCY_USD && $upi) {
+            if ($info->currency == KHQRData::CURRENCY_USD && $upi) {
                 throw new KHQRException(KHQRException::UPI_ACCOUNT_INFORMATION_INVALID_CURRENCY);
             }
 
@@ -388,8 +388,8 @@ class BakongKHQR
             ];
 
             if (isset($amount) && $amount != 0) {
-                $amountInput = $information->amount;
-                if ($information->currency == KHQRData::CURRENCY_KHR) {
+                $amountInput = $info->amount;
+                if ($info->currency == KHQRData::CURRENCY_KHR) {
                     if (floor($amountInput) == $amountInput) {
                         $amountInput = round($amountInput);
                     } else {
@@ -416,10 +416,10 @@ class BakongKHQR
             $countryCode = new CountryCode(EMV::COUNTRY_CODE, EMV::DEFAULT_COUNTRY_CODE);
             $KHQRInstances[] = $countryCode;
 
-            $merchantName = new MerchantName(EMV::MERCHANT_NAME, $information->merchantName);
+            $merchantName = new MerchantName(EMV::MERCHANT_NAME, $info->merchantName);
             $KHQRInstances[] = $merchantName;
 
-            $merchantCity = new MerchantCity(EMV::MERCHANT_CITY, $information->merchantCity);
+            $merchantCity = new MerchantCity(EMV::MERCHANT_CITY, $info->merchantCity);
             $KHQRInstances[] = $merchantCity;
 
             if (array_filter($additionalDataInformation) !== []) {

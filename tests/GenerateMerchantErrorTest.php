@@ -6,10 +6,10 @@ namespace KHQR\Tests;
 
 use KHQR\BakongKHQR;
 use PHPUnit\Framework\TestCase;
-use KHQR\Models\IndividualInfo;
+use KHQR\Models\MerchantInfo;
 use KHQR\Exceptions\KHQRException;
 
-class GenerateIndividualErrorTest extends TestCase
+class GenerateMerchantErrorTest extends TestCase
 {
 	private $testData = [
 		[
@@ -18,7 +18,9 @@ class GenerateIndividualErrorTest extends TestCase
 				'required' => [
 					'bakongAccountID' => 'johnsmith00123456789012345678912345@devb',
 					'merchantName' => 'Jonh Smith',
-					'merchantCity' => 'PHNOM PENH',
+					'merchantCity' => 'Phnom Penh',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 840,
@@ -37,6 +39,8 @@ class GenerateIndividualErrorTest extends TestCase
 					'bakongAccountID' => 'jonhsmithnbcq',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Phnom Penh',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 116,
@@ -55,6 +59,8 @@ class GenerateIndividualErrorTest extends TestCase
 					'bakongAccountID' => '',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Phnom Penh',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'amount' => 50000,
@@ -69,9 +75,11 @@ class GenerateIndividualErrorTest extends TestCase
 			'statement' => 'Merchant name length error',
 			'data' => [
 				'required' => [
-					'bakongAccountID' => 'jonhsmith@nbcq',
-					'merchantName' => '012345678901234567890123456789',
-					'merchantCity' => 'Siam Reap',
+					'bakongAccountID' => 'jonhsmith@devb',
+					'merchantName' => 'Jonh Smithhhhhhhhhhhhhhhhhhhhhhhh',
+					'merchantCity' => 'Phnom Penh',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 116,
@@ -90,9 +98,11 @@ class GenerateIndividualErrorTest extends TestCase
 			'statement' => 'Transaction amount invalid error',
 			'data' => [
 				'required' => [
-					'bakongAccountID' => 'jonhsmith@nbcq',
+					'bakongAccountID' => 'jonhsmith@devb',
 					'merchantName' => 'Jonh Smith',
-					'merchantCity' => 'Siam Reap',
+					'merchantCity' => 'Phnom Penh',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 116,
@@ -113,9 +123,11 @@ class GenerateIndividualErrorTest extends TestCase
 			'statement' => 'Merchant City length invalid',
 			'data' => [
 				'required' => [
-					'bakongAccountID' => 'jonhsmith@nbcq',
+					'bakongAccountID' => 'jonhsmith@devb',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Siam Reappppppppppppppppppppppppppp',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 116,
@@ -135,9 +147,11 @@ class GenerateIndividualErrorTest extends TestCase
 			'statement' => 'Billnumber invalid length',
 			'data' => [
 				'required' => [
-					'bakongAccountID' => 'jonhsmith@nbcq',
+					'bakongAccountID' => 'jonhsmith@devb',
 					'merchantName' => 'Jonh Smith',
-					'merchantCity' => 'Siam Reap',
+					'merchantCity' => 'Phnom Penh',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 116,
@@ -157,9 +171,11 @@ class GenerateIndividualErrorTest extends TestCase
 			'statement' => 'Mobile number invalid length',
 			'data' => [
 				'required' => [
-					'bakongAccountID' => 'jonhsmith@nbcq',
+					'bakongAccountID' => 'jonhsmith@devb',
 					'merchantName' => 'Jonh Smith',
-					'merchantCity' => 'Siam Reap',
+					'merchantCity' => 'Phnom Penh',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 116,
@@ -179,9 +195,11 @@ class GenerateIndividualErrorTest extends TestCase
 			'statement' => 'Storelabel invalid length',
 			'data' => [
 				'required' => [
-					'bakongAccountID' => 'jonhsmith@nbcq',
+					'bakongAccountID' => 'jonhsmith@devb',
 					'merchantName' => 'Jonh Smith',
-					'merchantCity' => 'Siam Reap',
+					'merchantCity' => 'Phnom Penh',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 116,
@@ -201,9 +219,11 @@ class GenerateIndividualErrorTest extends TestCase
 			'statement' => 'Terminal invalid length',
 			'data' => [
 				'required' => [
-					'bakongAccountID' => 'jonhsmith@nbcq',
+					'bakongAccountID' => 'jonhsmith@devb',
 					'merchantName' => 'Jonh Smith',
-					'merchantCity' => 'Siam Reap',
+					'merchantCity' => 'Phnom Penh',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 116,
@@ -220,57 +240,14 @@ class GenerateIndividualErrorTest extends TestCase
 			],
 		],
 		[
-			'statement' => 'Acquiring bank length invalid',
-			'data' => [
-				'required' => [
-					'bakongAccountID' => 'jonhsmith@nbcq',
-					'merchantName' => 'Jonh Smith',
-					'merchantCity' => 'Siam Reap',
-				],
-				'optional' => [
-					'currency' => 116,
-					'amount' => 50000,
-					'mobileNumber' => '85512345678',
-					'acquiringBank' => 'Advanced Bank of Asia Limited Cambodia',
-					'billNumber' => '1234',
-					'storeLabel' => 'BKK-1',
-					'terminalLabel' => '012345',
-				],
-			],
-			'result' => [
-				'error' => KHQRException::ACQUIRING_BANK_LENGTH_INVALID,
-			],
-		],
-		[
-			'statement' => 'Account Information invalid length',
-			'data' => [
-				'required' => [
-					'bakongAccountID' => 'jonhsmith@nbcq',
-					'merchantName' => 'Jonh Smith',
-					'merchantCity' => 'Siam Reap',
-				],
-				'optional' => [
-					'currency' => 116,
-					'amount' => 50000,
-					'accountInformation' => '012345678901234567890123456789897',
-					'mobileNumber' => '85512345678',
-					'billNumber' => '1234',
-					'storeLabel' => 'BKK-1',
-					'terminalLabel' => '012345',
-					'acquiringBank' => 'Dev Bank',
-				],
-			],
-			'result' => [
-				'error' => KHQRException::ACCOUNT_INFORMATION_LENGTH_INVALID,
-			],
-		],
-		[
 			'statement' => 'Amount 1 invalid length',
 			'data' => [
 				'required' => [
 					'bakongAccountID' => 'jonhsmith@nbcq',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Siam Reap',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 840,
@@ -293,6 +270,8 @@ class GenerateIndividualErrorTest extends TestCase
 					'bakongAccountID' => 'jonhsmith@nbcq',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Siam Reap',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 840,
@@ -315,6 +294,8 @@ class GenerateIndividualErrorTest extends TestCase
 					'bakongAccountID' => 'jonhsmith@nbcq',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Siam Reap',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 840,
@@ -337,6 +318,8 @@ class GenerateIndividualErrorTest extends TestCase
 					'bakongAccountID' => 'jonhsmith@nbcq',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Siam Reap',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 840,
@@ -359,6 +342,8 @@ class GenerateIndividualErrorTest extends TestCase
 					'bakongAccountID' => 'jonhsmith@nbcq',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Siam Reap',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 840,
@@ -381,32 +366,12 @@ class GenerateIndividualErrorTest extends TestCase
 					'bakongAccountID' => 'jonhsmith@nbcq',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Siam Reap',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 840,
 					'amount' => 999999999999.9999,
-					'mobileNumber' => '85512345678',
-					'billNumber' => '1234',
-					'storeLabel' => 'BKK-1',
-					'terminalLabel' => '012345',
-					'acquiringBank' => 'Dev Bank',
-				],
-			],
-			'result' => [
-				'error' => KHQRException::TRANSACTION_AMOUNT_INVALID,
-			],
-		],
-		[
-			'statement' => 'Amount 6 invalid length',
-			'data' => [
-				'required' => [
-					'bakongAccountID' => 'jonhsmith@nbcq',
-					'merchantName' => 'Jonh Smith',
-					'merchantCity' => 'Siam Reap',
-				],
-				'optional' => [
-					'currency' => 840,
-					'amount' => 12345678901234,
 					'mobileNumber' => '85512345678',
 					'billNumber' => '1234',
 					'storeLabel' => 'BKK-1',
@@ -425,6 +390,8 @@ class GenerateIndividualErrorTest extends TestCase
 					'bakongAccountID' => 'jonhsmith@nbcq',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Siam Reap',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 116,
@@ -447,6 +414,8 @@ class GenerateIndividualErrorTest extends TestCase
 					'bakongAccountID' => 'jonhsmith@nbcq',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Siam Reap',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 116,
@@ -469,6 +438,8 @@ class GenerateIndividualErrorTest extends TestCase
 					'bakongAccountID' => 'jonhsmith@nbcq',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Siam Reap',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 116,
@@ -491,6 +462,8 @@ class GenerateIndividualErrorTest extends TestCase
 					'bakongAccountID' => 'jonhsmith@nbcq',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Siam Reap',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 116,
@@ -513,6 +486,8 @@ class GenerateIndividualErrorTest extends TestCase
 					'bakongAccountID' => 'jonhsmith@nbcq',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Siam Reap',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 116,
@@ -535,6 +510,8 @@ class GenerateIndividualErrorTest extends TestCase
 					'bakongAccountID' => 'jonhsmith@nbcq',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Siam Reap',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 116,
@@ -557,6 +534,8 @@ class GenerateIndividualErrorTest extends TestCase
 					'bakongAccountID' => 'jonhsmith@nbcq',
 					'merchantName' => 'Jonh Smith',
 					'merchantCity' => 'Siam Reap',
+					'merchantId' => '123456',
+					'acquiringBank' => 'Dev Bank',
 				],
 				'optional' => [
 					'currency' => 116,
@@ -572,95 +551,25 @@ class GenerateIndividualErrorTest extends TestCase
 				'error' => KHQRException::TRANSACTION_AMOUNT_INVALID,
 			],
 		],
-		[
-			'statement' => 'Invalid UPI',
-			'data' => [
-				'required' => [
-					'bakongAccountID' => 'jonhsmith@nbcq',
-					'merchantName' => 'Jonh Smith',
-					'merchantCity' => 'Siam Reap',
-				],
-				'optional' => [
-					'currency' => 116,
-					'upiMerchantAccount' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a ultrices nunc. Quisque in sem fringilla, ullamcorper est vel',
-				],
-			],
-			'result' => [
-				'error' => KHQRException::UPI_ACCOUNT_INFORMATION_LENGTH_INVALID,
-			],
-		],
-		[
-			'statement' => 'Invalid alternative language',
-			'data' => [
-				'required' => [
-					'bakongAccountID' => 'jonhsmith@nbcq',
-					'merchantName' => 'Jonh Smith',
-					'merchantCity' => 'Siam Reap',
-				],
-				'optional' => [
-					'currency' => 116,
-					'languagePreference' => 'Khmer',
-					'merchantNameAlternateLanguage' => 'ចន ស្មីន'
-				],
-			],
-			'result' => [
-				'error' => KHQRException::LANGUAGE_PREFERENCE_LENGTH_INVALID,
-			],
-		],
-		[
-			'statement' => 'Invalid alternative merchant name',
-			'data' => [
-				'required' => [
-					'bakongAccountID' => 'jonhsmith@nbcq',
-					'merchantName' => 'Jonh Smith',
-					'merchantCity' => 'Siam Reap',
-				],
-				'optional' => [
-					'currency' => 116,
-					'languagePreference' => 'km',
-					'merchantNameAlternateLanguage' => 'Lorem ipsum dolor sit amet',
-				],
-			],
-			'result' => [
-				'error' => KHQRException::MERCHANT_NAME_ALTERNATE_LANGUAGE_LENGTH_INVALID,
-			],
-		],
-		[
-			'statement' => 'Invalid city name alter',
-			'data' => [
-				'required' => [
-					'bakongAccountID' => 'jonhsmith@nbcq',
-					'merchantName' => 'Jonh Smith',
-					'merchantCity' => 'Siam Reap',
-				],
-				'optional' => [
-					'currency' => 116,
-					'languagePreference' => 'km',
-					'merchantNameAlternateLanguage' => 'Lorem ipsum',
-					'merchantCityAlternateLanguage' => 'Lorem ipsum dolor',
-				],
-			],
-			'result' => [
-				'error' => KHQRException::MERCHANT_CITY_ALTERNATE_LANGUAGE_LENGTH_INVALID,
-			],
-		],
 	];
 
-	public function test_generate_individual_error()
+	public function test_generate_merchant_error()
 	{
 		foreach ($this->testData as $data) {
 			$requiredData = $data['data']['required'];
 			$optionalData = $data['data']['optional'];
 
 			try {
-				$individualInfo = IndividualInfo::withOptionalArray(
+				$merchantInfo = MerchantInfo::withOptionalArray(
 					$requiredData['bakongAccountID'],
 					$requiredData['merchantName'],
 					$requiredData['merchantCity'],
+					$requiredData['merchantId'],
+					$requiredData['acquiringBank'],
 					$optionalData
 				);
 
-				BakongKHQR::generateIndividual($individualInfo);
+				BakongKHQR::generateMerchant($merchantInfo);
 			} catch (KHQRException $e) {
 				$expectedErrorCode = KHQRException::getError($data['result']['error'])[0];
 				$this->assertEquals($expectedErrorCode, $e->getCode(), $data['statement']);

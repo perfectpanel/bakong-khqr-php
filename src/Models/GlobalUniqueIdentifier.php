@@ -13,7 +13,7 @@ class GlobalUniqueIdentifier extends TagLengthString
 
     public ?AcquiringBank $acquiringBank = null;
 
-    public ?AccountInformation $accountInformation = null;
+    public ?string $accountInformation = null;
 
     public BakongAccountID $bakongAccountID;
 
