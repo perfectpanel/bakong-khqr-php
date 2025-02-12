@@ -82,7 +82,7 @@ class BakongKHQR
 
             return new CRCValidation(true);
         } catch (Exception $error) {
-            error_log($error->getMessage());
+            // error_log($error->getMessage());
             // error_log($error->getTraceAsString());
             return new CRCValidation(false);
         }
@@ -172,7 +172,7 @@ class BakongKHQR
 
         $requiredFieldNotExist = count($requiredField) != 0;
         if ($requiredFieldNotExist) {
-            $requiredTag = $requiredField[0];
+            $requiredTag = current($requiredField);
             $missingInstance = Utils::findTag(KHQRData::KHQRTag, $requiredTag)['instance'];
             new $missingInstance($requiredTag, null);
         }
@@ -201,17 +201,22 @@ class BakongKHQR
                     $subtagValue = $cutsubstring['value'];
                     $slicedSubtag = $cutsubstring['slicedString'];
 
-                    $nameSubtag = array_filter($subTagCompare, fn($el): bool => $el['tag'] == $tag);
-                    $nameSubtag = array_filter($nameSubtag, fn($el): bool => $el['subTag'] == $tempSubtag)[0];
+                    $nameSubtag = current(array_filter($subTagCompare, fn($el): bool => $el['tag'] == $tag && $el['subTag'] == $tempSubtag));
 
-                    if ($nameSubtag != null) {
+                    if ($nameSubtag) {
                         $nameSubtag = $nameSubtag['name'];
                         $inputdata[$nameSubtag] = $subtagValue;
                         $inputValue = $inputdata;
                     }
+
                     $value = $slicedSubtag;
                 }
-                $decodeValue = array_merge($decodeValue, $inputValue);
+
+                if (!is_null($inputValue)) {
+                    $decodeValue = array_merge($decodeValue, $inputValue);
+                }
+
+                new $khqr['instance']($tag, $inputValue);
             } else {
                 $instance = new $khqr['instance']($tag, $inputValue);
                 $decodeValue[$khqr['type']] = $instance->value;
@@ -294,7 +299,7 @@ class BakongKHQR
                     $subtagValue = $cutsubstring['value'];
                     $slicedSubtag = $cutsubstring['slicedString'];
 
-                    $nameSubtag = current(array_filter($subTagCompare, fn($el): bool => $el['tag'] === $tag && $el['subTag'] == $tempSubtag));
+                    $nameSubtag = current(array_filter($subTagCompare, fn($el): bool => $el['tag'] == $tag && $el['subTag'] == $tempSubtag));
 
                     if ($nameSubtag) {
                         $nameSubtag = $nameSubtag['name'];

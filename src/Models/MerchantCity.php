@@ -9,7 +9,7 @@ use KHQR\Helpers\EMV;
 
 class MerchantCity extends TagLengthString
 {
-    public function __construct(string $tag, string $value)
+    public function __construct(string $tag, ?string $value)
     {
         if ($value === '' || $value == null) {
             throw new KHQRException(KHQRException::MERCHANT_CITY_TAG_REQUIRED);

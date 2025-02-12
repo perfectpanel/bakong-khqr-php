@@ -479,7 +479,6 @@ class GenerateIndividualTest extends TestCase
 
 			$khqrData = BakongKHQR::generateIndividual($individualInfo);
 			$decodedKhqrData = BakongKHQR::decode($khqrData->data['qr']);
-			// var_dump($decodedKhqrData);
 			$this->assertEquals($data['result'], $decodedKhqrData->data['transactionAmount'], $data['statement']);
 		}
 	}

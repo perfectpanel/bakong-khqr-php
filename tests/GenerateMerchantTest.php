@@ -416,7 +416,6 @@ class GenerateMerchantTest extends TestCase
 
 			$khqrData = BakongKHQR::generateMerchant($merchantInfo);
 			$decodedKhqrData = BakongKHQR::decode($khqrData->data['qr']);
-			// var_dump($decodedKhqrData);
 			$this->assertEquals($data['result'], $decodedKhqrData->data['transactionAmount'], $data['statement']);
 		}
 	}

@@ -29,7 +29,7 @@ class GlobalUniqueIdentifier extends TagLengthString
         $bakongAccountID = $valueObject['bakongAccountID'];
         $acquiringBank = isset($valueObject['acquiringBank']) ? $valueObject['acquiringBank'] : null;
 
-        $isMerchant = $valueObject['isMerchant'];
+        $isMerchant = isset($valueObject['isMerchant']) ? $valueObject['isMerchant'] : null;
         $accountInformation = isset($valueObject['accountInformation']) ? $valueObject['accountInformation'] : null;
 
         // Creating 3 instances
