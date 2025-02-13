@@ -52,18 +52,18 @@ class MerchantInfo
         string $merchantCity,
         string $merchantID,
         string $acquiringBank,
-        string $accountInformation = null,
-        int $currency = null,
+        ?string $accountInformation = null,
+        ?int $currency = null,
         float $amount = 0.0,
-        string $billNumber = null,
-        string $storeLabel = null,
-        string $terminalLabel = null,
-        string $mobileNumber = null,
-        string $purposeOfTransaction = null,
-        string $languagePreference = null,
-        string $merchantNameAlternateLanguage = null,
-        string $merchantCityAlternateLanguage = null,
-        string $upiMerchantAccount = null
+        ?string $billNumber = null,
+        ?string $storeLabel = null,
+        ?string $terminalLabel = null,
+        ?string $mobileNumber = null,
+        ?string $purposeOfTransaction = null,
+        ?string $languagePreference = null,
+        ?string $merchantNameAlternateLanguage = null,
+        ?string $merchantCityAlternateLanguage = null,
+        ?string $upiMerchantAccount = null
     ) {
 
         if (Utils::isBlank($bakongAccountID)) {

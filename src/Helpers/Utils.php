@@ -39,7 +39,7 @@ abstract class Utils
         $sliceIndex = 2;
 
         $tag = substr($string, 0, $sliceIndex);
-        $length = (int)(substr($string, $sliceIndex, $sliceIndex));
+        $length = (int) (substr($string, $sliceIndex, $sliceIndex));
         $value = substr($string, $sliceIndex * 2, $length);
         $slicedString = substr($string, $sliceIndex * 2 + $length);
 
@@ -77,7 +77,7 @@ abstract class Utils
         if (isset($bearerToken)) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, [
                 'Content-Type: application/json',
-                'Authorization: Bearer ' . $bearerToken
+                'Authorization: Bearer '.$bearerToken,
             ]);
         } else {
             curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -94,9 +94,9 @@ abstract class Utils
 
         // Check for errors
         if ($response === false || $httpCode != 200) {
-            if (isset($error) && !self::isBlank($error)) {
+            if (isset($error) && ! self::isBlank($error)) {
                 throw new KHQRException($error, $httpCode);
-            } else if (is_string($response)) {
+            } elseif (is_string($response)) {
                 $json = json_decode($response, true);
                 throw new KHQRException($json['responseMessage'], $json['errorCode']);
             }

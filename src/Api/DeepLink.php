@@ -13,7 +13,7 @@ class DeepLink
     {
         try {
             $url = parse_url($link);
-            if (!isset($url['path']) || $url['path'] !== '/v1/generate_deeplink_by_qr') {
+            if (! isset($url['path']) || $url['path'] !== '/v1/generate_deeplink_by_qr') {
                 return false;
             }
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace KHQR\Models;
 
-use InvalidArgumentException;
 use KHQR\Exceptions\KHQRException;
 use KHQR\Helpers\KHQRData;
 use KHQR\Helpers\Utils;
@@ -45,24 +44,23 @@ class IndividualInfo
 
     public ?string $upiMerchantAccount;
 
-
     public function __construct(
         string $bakongAccountID,
         string $merchantName,
         string $merchantCity,
-        string $acquiringBank = null,
-        string $accountInformation = null,
-        int $currency = null,
+        ?string $acquiringBank = null,
+        ?string $accountInformation = null,
+        ?int $currency = null,
         float $amount = 0.0,
-        string $billNumber = null,
-        string $storeLabel = null,
-        string $terminalLabel = null,
-        string $mobileNumber = null,
-        string $purposeOfTransaction = null,
-        string $languagePreference = null,
-        string $merchantNameAlternateLanguage = null,
-        string $merchantCityAlternateLanguage = null,
-        string $upiMerchantAccount = null
+        ?string $billNumber = null,
+        ?string $storeLabel = null,
+        ?string $terminalLabel = null,
+        ?string $mobileNumber = null,
+        ?string $purposeOfTransaction = null,
+        ?string $languagePreference = null,
+        ?string $merchantNameAlternateLanguage = null,
+        ?string $merchantCityAlternateLanguage = null,
+        ?string $upiMerchantAccount = null
     ) {
         if (Utils::isBlank($bakongAccountID)) {
             throw new KHQRException(KHQRException::BAKONG_ACCOUNT_ID_REQUIRED);

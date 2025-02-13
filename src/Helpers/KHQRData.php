@@ -19,88 +19,88 @@ final class KHQRData
             'tag' => '00',
             'type' => 'payloadFormatIndicator',
             'required' => true,
-            'instance' => 'KHQR\Models\PayloadFormatIndicator'
+            'instance' => 'KHQR\Models\PayloadFormatIndicator',
         ],
         [
             'tag' => '01',
             'type' => 'pointofInitiationMethod',
             'required' => false,
-            'instance' => 'KHQR\Models\PointOfInitiationMethod'
+            'instance' => 'KHQR\Models\PointOfInitiationMethod',
         ],
         [
             'tag' => '15',
             'type' => 'unionPayMerchant',
             'required' => false,
-            'instance' => 'KHQR\Models\UnionpayMerchantAccount'
+            'instance' => 'KHQR\Models\UnionpayMerchantAccount',
         ],
         [
             'sub' => true,
             'tag' => '29',
             'type' => 'globalUnqiueIdentifier',
             'required' => true,
-            'instance' => 'KHQR\Models\GlobalUniqueIdentifier'
+            'instance' => 'KHQR\Models\GlobalUniqueIdentifier',
         ],
         [
             'tag' => '52',
             'type' => 'merchantCategoryCode',
             'required' => true,
-            'instance' => 'KHQR\Models\MerchantCategoryCode'
+            'instance' => 'KHQR\Models\MerchantCategoryCode',
         ],
         [
             'tag' => '53',
             'type' => 'transactionCurrency',
             'required' => true,
-            'instance' => 'KHQR\Models\TransactionCurrency'
+            'instance' => 'KHQR\Models\TransactionCurrency',
         ],
         [
             'tag' => '54',
             'type' => 'transactionAmount',
             'required' => false,
-            'instance' => 'KHQR\Models\TransactionAmount'
+            'instance' => 'KHQR\Models\TransactionAmount',
         ],
         [
             'tag' => '58',
             'type' => 'countryCode',
             'required' => true,
-            'instance' => 'KHQR\Models\CountryCode'
+            'instance' => 'KHQR\Models\CountryCode',
         ],
         [
             'tag' => '59',
             'type' => 'merchantName',
             'required' => true,
-            'instance' => 'KHQR\Models\MerchantName'
+            'instance' => 'KHQR\Models\MerchantName',
         ],
         [
             'tag' => '60',
             'type' => 'merchantCity',
             'required' => true,
-            'instance' => 'KHQR\Models\MerchantCity'
+            'instance' => 'KHQR\Models\MerchantCity',
         ],
         [
             'sub' => true,
             'tag' => '62',
             'type' => 'additionalData',
             'required' => false,
-            'instance' => 'KHQR\Models\AdditionalData'
+            'instance' => 'KHQR\Models\AdditionalData',
         ],
         [
             'sub' => true,
             'tag' => '64',
             'type' => 'merchantInformationLanguageTemplate',
             'required' => false,
-            'instance' => 'KHQR\Models\MerchantInformationLanguageTemplate'
+            'instance' => 'KHQR\Models\MerchantInformationLanguageTemplate',
         ],
         [
             'tag' => '99',
             'type' => 'timestamp',
             'required' => false,
-            'instance' => 'KHQR\Models\TimeStamp'
+            'instance' => 'KHQR\Models\TimeStamp',
         ],
         [
             'tag' => '63',
             'type' => 'crc',
             'required' => true,
-            'instance' => 'KHQR\Models\CRC'
+            'instance' => 'KHQR\Models\CRC',
         ],
     ];
 
