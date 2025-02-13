@@ -148,10 +148,10 @@ class KHQRException extends Exception
     /**
      * Constructor to initialize exception with predefined error key.
      */
-    public function __construct(string $key)
+    public function __construct(string $key, ?int $code = 0)
     {
         if (! isset(self::ERRORS[$key])) {
-            parent::__construct('Unknown error', 0);
+            parent::__construct($key, $code);
         } else {
             [$code, $message] = self::ERRORS[$key];
             parent::__construct($message, $code);

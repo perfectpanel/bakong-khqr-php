@@ -7,6 +7,8 @@ namespace KHQR;
 use Exception;
 use KHQR\Api\Account;
 use KHQR\Api\DeepLink;
+use KHQR\Api\Token;
+use KHQR\Api\Transaction;
 use KHQR\Exceptions\KHQRException;
 use KHQR\Helpers\EMV;
 use KHQR\Helpers\KHQRData;
@@ -33,6 +35,57 @@ use KHQR\Models\UnionpayMerchantAccount;
 
 class BakongKHQR
 {
+    private ?string $token;
+
+    public function __construct(string $token)
+    {
+        if (Utils::isBlank($token)) {
+            throw new \InvalidArgumentException("Token cannot be blank");
+        }
+
+        $this->token = $token;
+    }
+
+    public function checkTransactionByMD5(string $md5, bool $isTest = false)
+    {
+        return Transaction::checkTransactionByMD5($this->token, $md5, $isTest);
+    }
+
+    public function checkTransactionByMD5List(array $md5Array, bool $isTest = false)
+    {
+        return Transaction::checkTransactionByMD5List($this->token, $md5Array, $isTest);
+    }
+
+    public function checkTransactionByFullHash(string $fullHash, bool $isTest = false)
+    {
+        return Transaction::checkTransactionByFullHash($this->token, $fullHash, $isTest);
+    }
+
+    public function checkTransactionByFullHashList(array $fullHashArrray, bool $isTest = false)
+    {
+        return Transaction::checkTransactionByFullHashList($this->token, $fullHashArrray, $isTest);
+    }
+
+    public function checkTransactionByShortHash(string $shortHash, float $amount, string $currency, bool $isTest = false)
+    {
+        return Transaction::checkTransactionByShortHash($this->token, $shortHash, $amount, $currency, $isTest);
+    }
+
+    public function checkTransactionByInstructionReference(string $ref, bool $isTest = false)
+    {
+        return Transaction::checkTransactionByInstructionReference($this->token, $ref, $isTest);
+    }
+
+    public function checkTransactionByExternalReference(string $ref, bool $isTest = false)
+    {
+        return Transaction::checkTransactionByExternalReference($this->token, $ref, $isTest);
+    }
+
+    public static function renewToken($email, bool $isTest = false)
+    {
+        return Token::renewToken($email, $isTest);
+    }
+
     public static function generateIndividual(IndividualInfo $individualInfo): \KHQR\Models\KHQRResponse
     {
         $khqr = self::generateKHQR($individualInfo, KHQRData::MERCHANT_TYPE_INDIVIDUAL);

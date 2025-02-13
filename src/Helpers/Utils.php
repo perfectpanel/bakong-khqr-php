@@ -89,11 +89,17 @@ abstract class Utils
         // Execute request
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
         curl_close($ch);
 
         // Check for errors
         if ($response === false || $httpCode != 200) {
-            throw new KHQRException(KHQRException::CONNECTION_TIMEOUT);
+            if (isset($error) && !self::isBlank($error)) {
+                throw new KHQRException($error, $httpCode);
+            } else if (is_string($response)) {
+                $json = json_decode($response, true);
+                throw new KHQRException($json['responseMessage'], $json['errorCode']);
+            }
         }
 
         return json_decode($response, true);

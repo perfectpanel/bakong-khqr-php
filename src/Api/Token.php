@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace KHQR\Api;
 
-use Constants;
+use KHQR\Config\Constants;
 use KHQR\Helpers\Utils;
 
 class Token
 {
-	public static function renewToken(string $email)
+	public static function renewToken(string $email, bool $isTest = false)
 	{
 		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 			throw new \InvalidArgumentException("Invalid email address");
 		}
 
-		return Utils::post_data_to_url(Constants::BAKONG_API_TOKEN_RENEW_URL, ['email' => $email]);
+		$url = $isTest ? Constants::SIT_RENEW_TOKEN_URL : Constants::RENEW_TOKEN_URL;
+		return Utils::post_data_to_url($url, ['email' => $email]);
 	}
 }

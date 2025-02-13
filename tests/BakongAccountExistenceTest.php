@@ -82,9 +82,12 @@ class BakongAccountExistenceTest extends TestCase
             'data' => [
                 'url' => 'https://sit-sit-api-bakong.nbc.gov.kh/v1/check_account_exist',
                 'account' => 'dave@devb',
-            ],
-            'errorCode' => KHQRException::ERRORS[KHQRException::CONNECTION_TIMEOUT][0],
+            ]
         ];
-        self::test_bakong_account($testData);
+        try {
+            BakongKHQR::checkBakongAccount($testData['data']['url'], $testData['data']['account']);
+        } catch (KHQRException $e) {
+            $this->assertStringContainsString('sit-sit-api-bakong.nbc.gov.kh', $e->getMessage());
+        }
     }
 }
