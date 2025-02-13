@@ -6,7 +6,7 @@ namespace KHQR\Models;
 
 class KHQRResponse
 {
-    public object $status;
+    public array $status;
 
     public $data;
 

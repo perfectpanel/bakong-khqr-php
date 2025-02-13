@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace KHQR\Tests;
+
 use KHQR\BakongKHQR;
 use KHQR\Helpers\Utils;
 

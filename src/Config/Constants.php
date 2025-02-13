@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace KHQR\Config;
+
 class Constants
 {
 	const BAKONG_API_BASE_URL = "https://api-bakong.nbc.gov.kh"; // For production
