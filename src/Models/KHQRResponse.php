@@ -15,7 +15,7 @@ class KHQRResponse
         $this->data = $data;
 
         $isError = $errorObject === null;
-        $this->status = (object) [
+        $this->status = [
             'code' => $isError ? 0 : 1,
             'errorCode' => $isError ? null : $errorObject['code'],
             'message' => $isError ? null : $errorObject['message'],

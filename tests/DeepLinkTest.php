@@ -15,7 +15,7 @@ class DeepLinkTest extends TestCase
 	{
 		try {
 			$response = BakongKHQR::generateDeepLink($data['data'][0], $data['data'][1], $data['data'][2] ?? null);
-			$this->assertEquals($data['errorCode'], $response->status->errorCode, $data['statement']);
+			$this->assertEquals($data['errorCode'], $response->status['errorCode'], $data['statement']);
 		} catch (KHQRException $e) {
 			$this->assertEquals($data['errorCode'], $e->getCode(), $data['statement']);
 		}

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace KHQR;
 
 use Exception;
+use KHQR\Api\Account;
 use KHQR\Api\DeepLink;
 use KHQR\Exceptions\KHQRException;
 use KHQR\Helpers\EMV;
@@ -108,7 +109,7 @@ class BakongKHQR
             throw new KHQRException(KHQRException::INVALID_DEEP_LINK_SOURCE_INFO);
         }
         // Call API to generate deep link
-        $data = DeepLink::callDeepLinkAPI($url, ['qr' => $qr]);
+        $data = DeepLink::generateDeeplink($url, ['qr' => $qr]);
         $deepLinkData = new KHQRDeepLinkData($data['data']['shortLink']);
 
         return new KHQRResponse($deepLinkData, null);
@@ -116,7 +117,7 @@ class BakongKHQR
 
     public static function checkBakongAccount(string $url, string $bakongID): KHQRResponse
     {
-        $accountExistResponse = Utils::checkBakongAccountExistence($url, $bakongID);
+        $accountExistResponse = Account::checkBakongAccountExistence($url, $bakongID);
 
         return new KHQRResponse($accountExistResponse, null);
     }

@@ -66,30 +66,25 @@ abstract class Utils
         return self::getHexString($finalCheckSum);
     }
 
-    public static function checkBakongAccountExistence(string $url, string $accountID)
+    public static function post_data_to_url(string $url, array $payload, ?string $bearerToken = null)
     {
-        // Check account ID length
-        if (strlen($accountID) > EMV::INVALID_LENGTH_BAKONG_ACCOUNT) {
-            throw new KHQRException(KHQRException::BAKONG_ACCOUNT_ID_LENGTH_INVALID);
-        }
-
-        if (substr_count($accountID, '@') != 1) {
-            throw new KHQRException(KHQRException::BAKONG_ACCOUNT_ID_INVALID);
-        }
-
-        // Prepare request payload
-        $postData = json_encode(['accountId' => $accountID]);
-
+        $postData = json_encode($payload);
         // Set up cURL
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-        ]);
+        if (isset($bearerToken)) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $bearerToken
+            ]);
+        } else {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+            ]);
+        }
         curl_setopt($ch, CURLOPT_TIMEOUT, 45);
-        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         // Execute request
         $response = curl_exec($ch);
@@ -101,25 +96,7 @@ abstract class Utils
             throw new KHQRException(KHQRException::CONNECTION_TIMEOUT);
         }
 
-        // Decode response
-        $respData = json_decode($response, true);
-
-        // Handle response codes
-        if (isset($respData['errorCode'])) {
-            $error = $respData['errorCode'];
-            if ($error == 11) {
-                return ['bakongAccountExists' => false];
-            }
-            if ($error == 12) {
-                throw new KHQRException(KHQRException::BAKONG_ACCOUNT_ID_INVALID);
-            }
-        }
-
-        if (isset($respData['responseCode']) && $respData['responseCode'] == 0) {
-            return ['bakongAccountExists' => true];
-        }
-
-        return ['bakongAccountExists' => false];
+        return json_decode($response, true);
     }
 
     private static array $crcTable = [
