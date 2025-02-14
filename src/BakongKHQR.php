@@ -9,6 +9,7 @@ use KHQR\Api\Account;
 use KHQR\Api\DeepLink;
 use KHQR\Api\Token;
 use KHQR\Api\Transaction;
+use KHQR\Config\Constants;
 use KHQR\Exceptions\KHQRException;
 use KHQR\Helpers\EMV;
 use KHQR\Helpers\KHQRData;
@@ -142,7 +143,7 @@ class BakongKHQR
         }
     }
 
-    public static function generateDeepLink(string $url, string $qr, ?SourceInfo $sourceInfo): KHQRResponse
+    public static function generateDeepLinkWithUrl(string $url, string $qr, ?SourceInfo $sourceInfo): KHQRResponse
     {
         // Check if URL is valid
         if (! DeepLink::isValidLink($url)) {
@@ -162,17 +163,31 @@ class BakongKHQR
             throw new KHQRException(KHQRException::INVALID_DEEP_LINK_SOURCE_INFO);
         }
         // Call API to generate deep link
-        $data = DeepLink::generateDeeplink($url, ['qr' => $qr]);
+        $data = DeepLink::callDeepLinkAPI($url, ['qr' => $qr, 'sourceInfo' => (array) $sourceInfo]);
         $deepLinkData = new KHQRDeepLinkData($data['data']['shortLink']);
 
         return new KHQRResponse($deepLinkData, null);
     }
 
-    public static function checkBakongAccount(string $url, string $bakongID): KHQRResponse
+    public static function generateDeepLink(string $qr, ?SourceInfo $sourceInfo, bool $isTest = false): KHQRResponse
+    {
+        $url = $isTest ? Constants::SIT_DEEPLINK_URL : Constants::DEEPLINK_URL;
+
+        return self::generateDeepLinkWithUrl($url, $qr, $sourceInfo);
+    }
+
+    public static function checkBakongAccountWithUrl(string $url, string $bakongID): KHQRResponse
     {
         $accountExistResponse = Account::checkBakongAccountExistence($url, $bakongID);
 
         return new KHQRResponse($accountExistResponse, null);
+    }
+
+    public static function checkBakongAccount(string $bakongID, bool $isTest = false)
+    {
+        $url = $isTest ? Constants::SIT_ACCOUNT_URL : Constants::ACCOUNT_URL;
+
+        return self::checkBakongAccountWithUrl($url, $bakongID);
     }
 
     /**

@@ -6,7 +6,7 @@ namespace KHQR\Models;
 
 class KHQRDeepLinkData
 {
-    private string $shortLink;
+    public string $shortLink;
 
     public function __construct(string $shortLink)
     {

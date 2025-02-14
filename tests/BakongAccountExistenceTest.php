@@ -13,7 +13,7 @@ class BakongAccountExistenceTest extends TestCase
     private function test_bakong_account(array $data)
     {
         try {
-            $checkAcc = BakongKHQR::checkBakongAccount($data['data']['url'], $data['data']['account']);
+            $checkAcc = BakongKHQR::checkBakongAccountWithUrl($data['data']['url'], $data['data']['account']);
             $this->assertEquals($data['errorCode'], $checkAcc->status['errorCode'], $data['statement']);
             $this->assertEquals($data['bakongAccountExists'], $checkAcc->data['bakongAccountExists'], $data['statement']);
         } catch (KHQRException $e) {
@@ -85,7 +85,7 @@ class BakongAccountExistenceTest extends TestCase
             ],
         ];
         try {
-            BakongKHQR::checkBakongAccount($testData['data']['url'], $testData['data']['account']);
+            BakongKHQR::checkBakongAccountWithUrl($testData['data']['url'], $testData['data']['account']);
         } catch (KHQRException $e) {
             $this->assertStringContainsString('sit-sit-api-bakong.nbc.gov.kh', $e->getMessage());
         }

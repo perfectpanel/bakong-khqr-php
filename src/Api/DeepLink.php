@@ -23,7 +23,7 @@ class DeepLink
         }
     }
 
-    public static function generateDeeplink(string $url, array $data)
+    public static function callDeepLinkAPI(string $url, array $data)
     {
         try {
             $ch = curl_init($url);

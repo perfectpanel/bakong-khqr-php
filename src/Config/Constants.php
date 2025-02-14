@@ -10,6 +10,8 @@ class Constants
 
     const BAKONG_API_SIT_BASE_URL = 'https://sit-api-bakong.nbc.gov.kh'; // For testing
 
+    const ACCOUNT_URL = self::BAKONG_API_BASE_URL.'/v1/check_bakong_account';
+
     const RENEW_TOKEN_URL = self::BAKONG_API_BASE_URL.'/v1/renew_token';
 
     const DEEPLINK_URL = self::BAKONG_API_BASE_URL.'/v1/generate_deeplink_by_qr';
@@ -27,6 +29,8 @@ class Constants
     const CHECK_TRANSACTION_INSTRUCTION_REF_URL = self::BAKONG_API_BASE_URL.'/v1/check_transaction_by_instruction_ref';
 
     const CHECK_TRANSACTION_EXTERNAL_REF_URL = self::BAKONG_API_BASE_URL.'/v1/check_transaction_by_external_ref';
+
+    const SIT_ACCOUNT_URL = self::BAKONG_API_SIT_BASE_URL.'/v1/check_bakong_account';
 
     const SIT_RENEW_TOKEN_URL = self::BAKONG_API_SIT_BASE_URL.'/v1/renew_token';
 

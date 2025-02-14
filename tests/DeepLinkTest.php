@@ -14,7 +14,7 @@ class DeepLinkTest extends TestCase
     private function test_deep_link($data)
     {
         try {
-            $response = BakongKHQR::generateDeepLink($data['data'][0], $data['data'][1], $data['data'][2] ?? null);
+            $response = BakongKHQR::generateDeepLinkWithUrl($data['data'][0], $data['data'][1], $data['data'][2] ?? null);
             $this->assertEquals($data['errorCode'], $response->status['errorCode'], $data['statement']);
         } catch (KHQRException $e) {
             $this->assertEquals($data['errorCode'], $e->getCode(), $data['statement']);
@@ -104,7 +104,7 @@ class DeepLinkTest extends TestCase
     public function test_deep_link_timeout()
     {
         $data = [
-            'statement' => 'Deeplink timeout',
+            'statement' => 'Deep link timeout',
             'data' => [
                 'https://fake-deeplink-api.herokuapp.com/v1/generate_deeplink_by_qr',
                 '00020101021229190015john_smith@devb5204599953038405405100.05802KH5910John Smith6010Phnom Penh6304BF30',
