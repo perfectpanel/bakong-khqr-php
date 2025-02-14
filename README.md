@@ -1,5 +1,7 @@
 # bakong-khqr-sdk
 
+![tests badge](https://github.com/fidele007/bakong-khqr-php/actions/workflows/tests.yml/badge.svg)
+
 This is a complete re-implementation of the `bakong-khqr` npm module (https://www.npmjs.com/package/bakong-khqr).
 
 ## Troubleshooting
