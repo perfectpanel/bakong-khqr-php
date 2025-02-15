@@ -251,7 +251,81 @@ object(KHQR\Models\KHQRResponse)#16 (2) {
 }
 ```
 
-### API - Renew Bakong API Token
+### API - Check Transaction Status
+
+A valid token is required to check transaction status. You can get one by registering on the Bakong website: https://api-bakong.nbc.gov.kh/register. At the moment of writing this README the token has to be renewed every 90 days. Then you can create a `BakongKHQR` instance with the token:
+
+```php
+$bakongKhqr = new BakongKHQR('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...');
+```
+
+#### Check Transaction by MD5
+
+```php
+$response = $bakongKhqr->checkTransactionByMD5('d60f3db96913029a2af979a1662c1e72');
+```
+
+#### Check Transaction by MD5 List
+
+```php
+$response = $bakongKhqr->checkTransactionByMD5List([
+    '0dbe08d3829a8b6b59844e51aa38a4e2',
+    '7b0e5c36486d7155eb3ee94997fe9bfb',
+    'e12b3ecc4c066405ce05cd8cacab884c',
+]);
+```
+
+#### Check Transaction by Full Hash
+
+```php
+$response = $bakongKhqr->checkTransactionByFullHash('dcd53430d3b3005d9cda36f1fe8dedc3714ccf18f886cf5d090d36fee67ef956');
+```
+
+#### Check Transaction by Full Hash List
+
+```php
+$response = $bakongKhqr->checkTransactionByFullHashList([
+    'f0ae142842181535e678900bc5be1c3bd48d567ced77410a169fb672792968c8',
+    'd3b42e35d618a42b7506a79564083e6e91d5383b63f8aa2cf2ca7e65d55ec858',
+    '9036688e95cb3d1b621a9a989ebe64629d8c118654cfbc47f4d4991d72fc3b44',
+]);
+```
+
+#### Check Transaction by Short Hash
+
+```php
+$response = $bakongKhqr->checkTransactionByShortHash('8465d722', 1.0, 'USD');
+```
+
+#### Check Transaction by Instruction Reference
+
+```php
+$response = $bakongKhqr->checkTransactionByInstructionReference('00001234');
+```
+
+#### Check Transaction by External Reference
+
+```php
+$response = $bakongKhqr->checkTransactionByExternalReference('DEV123456ZTH');
+```
+
+### API - Renewing an expired Bakong API Token
+
+If your token has expired, you will get a `KHQRException` when calling authorized Bakong API requests:
+
+```shell
+object(KHQR\Exceptions\KHQRException)#51 (7) {
+  ["message":protected]=>
+  string(57) "Unauthorized, not yet requested for token or code invalid"
+  ["string":"Exception":private]=>
+  string(0) ""
+  ["code":protected]=>
+  int(6)
+  ...
+}
+```
+
+You can renew your token with the `renewToken` method:
 
 ```php
 $result = BakongKHQR::renewToken('john.smith@gmail.com');
@@ -264,6 +338,24 @@ Output:
 ```shell
 array(4) {
   ["responseCode"]=>
+  int(0)
+  ["responseMessage"]=>
+  string(21) "Token has been issued"
+  ["errorCode"]=>
+  NULL
+  ["data"]=>
+  array(1) {
+    ["token"]=>
+    string(172) "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+```
+
+In case your email is not registered:
+
+```shell
+array(4) {
+  ["responseCode"]=>
   int(1)
   ["responseMessage"]=>
   string(18) "Not registered yet"
@@ -272,12 +364,6 @@ array(4) {
   ["data"]=>
   NULL
 }
-```
-
-### API - Check Transaction Status
-
-```php
-// TODO
 ```
 
 ## Testing
