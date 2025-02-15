@@ -16,17 +16,21 @@ abstract class Utils
         return $value === null || trim($value) === '';
     }
 
-    public static function checkCRCRegExp($crc)
+    public static function checkCRCRegExp(string $crc): bool
     {
         $crcRegExp = '/6304[A-Fa-f0-9]{4}$/';
 
         return preg_match($crcRegExp, $crc) === 1;
     }
 
-    public static function findTag(array $object, string $tag)
+    /**
+     * @param  array<array<string, mixed>>  $object
+     * @return ?array<string, mixed>
+     */
+    public static function findTag(array $object, string $tag): ?array
     {
         foreach ($object as $el) {
-            if ($el['tag'] == $tag) {
+            if (is_array($el) && isset($el['tag']) && $el['tag'] == $tag) {
                 return $el;
             }
         }
@@ -34,7 +38,10 @@ abstract class Utils
         return null;
     }
 
-    public static function cutString(string $string)
+    /**
+     * @return array<string, string>
+     */
+    public static function cutString(string $string): array
     {
         $sliceIndex = 2;
 
@@ -50,13 +57,13 @@ abstract class Utils
         ];
     }
 
-    public static function crc16($s)
+    public static function crc16(string $s): string
     {
         $crcTable = self::$crcTable;
         $crc = 0xFFFF;
         $s = unpack('C*', $s);
 
-        foreach ($s as $c) {
+        foreach ((array) $s as $c) {
             $j = ($c ^ ($crc >> 8)) & 0xFF;
             $crc = $crcTable[$j] ^ (($crc << 8) & 0xFFFF);
         }
@@ -66,7 +73,11 @@ abstract class Utils
         return self::getHexString($finalCheckSum);
     }
 
-    public static function post_data_to_url(string $url, array $payload, ?string $bearerToken = null)
+    /**
+     * @param  array<string, mixed>  $payload
+     * @return array<string, mixed>
+     */
+    public static function post_data_to_url(string $url, array $payload, ?string $bearerToken = null): array
     {
         $postData = json_encode($payload);
         // Set up cURL
@@ -94,17 +105,34 @@ abstract class Utils
 
         // Check for errors
         if ($response === false || $httpCode != 200) {
-            if (isset($error) && ! self::isBlank($error)) {
+            if (! self::isBlank($error)) {
                 throw new KHQRException($error, $httpCode);
-            } elseif (is_string($response)) {
+            }
+            if (is_string($response)) {
                 $json = json_decode($response, true);
-                throw new KHQRException($json['responseMessage'], $json['errorCode']);
+                if (
+                    is_array($json)
+                    && isset($json['responseMessage'])
+                    && isset($json['errorCode'])
+                ) {
+                    throw new KHQRException(
+                        (string) $json['responseMessage'],
+                        (int) $json['errorCode']
+                    );
+                }
+                // If JSON response doesn't have expected structure
+                throw new KHQRException('Invalid response from server', $httpCode);
             }
         }
 
-        return json_decode($response, true);
+        $result = json_decode((string) $response, true);
+
+        return is_array($result) ? $result : [$response];
     }
 
+    /**
+     * @var array<int>
+     */
     private static array $crcTable = [
         0x0000,
         0x1021,

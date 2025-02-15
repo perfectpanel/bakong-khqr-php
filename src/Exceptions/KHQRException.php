@@ -151,7 +151,7 @@ class KHQRException extends Exception
     public function __construct(string $key, ?int $code = 0)
     {
         if (! isset(self::ERRORS[$key])) {
-            parent::__construct($key, $code);
+            parent::__construct($key, $code ?? 0);
         } else {
             [$code, $message] = self::ERRORS[$key];
             parent::__construct($message, $code);
@@ -160,9 +160,11 @@ class KHQRException extends Exception
 
     /**
      * Get error details without throwing an exception.
+     *
+     * @return array<int|string>
      */
     public static function getError(string $key): array
     {
-        return self::ERRORS[$key] ?? ['code' => 0, 'message' => 'Unknown error'];
+        return self::ERRORS[$key] ?? [0, 'Unknown error'];
     }
 }

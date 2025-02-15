@@ -65,7 +65,6 @@ class MerchantInfo
         ?string $merchantCityAlternateLanguage = null,
         ?string $upiMerchantAccount = null
     ) {
-
         if (Utils::isBlank($bakongAccountID)) {
             throw new KHQRException(KHQRException::BAKONG_ACCOUNT_ID_REQUIRED);
         }
@@ -106,6 +105,22 @@ class MerchantInfo
         $this->upiMerchantAccount = $upiMerchantAccount;
     }
 
+    /**
+     * @param array{
+     *     accountInformation?: string|null,
+     *     currency?: int|null,
+     *     amount?: float|null,
+     *     billNumber?: string|null,
+     *     storeLabel?: string|null,
+     *     terminalLabel?: string|null,
+     *     mobileNumber?: string|null,
+     *     purposeOfTransaction?: string|null,
+     *     languagePreference?: string|null,
+     *     merchantNameAlternateLanguage?: string|null,
+     *     merchantCityAlternateLanguage?: string|null,
+     *     upiMerchantAccount?: string|null
+     * } $optionalData
+     */
     public static function withOptionalArray(
         string $bakongAccountID,
         string $merchantName,
@@ -113,25 +128,38 @@ class MerchantInfo
         string $merchantID,
         string $acquiringBank,
         array $optionalData
-    ) {
+    ): self {
+        $accountInformation = $optionalData['accountInformation'] ?? null;
+        $currency = $optionalData['currency'] ?? null;
+        $amount = $optionalData['amount'] ?? 0.0;
+        $billNumber = $optionalData['billNumber'] ?? null;
+        $storeLabel = $optionalData['storeLabel'] ?? null;
+        $terminalLabel = $optionalData['terminalLabel'] ?? null;
+        $mobileNumber = $optionalData['mobileNumber'] ?? null;
+        $purposeOfTransaction = $optionalData['purposeOfTransaction'] ?? null;
+        $languagePreference = $optionalData['languagePreference'] ?? null;
+        $merchantNameAlternateLanguage = $optionalData['merchantNameAlternateLanguage'] ?? null;
+        $merchantCityAlternateLanguage = $optionalData['merchantCityAlternateLanguage'] ?? null;
+        $upiMerchantAccount = $optionalData['upiMerchantAccount'] ?? null;
+
         return new self(
             bakongAccountID: $bakongAccountID,
             merchantName: $merchantName,
             merchantCity: $merchantCity,
             merchantID: $merchantID,
             acquiringBank: $acquiringBank,
-            accountInformation: $optionalData['accountInformation'] ?? null,
-            currency: $optionalData['currency'] ?? null,
-            amount: $optionalData['amount'] ?? 0.0,
-            billNumber: $optionalData['billNumber'] ?? null,
-            storeLabel: $optionalData['storeLabel'] ?? null,
-            terminalLabel: $optionalData['terminalLabel'] ?? null,
-            mobileNumber: $optionalData['mobileNumber'] ?? null,
-            purposeOfTransaction: $optionalData['purposeOfTransaction'] ?? null,
-            languagePreference: $optionalData['languagePreference'] ?? null,
-            merchantNameAlternateLanguage: $optionalData['merchantNameAlternateLanguage'] ?? null,
-            merchantCityAlternateLanguage: $optionalData['merchantCityAlternateLanguage'] ?? null,
-            upiMerchantAccount: $optionalData['upiMerchantAccount'] ?? null
+            accountInformation: $accountInformation,
+            currency: $currency,
+            amount: $amount,
+            billNumber: $billNumber,
+            storeLabel: $storeLabel,
+            terminalLabel: $terminalLabel,
+            mobileNumber: $mobileNumber,
+            purposeOfTransaction: $purposeOfTransaction,
+            languagePreference: $languagePreference,
+            merchantNameAlternateLanguage: $merchantNameAlternateLanguage,
+            merchantCityAlternateLanguage: $merchantCityAlternateLanguage,
+            upiMerchantAccount: $upiMerchantAccount
         );
     }
 }

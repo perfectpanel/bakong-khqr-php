@@ -23,7 +23,12 @@ class DeepLink
         }
     }
 
-    public static function callDeepLinkAPI(string $url, array $data)
+    /**
+     * @param  string  $url  Bakong API endpoint for generating deep link
+     * @param  array<string, mixed>  $data  payload to send
+     * @return mixed response body
+     */
+    public static function callDeepLinkAPI(string $url, array $data): mixed
     {
         try {
             $ch = curl_init($url);
@@ -44,10 +49,14 @@ class DeepLink
                 throw new KHQRException(KHQRException::CONNECTION_TIMEOUT);
             }
 
-            $respBody = json_decode($response, true);
+            $respBody = json_decode((string) $response, true);
 
             if ($httpCode !== 200 || $respBody === null) {
                 throw new KHQRException(KHQRException::CONNECTION_TIMEOUT);
+            }
+
+            if (! is_array($respBody)) {
+                return $respBody;
             }
 
             $error = $respBody['errorCode'] ?? null;

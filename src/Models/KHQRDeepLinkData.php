@@ -13,6 +13,9 @@ class KHQRDeepLinkData
         $this->shortLink = $shortLink;
     }
 
+    /**
+     * @return array<string, string> short link array
+     */
     public function getData(): array
     {
         return [

@@ -17,6 +17,8 @@ class IndividualInfo
 
     public string $merchantCity;
 
+    public ?string $merchantID = null;
+
     // Optional parameters
     public ?string $acquiringBank;
 
@@ -93,12 +95,29 @@ class IndividualInfo
         $this->upiMerchantAccount = $upiMerchantAccount;
     }
 
+    /**
+     * @param array{
+     *     acquiringBank?: string|null,
+     *     accountInformation?: string|null,
+     *     currency?: int|null,
+     *     amount?: float|null,
+     *     billNumber?: string|null,
+     *     storeLabel?: string|null,
+     *     terminalLabel?: string|null,
+     *     mobileNumber?: string|null,
+     *     purposeOfTransaction?: string|null,
+     *     languagePreference?: string|null,
+     *     merchantNameAlternateLanguage?: string|null,
+     *     merchantCityAlternateLanguage?: string|null,
+     *     upiMerchantAccount?: string|null
+     * } $optionalData
+     */
     public static function withOptionalArray(
         string $bakongAccountID,
         string $merchantName,
         string $merchantCity,
         array $optionalData
-    ) {
+    ): self {
         return new self(
             bakongAccountID: $bakongAccountID,
             merchantName: $merchantName,

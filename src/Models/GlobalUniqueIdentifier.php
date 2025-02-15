@@ -17,20 +17,30 @@ class GlobalUniqueIdentifier extends TagLengthString
 
     public BakongAccountID $bakongAccountID;
 
+    /**
+     * @var array{
+     *   bakongAccountID: BakongAccountID,
+     *   merchantID?: MerchantId,
+     *   acquiringBank?: AcquiringBank,
+     *   accountInformation?: string|null
+     * }
+     */
     public array $data;
 
-    public function __construct(string $tag, $valueObject)
+    public function __construct(string $tag, mixed $valueObject)
     {
-        if ($valueObject == null) {
+        if (is_null($valueObject)) {
             throw new KHQRException(KHQRException::MERCHANT_TYPE_REQUIRED);
         }
 
+        assert(is_array($valueObject));
+
         // Get value from props object
         $bakongAccountID = $valueObject['bakongAccountID'];
-        $acquiringBank = isset($valueObject['acquiringBank']) ? $valueObject['acquiringBank'] : null;
+        $acquiringBank = $valueObject['acquiringBank'] ?? null;
 
-        $isMerchant = isset($valueObject['isMerchant']) ? $valueObject['isMerchant'] : null;
-        $accountInformation = isset($valueObject['accountInformation']) ? $valueObject['accountInformation'] : null;
+        $isMerchant = $valueObject['isMerchant'] ?? null;
+        $accountInformation = $valueObject['accountInformation'] ?? null;
 
         // Creating 3 instances
         // BakongAccountID: 00
@@ -44,19 +54,20 @@ class GlobalUniqueIdentifier extends TagLengthString
         $globalUniqueIdentifier = (string) $bakongAccountId;
 
         if ($isMerchant) {
+            $merchantIDString = $valueObject['merchantID'] ?? null;
             $merchantId = new MerchantId(
                 EMV::MERCHANT_ACCOUNT_INFORMATION_MERCHANT_ID,
-                $valueObject['merchantID']
+                $merchantIDString
             );
             $acquiringBankName = new AcquiringBank(
                 EMV::MERCHANT_ACCOUNT_INFORMATION_ACQUIRING_BANK,
                 $acquiringBank
             );
 
-            if ($valueObject['merchantID'] !== null) {
+            if (! is_null($merchantIDString)) {
                 $globalUniqueIdentifier .= $merchantId;
             }
-            if ($acquiringBank !== null) {
+            if (! is_null($acquiringBank)) {
                 $globalUniqueIdentifier .= $acquiringBankName;
             }
 
@@ -70,7 +81,7 @@ class GlobalUniqueIdentifier extends TagLengthString
                 'acquiringBank' => $acquiringBankName,
             ];
         } else {
-            if ($accountInformation !== null) {
+            if (! is_null($accountInformation)) {
                 $accInformation = new AccountInformation(
                     EMV::INDIVIDUAL_ACCOUNT_INFORMATION,
                     $accountInformation
@@ -78,7 +89,7 @@ class GlobalUniqueIdentifier extends TagLengthString
                 $globalUniqueIdentifier .= $accInformation;
             }
 
-            if ($acquiringBank !== null) {
+            if (! is_null($acquiringBank)) {
                 $acquiringBankName = new AcquiringBank(
                     EMV::MERCHANT_ACCOUNT_INFORMATION_ACQUIRING_BANK,
                     $acquiringBank
@@ -100,12 +111,12 @@ class GlobalUniqueIdentifier extends TagLengthString
 
 class BakongAccountID extends TagLengthString
 {
-    public function __construct(string $tag, string $bakongAccountID)
+    public function __construct(string $tag, ?string $bakongAccountID)
     {
         // Throw validation if there is
         // 1. No tag
         // 2. empty value of bakong account
-        if ($bakongAccountID === '' || $bakongAccountID === '0') {
+        if (is_null($bakongAccountID) || $bakongAccountID === '' || $bakongAccountID === '0') {
             throw new KHQRException(KHQRException::BAKONG_ACCOUNT_ID_REQUIRED);
         }
 
@@ -138,9 +149,9 @@ class AccountInformation extends TagLengthString
 
 class MerchantId extends TagLengthString
 {
-    public function __construct(string $tag, string $value)
+    public function __construct(string $tag, ?string $value)
     {
-        if ($value === '' || $value === '0') {
+        if (is_null($value) || $value === '' || $value === '0') {
             throw new KHQRException(KHQRException::MERCHANT_ID_REQUIRED);
         }
         if (mb_strlen($value, 'UTF-8') > EMV::INVALID_LENGTH_MERCHANT_ID) {
@@ -152,9 +163,9 @@ class MerchantId extends TagLengthString
 
 class AcquiringBank extends TagLengthString
 {
-    public function __construct(string $tag, string $value)
+    public function __construct(string $tag, ?string $value)
     {
-        if ($value === '' || $value === '0') {
+        if (is_null($value) || $value === '' || $value === '0') {
             throw new KHQRException(KHQRException::ACQUIRING_BANK_REQUIRED);
         }
         if (mb_strlen($value, 'UTF-8') > EMV::INVALID_LENGTH_ACQUIRING_BANK) {

@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace KHQR\Models;
 
-class TimeStamp extends TagLengthString
+class Timestamp extends TagLengthString
 {
     public function __construct(string $tag)
     {
-        $milisecondTimeStamp = floor(microtime(true) * 1000);
-        $timeStamp = new TimeStampMiliSecond('00', (string) $milisecondTimeStamp);
-        $value = (string) $timeStamp;
+        $millisecondTimestamp = floor(microtime(true) * 1000);
+        $timestamp = new TimestampMillisecond('00', (string) $millisecondTimestamp);
+        $value = (string) $timestamp;
         parent::__construct($tag, $value);
     }
 }
 
-class TimeStampMiliSecond extends TagLengthString
+class TimestampMillisecond extends TagLengthString
 {
     public function __construct(string $tag, string $value)
     {

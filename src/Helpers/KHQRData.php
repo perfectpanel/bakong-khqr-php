@@ -4,6 +4,21 @@ declare(strict_types=1);
 
 namespace KHQR\Helpers;
 
+use KHQR\Models\AdditionalData;
+use KHQR\Models\CountryCode;
+use KHQR\Models\CRC;
+use KHQR\Models\GlobalUniqueIdentifier;
+use KHQR\Models\MerchantCategoryCode;
+use KHQR\Models\MerchantCity;
+use KHQR\Models\MerchantInformationLanguageTemplate;
+use KHQR\Models\MerchantName;
+use KHQR\Models\PayloadFormatIndicator;
+use KHQR\Models\PointOfInitiationMethod;
+use KHQR\Models\Timestamp;
+use KHQR\Models\TransactionAmount;
+use KHQR\Models\TransactionCurrency;
+use KHQR\Models\UnionpayMerchantAccount;
+
 final class KHQRData
 {
     public const CURRENCY_USD = 840;
@@ -19,88 +34,88 @@ final class KHQRData
             'tag' => '00',
             'type' => 'payloadFormatIndicator',
             'required' => true,
-            'instance' => 'KHQR\Models\PayloadFormatIndicator',
+            'instance' => PayloadFormatIndicator::class,
         ],
         [
             'tag' => '01',
             'type' => 'pointofInitiationMethod',
             'required' => false,
-            'instance' => 'KHQR\Models\PointOfInitiationMethod',
+            'instance' => PointOfInitiationMethod::class,
         ],
         [
             'tag' => '15',
             'type' => 'unionPayMerchant',
             'required' => false,
-            'instance' => 'KHQR\Models\UnionpayMerchantAccount',
+            'instance' => UnionpayMerchantAccount::class,
         ],
         [
             'sub' => true,
             'tag' => '29',
-            'type' => 'globalUnqiueIdentifier',
+            'type' => 'globalUniqueIdentifier',
             'required' => true,
-            'instance' => 'KHQR\Models\GlobalUniqueIdentifier',
+            'instance' => GlobalUniqueIdentifier::class,
         ],
         [
             'tag' => '52',
             'type' => 'merchantCategoryCode',
             'required' => true,
-            'instance' => 'KHQR\Models\MerchantCategoryCode',
+            'instance' => MerchantCategoryCode::class,
         ],
         [
             'tag' => '53',
             'type' => 'transactionCurrency',
             'required' => true,
-            'instance' => 'KHQR\Models\TransactionCurrency',
+            'instance' => TransactionCurrency::class,
         ],
         [
             'tag' => '54',
             'type' => 'transactionAmount',
             'required' => false,
-            'instance' => 'KHQR\Models\TransactionAmount',
+            'instance' => TransactionAmount::class,
         ],
         [
             'tag' => '58',
             'type' => 'countryCode',
             'required' => true,
-            'instance' => 'KHQR\Models\CountryCode',
+            'instance' => CountryCode::class,
         ],
         [
             'tag' => '59',
             'type' => 'merchantName',
             'required' => true,
-            'instance' => 'KHQR\Models\MerchantName',
+            'instance' => MerchantName::class,
         ],
         [
             'tag' => '60',
             'type' => 'merchantCity',
             'required' => true,
-            'instance' => 'KHQR\Models\MerchantCity',
+            'instance' => MerchantCity::class,
         ],
         [
             'sub' => true,
             'tag' => '62',
             'type' => 'additionalData',
             'required' => false,
-            'instance' => 'KHQR\Models\AdditionalData',
+            'instance' => AdditionalData::class,
         ],
         [
             'sub' => true,
             'tag' => '64',
             'type' => 'merchantInformationLanguageTemplate',
             'required' => false,
-            'instance' => 'KHQR\Models\MerchantInformationLanguageTemplate',
+            'instance' => MerchantInformationLanguageTemplate::class,
         ],
         [
             'tag' => '99',
             'type' => 'timestamp',
             'required' => false,
-            'instance' => 'KHQR\Models\TimeStamp',
+            'instance' => Timestamp::class,
         ],
         [
             'tag' => '63',
             'type' => 'crc',
             'required' => true,
-            'instance' => 'KHQR\Models\CRC',
+            'instance' => CRC::class,
         ],
     ];
 

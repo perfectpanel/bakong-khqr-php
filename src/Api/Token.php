@@ -9,7 +9,10 @@ use KHQR\Helpers\Utils;
 
 class Token
 {
-    public static function renewToken(string $email, bool $isTest = false)
+    /**
+     * @return array<string, mixed>
+     */
+    public static function renewToken(string $email, bool $isTest = false): array
     {
         if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new \InvalidArgumentException('Invalid email address');

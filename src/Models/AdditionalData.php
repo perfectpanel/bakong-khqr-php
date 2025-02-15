@@ -17,9 +17,18 @@ class AdditionalData extends TagLengthString
 
     public ?TerminalLabel $terminalLabel;
 
+    /**
+     * @var array{
+     *     billNumber: ?BillNumber,
+     *     mobileNumber: ?MobileNumber,
+     *     storeLabel: ?StoreLabel,
+     *     terminalLabel: ?TerminalLabel,
+     *     purposeOfTransaction: ?string
+     * }
+     */
     public array $data;
 
-    public function __construct(string $tag, $additionalData = null)
+    public function __construct(string $tag, mixed $additionalData)
     {
         if ($additionalData == null) {
             $additionalData = [
@@ -29,6 +38,8 @@ class AdditionalData extends TagLengthString
                 'terminalLabelInput' => null,
             ];
         }
+
+        assert(is_array($additionalData));
 
         // Getting information from additionalData
         $billNumberInput = $additionalData['billNumber'];

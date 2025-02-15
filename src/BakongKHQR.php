@@ -29,14 +29,14 @@ use KHQR\Models\MerchantName;
 use KHQR\Models\PayloadFormatIndicator;
 use KHQR\Models\PointOfInitiationMethod;
 use KHQR\Models\SourceInfo;
-use KHQR\Models\TimeStamp;
+use KHQR\Models\Timestamp;
 use KHQR\Models\TransactionAmount;
 use KHQR\Models\TransactionCurrency;
 use KHQR\Models\UnionpayMerchantAccount;
 
 class BakongKHQR
 {
-    private ?string $token;
+    private string $token;
 
     public function __construct(string $token)
     {
@@ -47,42 +47,68 @@ class BakongKHQR
         $this->token = $token;
     }
 
-    public function checkTransactionByMD5(string $md5, bool $isTest = false)
+    /**
+     * @return array<string, mixed>
+     */
+    public function checkTransactionByMD5(string $md5, bool $isTest = false): array
     {
         return Transaction::checkTransactionByMD5($this->token, $md5, $isTest);
     }
 
-    public function checkTransactionByMD5List(array $md5Array, bool $isTest = false)
+    /**
+     * @param  array<string>  $md5Array
+     * @return array<string, mixed>
+     */
+    public function checkTransactionByMD5List(array $md5Array, bool $isTest = false): array
     {
         return Transaction::checkTransactionByMD5List($this->token, $md5Array, $isTest);
     }
 
-    public function checkTransactionByFullHash(string $fullHash, bool $isTest = false)
+    /**
+     * @return array<string, mixed>
+     */
+    public function checkTransactionByFullHash(string $fullHash, bool $isTest = false): array
     {
         return Transaction::checkTransactionByFullHash($this->token, $fullHash, $isTest);
     }
 
-    public function checkTransactionByFullHashList(array $fullHashArrray, bool $isTest = false)
+    /**
+     * @param  array<string>  $fullHashArrray
+     * @return array<string, mixed>
+     */
+    public function checkTransactionByFullHashList(array $fullHashArrray, bool $isTest = false): array
     {
         return Transaction::checkTransactionByFullHashList($this->token, $fullHashArrray, $isTest);
     }
 
-    public function checkTransactionByShortHash(string $shortHash, float $amount, string $currency, bool $isTest = false)
+    /**
+     * @return array<string, mixed>
+     */
+    public function checkTransactionByShortHash(string $shortHash, float $amount, string $currency, bool $isTest = false): array
     {
         return Transaction::checkTransactionByShortHash($this->token, $shortHash, $amount, $currency, $isTest);
     }
 
-    public function checkTransactionByInstructionReference(string $ref, bool $isTest = false)
+    /**
+     * @return array<string, mixed>
+     */
+    public function checkTransactionByInstructionReference(string $ref, bool $isTest = false): array
     {
         return Transaction::checkTransactionByInstructionReference($this->token, $ref, $isTest);
     }
 
-    public function checkTransactionByExternalReference(string $ref, bool $isTest = false)
+    /**
+     * @return array<string, mixed>
+     */
+    public function checkTransactionByExternalReference(string $ref, bool $isTest = false): array
     {
         return Transaction::checkTransactionByExternalReference($this->token, $ref, $isTest);
     }
 
-    public static function renewToken($email, bool $isTest = false)
+    /**
+     * @return array<string, mixed>
+     */
+    public static function renewToken(string $email, bool $isTest = false): array
     {
         return Token::renewToken($email, $isTest);
     }
@@ -125,7 +151,7 @@ class BakongKHQR
 
         $crc = substr($KHQRString, -4);
         $KHQRNoCrc = substr($KHQRString, 0, -4);
-        $validCRC = Utils::crc16($KHQRNoCrc) == strtoupper($crc);
+        $validCRC = Utils::crc16($KHQRNoCrc) === strtoupper($crc);
         $isValidCRC = new CRCValidation($validCRC);
 
         try {
@@ -164,9 +190,13 @@ class BakongKHQR
         }
         // Call API to generate deep link
         $data = DeepLink::callDeepLinkAPI($url, ['qr' => $qr, 'sourceInfo' => (array) $sourceInfo]);
-        $deepLinkData = new KHQRDeepLinkData($data['data']['shortLink']);
+        if (is_array($data) && isset($data['data'])) {
+            $deepLinkData = new KHQRDeepLinkData($data['data']['shortLink']);
 
-        return new KHQRResponse($deepLinkData, null);
+            return new KHQRResponse($deepLinkData, null);
+        }
+
+        return new KHQRResponse($data, null);
     }
 
     public static function generateDeepLink(string $qr, ?SourceInfo $sourceInfo, bool $isTest = false): KHQRResponse
@@ -183,7 +213,7 @@ class BakongKHQR
         return new KHQRResponse($accountExistResponse, null);
     }
 
-    public static function checkBakongAccount(string $bakongID, bool $isTest = false)
+    public static function checkBakongAccount(string $bakongID, bool $isTest = false): \KHQR\Models\KHQRResponse
     {
         $url = $isTest ? Constants::SIT_ACCOUNT_URL : Constants::ACCOUNT_URL;
 
@@ -199,7 +229,7 @@ class BakongKHQR
      * 4. Get the value of each tag and if there is subtag repeat number 1
      *
      * @param  string  $khqrString  The KHQR string to decode.
-     * @return array An associative array containing the decoded KHQR string.
+     * @return array<string, mixed> An associative array containing the decoded KHQR string.
      */
     private static function decodeKHQRValidation(string $khqrString): array
     {
@@ -242,7 +272,7 @@ class BakongKHQR
         $requiredFieldNotExist = count($requiredField) != 0;
         if ($requiredFieldNotExist) {
             $requiredTag = current($requiredField);
-            $missingInstance = Utils::findTag(KHQRData::KHQRTag, $requiredTag)['instance'];
+            $missingInstance = ((array) Utils::findTag(KHQRData::KHQRTag, $requiredTag))['instance'];
             new $missingInstance($requiredTag, null);
         }
 
@@ -259,11 +289,20 @@ class BakongKHQR
         foreach ($tags as $khqrTag) {
             $tag = $khqrTag['tag'];
             $khqr = current(array_filter(KHQRData::KHQRTag, fn ($el): bool => $el['tag'] == $tag));
+            assert($khqr !== false);
+
+            if ($khqr['instance'] === Timestamp::class) {
+                $instance = new Timestamp($tag);
+                $decodeValue[$khqr['type']] = $instance->value;
+
+                continue;
+            }
+
             $value = $khqrTag['value'];
             $inputValue = $value;
 
             if (in_array($tag, $subtag)) {
-                $inputdata = Utils::findTag($subTagInput, $tag)['data'];
+                $inputdata = (array) ((array) Utils::findTag($subTagInput, $tag))['data'];
                 while ($value) {
                     $cutsubstring = Utils::cutString($value);
                     $tempSubtag = $cutsubstring['tag'];
@@ -281,13 +320,21 @@ class BakongKHQR
                     $value = $slicedSubtag;
                 }
 
-                if (! is_null($inputValue)) {
-                    $decodeValue = array_merge($decodeValue, $inputValue);
-                }
+                assert(is_array($inputValue));
 
-                new $khqr['instance']($tag, $inputValue);
+                $tagClass = $khqr['instance'];
+                assert(in_array($tagClass, [
+                    AdditionalData::class,
+                    MerchantInformationLanguageTemplate::class,
+                    GlobalUniqueIdentifier::class,
+                ]));
+
+                // Check if the tag value is valid
+                new $tagClass($tag, $inputValue);
+
+                $decodeValue = array_merge($decodeValue, $inputValue);
             } else {
-                $instance = new $khqr['instance']($tag, $inputValue);
+                $instance = new $khqr['instance']($tag, $value);
                 $decodeValue[$khqr['type']] = $instance->value;
             }
         }
@@ -304,13 +351,13 @@ class BakongKHQR
      * 4. Get the value of each tag and if there is subtag repeat number 1
      *
      * @param  string  $khqrString  The KHQR string to decode.
-     * @return array An associative array containing the decoded KHQR string.
+     * @return array<string, mixed> An associative array containing the decoded KHQR string.
      */
     private static function decodeKHQRString(string $khqrString): array
     {
         $allField = array_map(fn ($el): string => $el['tag'], KHQRData::KHQRTag);
         $subtag = array_map(fn ($obj): string => $obj['tag'], array_filter(KHQRData::KHQRTag, fn ($el): bool => isset($el['sub']) && $el['sub']));
-        $requiredField = array_map(fn ($el): string => $el['tag'], array_filter(KHQRData::KHQRTag, fn ($el): bool => isset($el['required']) && $el['required'] == true));
+        $requiredField = array_map(fn ($el): string => $el['tag'], array_filter(KHQRData::KHQRTag, fn ($el): bool => $el['required'] == true));
 
         $subTagInput = KHQRData::KHQRSubtag['input'];
         $subTagCompare = KHQRData::KHQRSubtag['compare'];
@@ -357,18 +404,20 @@ class BakongKHQR
         foreach (KHQRData::KHQRTag as $khqrTag) {
             $tag = $khqrTag['tag'];
             $khqr = current(array_filter(KHQRData::KHQRTag, fn ($el): bool => $el['tag'] === $tag));
+            assert($khqr !== false);
+
             $value = $tags[$tag] ?? null;
-            $inputValue = $value;
 
             if (in_array($tag, $subtag)) {
-                $inputdata = Utils::findTag($subTagInput, $tag)['data'];
+                $inputValue = null;
+                $inputdata = (array) ((array) Utils::findTag($subTagInput, $tag))['data'];
                 while ($value) {
                     $cutsubstring = Utils::cutString($value);
                     $tempSubtag = $cutsubstring['tag'];
                     $subtagValue = $cutsubstring['value'];
                     $slicedSubtag = $cutsubstring['slicedString'];
 
-                    $nameSubtag = current(array_filter($subTagCompare, fn ($el): bool => $el['tag'] == $tag && $el['subTag'] == $tempSubtag));
+                    $nameSubtag = current(array_filter($subTagCompare, fn ($el): bool => $el['tag'] === $tag && $el['subTag'] == $tempSubtag));
 
                     if ($nameSubtag) {
                         $nameSubtag = $nameSubtag['name'];
@@ -381,7 +430,7 @@ class BakongKHQR
                     $value = $slicedSubtag;
                 }
 
-                if (! is_null($inputValue)) {
+                if (is_array($inputValue)) {
                     $decodeValue = array_merge($decodeValue, $inputValue);
                 }
             } else {
@@ -395,7 +444,7 @@ class BakongKHQR
         return $decodeValue;
     }
 
-    private static function generateKHQR(MerchantInfo|IndividualInfo $info, string $type)
+    private static function generateKHQR(MerchantInfo|IndividualInfo $info, string $type): string
     {
         if ($type === KHQRData::MERCHANT_TYPE_MERCHANT) {
             $merchantInfo = [
@@ -426,99 +475,79 @@ class BakongKHQR
             'merchantNameAlternateLanguage' => $info->merchantNameAlternateLanguage,
             'merchantCityAlternateLanguage' => $info->merchantCityAlternateLanguage,
         ];
+        $amount = $info->amount;
+        $payloadFormatIndicator = new PayloadFormatIndicator(EMV::PAYLOAD_FORMAT_INDICATOR, EMV::DEFAULT_PAYLOAD_FORMAT_INDICATOR);
+        $QRType = EMV::DYNAMIC_QR;
+        if (! isset($amount) || $amount == 0) {
+            $QRType = EMV::STATIC_QR;
+        }
+        $pointOfInitiationMethod = new PointOfInitiationMethod(EMV::POINT_OF_INITIATION_METHOD, $QRType);
+        $upi = null;
+        if ($info->upiMerchantAccount !== null && $info->upiMerchantAccount !== '' && $info->upiMerchantAccount !== '0') {
+            $upi = new UnionpayMerchantAccount(EMV::UNIONPAY_MERCHANT_ACCOUNT, $info->upiMerchantAccount);
+        }
+        $KHQRType = ($type === KHQRData::MERCHANT_TYPE_MERCHANT) ? EMV::MERCHANT_ACCOUNT_INFORMATION_MERCHANT : EMV::MERCHANT_ACCOUNT_INFORMATION_INDIVIDUAL;
+        $globalUniqueIdentifier = new GlobalUniqueIdentifier($KHQRType, $merchantInfo);
+        $merchantCategoryCode = new MerchantCategoryCode(EMV::MERCHANT_CATEGORY_CODE, EMV::DEFAULT_MERCHANT_CATEGORY_CODE);
+        $currency = new TransactionCurrency(EMV::TRANSACTION_CURRENCY, $info->currency);
+        if ($info->currency == KHQRData::CURRENCY_USD && $upi) {
+            throw new KHQRException(KHQRException::UPI_ACCOUNT_INFORMATION_INVALID_CURRENCY);
+        }
+        $KHQRInstances = [
+            $payloadFormatIndicator,
+            $pointOfInitiationMethod,
+            $upi ?: '',
+            $globalUniqueIdentifier,
+            $merchantCategoryCode,
+            $currency,
+        ];
+        if (isset($amount) && $amount != 0) {
+            $amountInput = $amount;
+            if ($info->currency == KHQRData::CURRENCY_KHR) {
+                if (floor($amountInput) == $amountInput) {
+                    $amountInput = round($amountInput);
+                } else {
+                    throw new KHQRException(KHQRException::TRANSACTION_AMOUNT_INVALID);
+                }
+            } else {
+                // Removing trailing zeros after the decimal point
+                if (floor($amountInput) == $amountInput) {
+                    $amountInput = floor($amountInput);
+                }
 
-        try {
-            $amount = $info->amount;
-            $payloadFormatIndicator = new PayloadFormatIndicator(EMV::PAYLOAD_FORMAT_INDICATOR, EMV::DEFAULT_PAYLOAD_FORMAT_INDICATOR);
-            $QRType = EMV::DYNAMIC_QR;
-
-            if (! isset($amount) || $amount == 0) {
-                $QRType = EMV::STATIC_QR;
-            }
-
-            $pointOfInitiationMethod = new PointOfInitiationMethod(EMV::POINT_OF_INITIATION_METHOD, $QRType);
-
-            $upi = null;
-            if ($info->upiMerchantAccount !== null && $info->upiMerchantAccount !== '' && $info->upiMerchantAccount !== '0') {
-                $upi = new UnionpayMerchantAccount(EMV::UNIONPAY_MERCHANT_ACCOUNT, $info->upiMerchantAccount);
-            }
-
-            $KHQRType = ($type === KHQRData::MERCHANT_TYPE_MERCHANT) ? EMV::MERCHANT_ACCOUNT_INFORMATION_MERCHANT : EMV::MERCHANT_ACCOUNT_INFORMATION_INDIVIDUAL;
-            $globalUniqueIdentifier = new GlobalUniqueIdentifier($KHQRType, $merchantInfo);
-            $merchantCategoryCode = new MerchantCategoryCode(EMV::MERCHANT_CATEGORY_CODE, EMV::DEFAULT_MERCHANT_CATEGORY_CODE);
-            $currency = new TransactionCurrency(EMV::TRANSACTION_CURRENCY, $info->currency);
-
-            if ($info->currency == KHQRData::CURRENCY_USD && $upi) {
-                throw new KHQRException(KHQRException::UPI_ACCOUNT_INFORMATION_INVALID_CURRENCY);
-            }
-
-            $KHQRInstances = [
-                $payloadFormatIndicator,
-                $pointOfInitiationMethod,
-                $upi ?: '',
-                $globalUniqueIdentifier,
-                $merchantCategoryCode,
-                $currency,
-            ];
-
-            if (isset($amount) && $amount != 0) {
-                $amountInput = $info->amount;
-                if ($info->currency == KHQRData::CURRENCY_KHR) {
-                    if (floor($amountInput) == $amountInput) {
-                        $amountInput = round($amountInput);
-                    } else {
+                $amountSplit = explode('.', (string) $amountInput);
+                if (isset($amountSplit[1])) {
+                    if (strlen($amountSplit[1]) > 2) {
                         throw new KHQRException(KHQRException::TRANSACTION_AMOUNT_INVALID);
                     }
-                } else {
-                    // Removing trailing zeros after the decimal point
-                    if (floor($amountInput) == $amountInput) {
-                        $amountInput = floor($amountInput);
-                    }
 
-                    $amountSplit = explode('.', (string) $amountInput);
-                    if (isset($amountSplit[1])) {
-                        if (strlen($amountSplit[1]) > 2) {
-                            throw new KHQRException(KHQRException::TRANSACTION_AMOUNT_INVALID);
-                        }
-
-                        $amountInput = number_format($amountInput, 2, '.', '');
-                    }
+                    $amountInput = number_format($amountInput, 2, '.', '');
                 }
-                $KHQRInstances[] = new TransactionAmount(EMV::TRANSACTION_AMOUNT, (string) $amountInput);
             }
-
-            $countryCode = new CountryCode(EMV::COUNTRY_CODE, EMV::DEFAULT_COUNTRY_CODE);
-            $KHQRInstances[] = $countryCode;
-
-            $merchantName = new MerchantName(EMV::MERCHANT_NAME, $info->merchantName);
-            $KHQRInstances[] = $merchantName;
-
-            $merchantCity = new MerchantCity(EMV::MERCHANT_CITY, $info->merchantCity);
-            $KHQRInstances[] = $merchantCity;
-
-            if (array_filter($additionalDataInformation) !== []) {
-                $additionalData = new AdditionalData(EMV::ADDITIONAL_DATA_TAG, $additionalDataInformation);
-                $KHQRInstances[] = $additionalData;
-            }
-
-            if (array_filter($languageInformation) !== []) {
-                $languageTemplate = new MerchantInformationLanguageTemplate(EMV::MERCHANT_INFORMATION_LANGUAGE_TEMPLATE, $languageInformation);
-                $KHQRInstances[] = $languageTemplate;
-            }
-
-            $timeStamp = new TimeStamp(EMV::TIMESTAMP_TAG);
-            $KHQRInstances[] = $timeStamp;
-
-            $khqrNoCrc = '';
-            foreach ($KHQRInstances as $instance) {
-                $khqrNoCrc .= (string) $instance;
-            }
-
-            $khqr = $khqrNoCrc.EMV::CRC.EMV::CRC_LENGTH;
-
-            return $khqr.Utils::crc16($khqr);
-        } catch (Exception $e) {
-            throw $e;
+            $KHQRInstances[] = new TransactionAmount(EMV::TRANSACTION_AMOUNT, (string) $amountInput);
         }
+        $countryCode = new CountryCode(EMV::COUNTRY_CODE, EMV::DEFAULT_COUNTRY_CODE);
+        $KHQRInstances[] = $countryCode;
+        $merchantName = new MerchantName(EMV::MERCHANT_NAME, $info->merchantName);
+        $KHQRInstances[] = $merchantName;
+        $merchantCity = new MerchantCity(EMV::MERCHANT_CITY, $info->merchantCity);
+        $KHQRInstances[] = $merchantCity;
+        if (array_filter($additionalDataInformation) !== []) {
+            $additionalData = new AdditionalData(EMV::ADDITIONAL_DATA_TAG, $additionalDataInformation);
+            $KHQRInstances[] = $additionalData;
+        }
+        if (array_filter($languageInformation) !== []) {
+            $languageTemplate = new MerchantInformationLanguageTemplate(EMV::MERCHANT_INFORMATION_LANGUAGE_TEMPLATE, $languageInformation);
+            $KHQRInstances[] = $languageTemplate;
+        }
+        $timeStamp = new Timestamp(EMV::TIMESTAMP_TAG);
+        $KHQRInstances[] = $timeStamp;
+        $khqrNoCrc = '';
+        foreach ($KHQRInstances as $instance) {
+            $khqrNoCrc .= (string) $instance;
+        }
+        $khqr = $khqrNoCrc.EMV::CRC.EMV::CRC_LENGTH;
+
+        return $khqr.Utils::crc16($khqr);
     }
 }

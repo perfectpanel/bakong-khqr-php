@@ -9,12 +9,10 @@ use KHQR\Helpers\EMV;
 
 class MerchantInformationLanguageTemplate extends TagLengthString
 {
+    /** @var array<string, ?string> */
     public array $data;
 
-    /**
-     * @param  array<string, string|null>  $value
-     */
-    public function __construct(string $tag, ?array $value)
+    public function __construct(string $tag, mixed $value)
     {
         if ($value === null) {
             $value = [
@@ -23,6 +21,8 @@ class MerchantInformationLanguageTemplate extends TagLengthString
                 'merchantCityAlternateLanguage' => null,
             ];
         }
+
+        assert(is_array($value));
 
         if (! empty($value['languagePreference']) && empty($value['merchantNameAlternateLanguage'])) {
             throw new KHQRException(KHQRException::MERCHANT_NAME_ALTERNATE_LANGUAGE_REQUIRED);
@@ -50,9 +50,9 @@ class MerchantInformationLanguageTemplate extends TagLengthString
 
 class LanguagePreference extends TagLengthString
 {
-    public function __construct(string $tag, string $value)
+    public function __construct(string $tag, ?string $value)
     {
-        if (strlen($value) > EMV::INVALID_LENGTH_LANGUAGE_PREFERENCE || $value === '') {
+        if (is_null($value) || strlen($value) > EMV::INVALID_LENGTH_LANGUAGE_PREFERENCE || $value === '') {
             throw new KHQRException(KHQRException::LANGUAGE_PREFERENCE_LENGTH_INVALID);
         }
         parent::__construct($tag, $value);

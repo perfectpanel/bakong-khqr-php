@@ -10,7 +10,12 @@ use KHQR\Helpers\Utils;
 
 class Account
 {
-    public static function checkBakongAccountExistence(string $url, string $accountID)
+    /**
+     * @param  string  $url  Bakong API endopint for checking account status
+     * @param  string  $accountID  Bakong account ID
+     * @return array<string, bool> info on account existence
+     */
+    public static function checkBakongAccountExistence(string $url, string $accountID): array
     {
         // Check account ID length
         if (strlen($accountID) > EMV::INVALID_LENGTH_BAKONG_ACCOUNT) {
