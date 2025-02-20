@@ -82,6 +82,7 @@ abstract class Utils
         $postData = json_encode($payload);
         // Set up cURL
         $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
@@ -95,7 +96,8 @@ abstract class Utils
                 'Content-Type: application/json',
             ]);
         }
-        curl_setopt($ch, CURLOPT_TIMEOUT, 45);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 120); // Max execution time in seconds
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // Stops if the connection cannot be established in 10s
 
         // Execute request
         $response = curl_exec($ch);
