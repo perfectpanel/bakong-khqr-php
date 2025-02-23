@@ -96,7 +96,7 @@ abstract class Utils
                 'Content-Type: application/json',
             ]);
         }
-        curl_setopt($ch, CURLOPT_TIMEOUT, 120); // Max execution time in seconds
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60); // Max execution time in seconds
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // Stops if the connection cannot be established in 10s
 
         // Execute request
@@ -127,8 +127,8 @@ abstract class Utils
                         (int) $json['errorCode']
                     );
                 }
-                // If JSON response doesn't have expected structure
-                throw new KHQRException('Invalid response from server', $httpCode);
+
+                throw new KHQRException($httpCode.PHP_EOL.$response, $httpCode);
             }
         }
 
