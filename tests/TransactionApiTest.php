@@ -30,7 +30,7 @@ class TransactionApiTest extends TestCase
 
     public function test_expired_token(): void
     {
-        $bakongKhqr = new BakongKHQR($this->expiredToken);
+        $bakongKhqr = new BakongKHQR(self::$expiredToken);
         try {
             $bakongKhqr->checkTransactionByMD5('d60f3db96913029a2af979a1662c1e72');
         } catch (KHQRException $e) {
@@ -46,7 +46,7 @@ class TransactionApiTest extends TestCase
     {
         for ($i = 0; $i < self::RETRY_ATTEMPTS; $i++) {
             try {
-                $bakongKhqr = new BakongKHQR($this->token);
+                $bakongKhqr = new BakongKHQR(self::$token);
                 $response = $bakongKhqr->checkTransactionByMD5('d60f3db96913029a2af979a1662c1e72');
                 if ($response['errorCode'] !== 1) {
                     $this->fail('[test_check_transaction_by_md5] Unexpected response: '.json_encode($response));
@@ -70,7 +70,7 @@ class TransactionApiTest extends TestCase
 
                 // Token has expired. Renew token and retry again.
                 try {
-                    $this->token = self::renew_token();
+                    self::$token = self::renew_token();
                 } catch (KHQRException $e) {
                     $this->fail('Test failed due to an unexpected exception: '.$e->getMessage());
                 }
@@ -85,7 +85,7 @@ class TransactionApiTest extends TestCase
     {
         for ($i = 0; $i < self::RETRY_ATTEMPTS; $i++) {
             try {
-                $bakongKhqr = new BakongKHQR($this->token);
+                $bakongKhqr = new BakongKHQR(self::$token);
                 $response = $bakongKhqr->checkTransactionByFullHash('dcd53430d3b3005d9cda36f1fe8dedc3714ccf18f886cf5d090d36fee67ef956');
                 if ($response['errorCode'] !== 1) {
                     $this->fail('[test_check_transaction_by_full_hash] Unexpected response: '.json_encode($response));
@@ -109,7 +109,7 @@ class TransactionApiTest extends TestCase
 
                 // Token has expired. Renew token and retry again.
                 try {
-                    $this->token = self::renew_token();
+                    self::$token = self::renew_token();
                 } catch (KHQRException $e) {
                     $this->fail('Test failed due to an unexpected exception: '.$e->getMessage());
                 }
@@ -124,7 +124,7 @@ class TransactionApiTest extends TestCase
     {
         for ($i = 0; $i < self::RETRY_ATTEMPTS; $i++) {
             try {
-                $bakongKhqr = new BakongKHQR($this->token);
+                $bakongKhqr = new BakongKHQR(self::$token);
                 $response = $bakongKhqr->checkTransactionByShortHash('8465d722', 1.0, 'USD');
                 if ($response['errorCode'] !== 1) {
                     $this->fail('[test_check_transaction_by_short_hash] Unexpected response: '.json_encode($response));
@@ -148,7 +148,7 @@ class TransactionApiTest extends TestCase
 
                 // Token has expired. Renew token and retry again.
                 try {
-                    $this->token = self::renew_token();
+                    self::$token = self::renew_token();
                 } catch (KHQRException $e) {
                     $this->fail('Test failed due to an unexpected exception: '.$e->getMessage());
                 }
@@ -163,7 +163,7 @@ class TransactionApiTest extends TestCase
     {
         for ($i = 0; $i < self::RETRY_ATTEMPTS; $i++) {
             try {
-                $bakongKhqr = new BakongKHQR($this->token);
+                $bakongKhqr = new BakongKHQR(self::$token);
                 $response = $bakongKhqr->checkTransactionByInstructionReference('00001234');
                 if ($response['errorCode'] !== 1) {
                     $this->fail('[test_check_transaction_by_instruction_ref] Unexpected response: '.json_encode($response));
@@ -187,7 +187,7 @@ class TransactionApiTest extends TestCase
 
                 // Token has expired. Renew token and retry again.
                 try {
-                    $this->token = self::renew_token();
+                    self::$token = self::renew_token();
                 } catch (KHQRException $e) {
                     $this->fail('Test failed due to an unexpected exception: '.$e->getMessage());
                 }
@@ -202,7 +202,7 @@ class TransactionApiTest extends TestCase
     {
         for ($i = 0; $i < self::RETRY_ATTEMPTS; $i++) {
             try {
-                $bakongKhqr = new BakongKHQR($this->token);
+                $bakongKhqr = new BakongKHQR(self::$token);
                 $response = $bakongKhqr->checkTransactionByExternalReference('DEV123456ZTH');
                 if ($response['errorCode'] !== 1) {
                     $this->fail('[test_check_transaction_by_external_ref] Unexpected response: '.json_encode($response));
@@ -226,7 +226,7 @@ class TransactionApiTest extends TestCase
 
                 // Token has expired. Renew token and retry again.
                 try {
-                    $this->token = self::renew_token();
+                    self::$token = self::renew_token();
                 } catch (KHQRException $e) {
                     $this->fail('Test failed due to an unexpected exception: '.$e->getMessage());
                 }
@@ -241,7 +241,7 @@ class TransactionApiTest extends TestCase
     {
         for ($i = 0; $i < self::RETRY_ATTEMPTS; $i++) {
             try {
-                $bakongKhqr = new BakongKHQR($this->token);
+                $bakongKhqr = new BakongKHQR(self::$token);
                 $md5List = [
                     '0dbe08d3829a8b6b59844e51aa38a4e2',
                     '7b0e5c36486d7155eb3ee94997fe9bfb',
@@ -272,7 +272,7 @@ class TransactionApiTest extends TestCase
 
                 // Token has expired. Renew token and retry again.
                 try {
-                    $this->token = self::renew_token();
+                    self::$token = self::renew_token();
                 } catch (KHQRException $e) {
                     $this->fail('Test failed due to an unexpected exception: '.$e->getMessage());
                 }
@@ -287,7 +287,7 @@ class TransactionApiTest extends TestCase
     {
         for ($i = 0; $i < self::RETRY_ATTEMPTS; $i++) {
             try {
-                $bakongKhqr = new BakongKHQR($this->token);
+                $bakongKhqr = new BakongKHQR(self::$token);
                 // FIXME: Commented the first hash for now because somehow it always returns result 'SERVICE_FAILED' (Service unavailable)
                 $fullHashList = [
                     // 'f0ae142842181535e678900bc5be1c3bd48d567ced77410a169fb672792968c8',
@@ -319,7 +319,7 @@ class TransactionApiTest extends TestCase
 
                 // Token has expired. Renew token and retry again.
                 try {
-                    $this->token = self::renew_token();
+                    self::$token = self::renew_token();
                 } catch (KHQRException $e) {
                     $this->fail('Test failed due to an unexpected exception: '.$e->getMessage());
                 }
