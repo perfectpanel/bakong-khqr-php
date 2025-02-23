@@ -14,9 +14,9 @@ class TransactionApiTest extends TestCase
 
     private const RETRY_ATTEMPTS = 3;
 
-    private string $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiN2Y0NTBhZTIzYWRhNDE1MCJ9LCJpYXQiOjE3NDAzMTg2MTUsImV4cCI6MTc0ODA5NDYxNX0.emVxFsxcLm-8aZv53Itbm8kNgAgpzddNl_Irf_LNiWU';
+    private static string $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiN2Y0NTBhZTIzYWRhNDE1MCJ9LCJpYXQiOjE3NDAzMTg2MTUsImV4cCI6MTc0ODA5NDYxNX0.emVxFsxcLm-8aZv53Itbm8kNgAgpzddNl_Irf_LNiWU';
 
-    private string $expiredToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiMWExMTJhNGE2NWZhNGNkNSJ9LCJpYXQiOjE3MjgxNjg1OTAsImV4cCI6MTczNTk0NDU5MH0.TW2cWPrcPTWTuR-Hth_6tXnNLoTjQVBknuyRlMQIluk';
+    private static string $expiredToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiMWExMTJhNGE2NWZhNGNkNSJ9LCJpYXQiOjE3MjgxNjg1OTAsImV4cCI6MTczNTk0NDU5MH0.TW2cWPrcPTWTuR-Hth_6tXnNLoTjQVBknuyRlMQIluk';
 
     private function renew_token(): string
     {
