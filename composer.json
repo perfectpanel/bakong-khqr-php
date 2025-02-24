@@ -52,7 +52,8 @@
         },
         "optimize-autoloader": true,
         "sort-packages": true,
-        "classmap-authoritative": true
+        "classmap-authoritative": true,
+        "process-timeout": 900
     },
     "scripts": {
         "pint": [
