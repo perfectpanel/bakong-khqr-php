@@ -22,9 +22,6 @@ class TokenApiTest extends TestCase
 
     public function test_renew_token_unregistered_email(): void
     {
-        $response = BakongKHQR::renewToken('nonexistent-account@gmail.com');
-        $this->assertEquals(10, $response['errorCode'], 'Unregistered email');
-
         for ($i = 0; $i < self::RETRY_ATTEMPTS; $i++) {
             try {
                 $response = BakongKHQR::renewToken('nonexistent-account@gmail.com');

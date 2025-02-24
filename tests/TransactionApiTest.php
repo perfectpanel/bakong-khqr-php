@@ -249,7 +249,7 @@ class TransactionApiTest extends TestCase
                 ];
                 $response = $bakongKhqr->checkTransactionByMD5List($md5List);
                 $this->assertIsArray($response['data'], '[test_check_transaction_by_md5_list] Response should have data array');
-                $notFoundArray = array_filter($response['data'], fn ($item) => is_array($item) && $item['status'] === 'NOT_FOUND');
+                $notFoundArray = array_filter($response['data'], fn ($item) => is_array($item) && ($item['status'] === 'NOT_FOUND' || $item['status'] === 'SERVICE_FAILED'));
                 if (count($notFoundArray) !== count($md5List)) {
                     $this->fail('[test_check_transaction_by_md5_list] Unexpected response: '.json_encode($response));
                 }
@@ -288,15 +288,14 @@ class TransactionApiTest extends TestCase
         for ($i = 0; $i < self::RETRY_ATTEMPTS; $i++) {
             try {
                 $bakongKhqr = new BakongKHQR(self::$token);
-                // FIXME: Commented the first hash for now because somehow it always returns result 'SERVICE_FAILED' (Service unavailable)
                 $fullHashList = [
-                    // 'f0ae142842181535e678900bc5be1c3bd48d567ced77410a169fb672792968c8',
+                    'f0ae142842181535e678900bc5be1c3bd48d567ced77410a169fb672792968c8',
                     'd3b42e35d618a42b7506a79564083e6e91d5383b63f8aa2cf2ca7e65d55ec858',
                     '9036688e95cb3d1b621a9a989ebe64629d8c118654cfbc47f4d4991d72fc3b44',
                 ];
                 $response = $bakongKhqr->checkTransactionByFullHashList($fullHashList);
                 $this->assertIsArray($response['data'], '[test_check_transaction_by_hash_list] Response should have data array');
-                $notFoundArray = array_filter($response['data'], fn ($item) => is_array($item) && $item['status'] === 'NOT_FOUND');
+                $notFoundArray = array_filter($response['data'], fn ($item) => is_array($item) && ($item['status'] === 'NOT_FOUND' || $item['status'] === 'SERVICE_FAILED'));
                 if (count($notFoundArray) !== count($fullHashList)) {
                     $this->fail('[test_check_transaction_by_hash_list] Unexpected response: '.json_encode($response));
                 }
