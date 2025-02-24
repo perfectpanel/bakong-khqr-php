@@ -29,6 +29,8 @@ class TokenApiTest extends TestCase
             try {
                 $response = BakongKHQR::renewToken('nonexistent-account@gmail.com');
                 $this->assertEquals(10, $response['errorCode'], 'Unregistered email');
+
+                return;
             } catch (KHQRException $e) {
                 if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13 || $e->getCode() === 15) {
                     // Unstable server or server cannot be reached; retry again 3 times
@@ -41,6 +43,9 @@ class TokenApiTest extends TestCase
                 $this->fail('[test_renew_token_unregistered_email] Unexpected exception occurred: '.$e->getCode().' - '.$e->getMessage());
             }
         }
+
+        // If we reach here, the test failed to get a valid response
+        $this->fail('Test failed after all retry attempts.');
     }
 
     public function test_renew_token_registered_email(): void
@@ -53,6 +58,8 @@ class TokenApiTest extends TestCase
                     $this->fail('[test_renew_token_registered_email] Unexpected data structure: '.json_encode($response));
                 }
                 $this->assertNotEmpty($response['data']['token'], 'Renewed token string is not empty');
+
+                return;
             } catch (KHQRException $e) {
                 if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13 || $e->getCode() === 15) {
                     // Unstable server or server cannot be reached; retry again 3 times
@@ -65,5 +72,8 @@ class TokenApiTest extends TestCase
                 $this->fail('[test_renew_token_registered_email] Unexpected exception occurred: '.$e->getCode().' - '.$e->getMessage());
             }
         }
+
+        // If we reach here, the test failed to get a valid response
+        $this->fail('Test failed after all retry attempts.');
     }
 }
