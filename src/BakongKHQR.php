@@ -550,4 +550,9 @@ class BakongKHQR
 
         return $khqr.Utils::crc16($khqr);
     }
+
+    public static function isExpiredToken(string $token): bool
+    {
+        return Token::isExpiredToken($token);
+    }
 }

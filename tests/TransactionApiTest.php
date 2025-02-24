@@ -28,14 +28,14 @@ class TransactionApiTest extends TestCase
         return $response['data']['token'];
     }
 
-    public function test_expired_token(): void
+    public function test_check_transaction_by_md5_with_expired_token(): void
     {
         $bakongKhqr = new BakongKHQR(self::$expiredToken);
         try {
             $bakongKhqr->checkTransactionByMD5('d60f3db96913029a2af979a1662c1e72');
         } catch (KHQRException $e) {
             if ($e->getCode() !== 6) {
-                $this->fail('[test_expired_token] Unexpected exception occurred: '.$e->getCode().' - '.$e->getMessage());
+                $this->fail('[test_check_transaction_by_md5_with_expired_token] Unexpected exception occurred: '.$e->getCode().' - '.$e->getMessage());
             }
 
             $this->assertEquals(6, $e->getCode());
@@ -56,7 +56,7 @@ class TransactionApiTest extends TestCase
 
                 return;
             } catch (KHQRException $e) {
-                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13) {
+                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13 || $e->getCode() === 15) {
                     // Unstable server or server cannot be reached; retry again 3 times
                     $waitTime = self::BACKOFF_FACTOR ** $i;
                     sleep($waitTime);
@@ -95,7 +95,7 @@ class TransactionApiTest extends TestCase
 
                 return;
             } catch (KHQRException $e) {
-                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13) {
+                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13 || $e->getCode() === 15) {
                     // Unstable server or server cannot be reached; retry again 3 times
                     $waitTime = self::BACKOFF_FACTOR ** $i;
                     sleep($waitTime);
@@ -134,7 +134,7 @@ class TransactionApiTest extends TestCase
 
                 return;
             } catch (KHQRException $e) {
-                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13) {
+                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13 || $e->getCode() === 15) {
                     // Unstable server or server cannot be reached; retry again 3 times
                     $waitTime = self::BACKOFF_FACTOR ** $i;
                     sleep($waitTime);
@@ -173,7 +173,7 @@ class TransactionApiTest extends TestCase
 
                 return;
             } catch (KHQRException $e) {
-                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13) {
+                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13 || $e->getCode() === 15) {
                     // Unstable server or server cannot be reached; retry again 3 times
                     $waitTime = self::BACKOFF_FACTOR ** $i;
                     sleep($waitTime);
@@ -212,7 +212,7 @@ class TransactionApiTest extends TestCase
 
                 return;
             } catch (KHQRException $e) {
-                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13) {
+                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13 || $e->getCode() === 15) {
                     // Unstable server or server cannot be reached; retry again 3 times
                     $waitTime = self::BACKOFF_FACTOR ** $i;
                     sleep($waitTime);
@@ -258,7 +258,7 @@ class TransactionApiTest extends TestCase
 
                 return;
             } catch (KHQRException $e) {
-                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13) {
+                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13 || $e->getCode() === 15) {
                     // Unstable server or server cannot be reached; retry again 3 times
                     $waitTime = self::BACKOFF_FACTOR ** $i;
                     sleep($waitTime);
@@ -305,7 +305,7 @@ class TransactionApiTest extends TestCase
 
                 return;
             } catch (KHQRException $e) {
-                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13) {
+                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13 || $e->getCode() === 15) {
                     // Unstable server or server cannot be reached; retry again 3 times
                     $waitTime = self::BACKOFF_FACTOR ** $i;
                     sleep($waitTime);

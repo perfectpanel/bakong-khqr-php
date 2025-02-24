@@ -22,4 +22,24 @@ class Token
 
         return Utils::post_data_to_url($url, ['email' => $email]);
     }
+
+    public static function isExpiredToken(string $token): bool
+    {
+        if (Utils::isBlank($token)) {
+            return true;
+        }
+
+        try {
+            $exp = Utils::getExpirationDateFromJwtPayload($token);
+            if ($exp == null) {
+                return true;
+            }
+
+            return time() > $exp;
+        } catch (\Exception $e) {
+            var_dump('An exception occurred while validating expiration date from token: '.$token, $e);
+
+            return true;
+        }
+    }
 }

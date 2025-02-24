@@ -403,4 +403,30 @@ abstract class Utils
     {
         return str_pad(strtoupper(dechex($crc)), 4, '0', STR_PAD_LEFT);
     }
+
+    public static function getExpirationDateFromJwtPayload(string $jwt): ?int
+    {
+        // Split the JWT into its components (header, payload, signature)
+        $parts = explode('.', $jwt);
+
+        // Ensure the JWT has 3 parts
+        if (count($parts) !== 3) {
+            throw new \InvalidArgumentException('Invalid JWT format.');
+        }
+
+        // Decode the payload (second part) from Base64Url
+        $payload = base64_decode($parts[1]);
+
+        // Convert the payload from JSON to an array or object
+        $decodedPayload = json_decode($payload, true);
+
+        assert(is_array($decodedPayload));
+
+        // Check if the 'exp' (expiration) key exists in the payload
+        if (isset($decodedPayload['exp'])) {
+            return (int) $decodedPayload['exp']; // Return the expiration time (as a timestamp)
+        }
+
+        return null; // Return null if no expiration date is found
+    }
 }

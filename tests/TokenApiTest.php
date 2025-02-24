@@ -14,10 +14,33 @@ class TokenApiTest extends TestCase
 
     private const RETRY_ATTEMPTS = 3;
 
+    public function test_expired_token(): void
+    {
+        $valid = BakongKHQR::isExpiredToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiMWExMTJhNGE2NWZhNGNkNSJ9LCJpYXQiOjE3MjgxNjg1OTAsImV4cCI6MTczNTk0NDU5MH0.TW2cWPrcPTWTuR-Hth_6tXnNLoTjQVBknuyRlMQIluk');
+        $this->assertTrue($valid);
+    }
+
     public function test_renew_token_unregistered_email(): void
     {
         $response = BakongKHQR::renewToken('nonexistent-account@gmail.com');
         $this->assertEquals(10, $response['errorCode'], 'Unregistered email');
+
+        for ($i = 0; $i < self::RETRY_ATTEMPTS; $i++) {
+            try {
+                $response = BakongKHQR::renewToken('nonexistent-account@gmail.com');
+                $this->assertEquals(10, $response['errorCode'], 'Unregistered email');
+            } catch (KHQRException $e) {
+                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13 || $e->getCode() === 15) {
+                    // Unstable server or server cannot be reached; retry again 3 times
+                    $waitTime = self::BACKOFF_FACTOR ** $i;
+                    sleep($waitTime);
+
+                    continue;
+                }
+
+                $this->fail('[test_renew_token_unregistered_email] Unexpected exception occurred: '.$e->getCode().' - '.$e->getMessage());
+            }
+        }
     }
 
     public function test_renew_token_registered_email(): void
@@ -31,7 +54,7 @@ class TokenApiTest extends TestCase
                 }
                 $this->assertNotEmpty($response['data']['token'], 'Renewed token string is not empty');
             } catch (KHQRException $e) {
-                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13) {
+                if ($e->getCode() === 503 || $e->getCode() === 504 || $e->getCode() === 13 || $e->getCode() === 15) {
                     // Unstable server or server cannot be reached; retry again 3 times
                     $waitTime = self::BACKOFF_FACTOR ** $i;
                     sleep($waitTime);

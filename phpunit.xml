@@ -8,6 +8,7 @@
 >
     <php>
         <ini name="memory_limit" value="1G" />
+        <ini name="max_execution_time" value="600" /> <!-- Increase to 600 seconds -->
     </php>
     <testsuites>
         <testsuite name="main">
