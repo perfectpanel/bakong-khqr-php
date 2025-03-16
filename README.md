@@ -398,7 +398,7 @@ composer run refactor
 
 ## Troubleshooting
 
-### PHP curl does not work correctly on Windows.
+### PHP curl does not work correctly on Windows
 
 It may be due to the fact that your PHP configuration does not include a valid certificate file. This can be confirmed by disabling the SSL verification:
 

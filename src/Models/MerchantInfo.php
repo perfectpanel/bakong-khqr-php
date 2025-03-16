@@ -46,6 +46,8 @@ class MerchantInfo
 
     public ?string $upiMerchantAccount;
 
+    public ?int $expirationTimestamp;
+
     public function __construct(
         string $bakongAccountID,
         string $merchantName,
@@ -63,7 +65,8 @@ class MerchantInfo
         ?string $languagePreference = null,
         ?string $merchantNameAlternateLanguage = null,
         ?string $merchantCityAlternateLanguage = null,
-        ?string $upiMerchantAccount = null
+        ?string $upiMerchantAccount = null,
+        ?int $expirationTimestamp = null
     ) {
         if (Utils::isBlank($bakongAccountID)) {
             throw new KHQRException(KHQRException::BAKONG_ACCOUNT_ID_REQUIRED);
@@ -103,6 +106,7 @@ class MerchantInfo
         $this->merchantNameAlternateLanguage = $merchantNameAlternateLanguage;
         $this->merchantCityAlternateLanguage = $merchantCityAlternateLanguage;
         $this->upiMerchantAccount = $upiMerchantAccount;
+        $this->expirationTimestamp = $expirationTimestamp;
     }
 
     /**
@@ -118,7 +122,8 @@ class MerchantInfo
      *     languagePreference?: string|null,
      *     merchantNameAlternateLanguage?: string|null,
      *     merchantCityAlternateLanguage?: string|null,
-     *     upiMerchantAccount?: string|null
+     *     upiMerchantAccount?: string|null,
+     *     expirationTimestamp?: int|null
      * } $optionalData
      */
     public static function withOptionalArray(
@@ -141,6 +146,7 @@ class MerchantInfo
         $merchantNameAlternateLanguage = $optionalData['merchantNameAlternateLanguage'] ?? null;
         $merchantCityAlternateLanguage = $optionalData['merchantCityAlternateLanguage'] ?? null;
         $upiMerchantAccount = $optionalData['upiMerchantAccount'] ?? null;
+        $expirationTimestamp = $optionalData['expirationTimestamp'] ?? null;
 
         return new self(
             bakongAccountID: $bakongAccountID,
@@ -159,7 +165,8 @@ class MerchantInfo
             languagePreference: $languagePreference,
             merchantNameAlternateLanguage: $merchantNameAlternateLanguage,
             merchantCityAlternateLanguage: $merchantCityAlternateLanguage,
-            upiMerchantAccount: $upiMerchantAccount
+            upiMerchantAccount: $upiMerchantAccount,
+            expirationTimestamp: $expirationTimestamp
         );
     }
 }

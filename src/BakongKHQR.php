@@ -30,9 +30,12 @@ use KHQR\Models\PayloadFormatIndicator;
 use KHQR\Models\PointOfInitiationMethod;
 use KHQR\Models\SourceInfo;
 use KHQR\Models\Timestamp;
+use KHQR\Models\TimestampData;
 use KHQR\Models\TransactionAmount;
 use KHQR\Models\TransactionCurrency;
 use KHQR\Models\UnionpayMerchantAccount;
+
+use function PHPUnit\Framework\assertFalse;
 
 class BakongKHQR
 {
@@ -269,6 +272,21 @@ class BakongKHQR
             $lastTag = $tag;
         }
 
+        // Tag pointOfInitiationMethod 01, dynamic khqr 12
+        if (array_filter($tags, fn ($item) => $item['tag'] === '01' && $item['value'] === '12')) {
+            if (! array_filter($tags, fn ($item) => $item['tag'] === '54')) {
+                throw new KHQRException(KHQRException::INVALID_DYNAMIC_KHQR);
+            }
+            if (! array_filter($tags, fn ($item) => $item['tag'] === '99')) {
+                throw new KHQRException(KHQRException::EXPIRATION_TIMESTAMP_REQUIRED);
+            }
+        }
+
+        // Check required timestamp for dynamic KHQR (tag amount 54, tag timestamp 99)
+        if (array_filter($tags, fn ($item) => $item['tag'] === '54') && ! array_filter($tags, fn ($item) => $item['tag'] === '99')) {
+            throw new KHQRException(KHQRException::EXPIRATION_TIMESTAMP_REQUIRED);
+        }
+
         $requiredFieldNotExist = count($requiredField) != 0;
         if ($requiredFieldNotExist) {
             $requiredTag = current($requiredField);
@@ -286,20 +304,17 @@ class BakongKHQR
             $decodeValue = array_merge($decodeValue, $obj);
         }
 
+        $poi = null;
         foreach ($tags as $khqrTag) {
             $tag = $khqrTag['tag'];
             $khqr = current(array_filter(KHQRData::KHQRTag, fn ($el): bool => $el['tag'] == $tag));
             assert($khqr !== false);
-
-            if ($khqr['instance'] === Timestamp::class) {
-                $instance = new Timestamp($tag);
-                $decodeValue[$khqr['type']] = $instance->value;
-
-                continue;
-            }
-
             $value = $khqrTag['value'];
             $inputValue = $value;
+
+            if ($tag === EMV::POINT_OF_INITIATION_METHOD) {
+                $poi = $value;
+            }
 
             if (in_array($tag, $subtag)) {
                 $inputdata = (array) ((array) Utils::findTag($subTagInput, $tag))['data'];
@@ -327,13 +342,20 @@ class BakongKHQR
                     AdditionalData::class,
                     MerchantInformationLanguageTemplate::class,
                     GlobalUniqueIdentifier::class,
+                    Timestamp::class,
                 ]));
 
                 // Check if the tag value is valid
-                new $tagClass($tag, $inputValue);
+                if ($tagClass === Timestamp::class) {
+                    $timestampData = new TimestampData($inputValue['creationTimestamp'], $inputValue['expirationTimestamp']);
+                    new Timestamp($tag, $timestampData, $poi);
+                } else {
+                    new $tagClass($tag, $inputValue);
+                }
 
                 $decodeValue = array_merge($decodeValue, $inputValue);
             } else {
+                assertFalse($khqr['instance'] === Timestamp::class);
                 $instance = new $khqr['instance']($tag, $value);
                 $decodeValue[$khqr['type']] = $instance->value;
             }
@@ -540,8 +562,17 @@ class BakongKHQR
             $languageTemplate = new MerchantInformationLanguageTemplate(EMV::MERCHANT_INFORMATION_LANGUAGE_TEMPLATE, $languageInformation);
             $KHQRInstances[] = $languageTemplate;
         }
-        $timeStamp = new Timestamp(EMV::TIMESTAMP_TAG);
-        $KHQRInstances[] = $timeStamp;
+
+        if ($QRType === EMV::DYNAMIC_QR) {
+            if (! isset($info->expirationTimestamp)) {
+                throw new KHQRException(KHQRException::EXPIRATION_TIMESTAMP_REQUIRED);
+            }
+
+            $timestampData = new TimestampData(time(), $info->expirationTimestamp);
+            $timeStamp = new Timestamp(EMV::TIMESTAMP_TAG, $timestampData, $QRType);
+            $KHQRInstances[] = $timeStamp;
+        }
+
         $khqrNoCrc = '';
         foreach ($KHQRInstances as $instance) {
             $khqrNoCrc .= (string) $instance;
@@ -558,13 +589,13 @@ class BakongKHQR
 
     /*** Decode Non-KHQR String ***/
 
-    private static function isValidTLV(string $tag, int $length, string $value): bool
+    private static function isValidTLV(mixed $tag, int $length, string $value): bool
     {
         return \is_numeric($tag) && $length === strlen($value);
     }
 
     /**
-     * @return array<string, string|mixed>
+     * @return array<string, string|int>
      */
     private static function extractTLV(string $string): array
     {
@@ -587,13 +618,13 @@ class BakongKHQR
         $finalData = [];
         $remaningQR = $qr;
 
-        // First-level
+        // first-level
         do {
             $result = self::extractTLV($remaningQR);
-            $tag = $result['tag'];
-            $length = $result['length'];
-            $value = $result['value'];
-            $remainString = $result['remainString'];
+            $tag = (string) $result['tag'];
+            $length = (int) $result['length'];
+            $value = (string) $result['value'];
+            $remainString = (string) $result['remainString'];
 
             if (! self::isValidTLV($tag, $length, $value)) {
                 break;
@@ -602,38 +633,47 @@ class BakongKHQR
             $remaningQR = $remainString;
         } while (! empty($remaningQR));
 
-        // Second-level
+        // second-level
         foreach ($firstLevelData as $tag => $value) {
             $remainingValue = $value;
             $finalData[$tag] = $remainingValue;
+
             $secondLevelData = [];
             $thirdLevelData = [];
 
-            if (! ($tag >= 26 && $tag <= 51) && ! ($tag >= 80 && $tag <= 99) && $tag !== '64' && $tag !== '62') {
+            $tagInt = (int) $tag;
+            if (! ($tagInt >= 26 && $tagInt <= 51) &&
+                ! ($tagInt >= 80 && $tagInt <= 99) &&
+                $tag !== 64 &&
+                $tag !== 62) {
                 continue;
             }
 
+            // check if value has emv format
             if (strlen($remainingValue) >= 6) {
                 do {
                     $result = self::extractTLV($remainingValue);
-                    $subTag = $result['tag'];
-                    $length = $result['length'];
-                    $subValue = $result['value'];
-                    $remainString = $result['remainString'];
+                    $subTag = (string) $result['tag'];
+                    $length = (int) $result['length'];
+                    $subValue = (string) $result['value'];
+                    $remainString = (string) $result['remainString'];
 
                     if (! self::isValidTLV($subTag, $length, $subValue)) {
                         break;
                     }
                     $remainingValue = $remainString;
 
-                    if ($tag === '62' && $subTag >= 50 && $subTag <= 99) {
+                    // check for main tag 62 and subtags in range 50-99
+                    if ($tagInt === 62 && (int) $subTag >= 50 && (int) $subTag <= 99) {
                         $remainingValueL3 = $subValue;
+
+                        // third-level
                         do {
                             $result = self::extractTLV($remainingValueL3);
-                            $subTagL3 = $result['tag'];
-                            $length = $result['length'];
-                            $valueL3 = $result['value'];
-                            $remainString = $result['remainString'];
+                            $subTagL3 = (string) $result['tag'];
+                            $length = (int) $result['length'];
+                            $valueL3 = (string) $result['value'];
+                            $remainString = (string) $result['remainString'];
 
                             if (! self::isValidTLV($subTagL3, $length, $valueL3)) {
                                 break;

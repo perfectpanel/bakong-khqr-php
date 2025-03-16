@@ -95,7 +95,7 @@ final class EMV
 
     public const INVALID_LENGTH_MERCHANT_CITY = 15;
 
-    // public const INVALID_LENGTH_TIMESTAMP = 13;
+    public const INVALID_LENGTH_TIMESTAMP = 13;
 
     public const INVALID_LENGTH_TRANSACTION_AMOUNT = 14;
 

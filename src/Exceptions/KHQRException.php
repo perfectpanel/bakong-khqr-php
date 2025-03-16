@@ -97,6 +97,18 @@ class KHQRException extends Exception
 
     public const UPI_ACCOUNT_INFORMATION_INVALID_CURRENCY = 'UPI_ACCOUNT_INFORMATION_INVALID_CURRENCY';
 
+    public const EXPIRATION_TIMESTAMP_REQUIRED = 'EXPIRATION_TIMESTAMP_REQUIRED';
+
+    public const KHQR_EXPIRED = 'KHQR_EXPIRED';
+
+    public const INVALID_DYNAMIC_KHQR = 'INVALID_DYNAMIC_KHQR';
+
+    public const POINT_OF_INITIATION_METHOD_INVALID = 'POINT_OF_INITIATION_METHOD_INVALID';
+
+    public const EXPIRATION_TIMESTAMP_LENGTH_INVALID = 'EXPIRATION_TIMESTAMP_LENGTH_INVALID';
+
+    public const EXPIRATION_TIMESTAMP_IN_THE_PAST = 'EXPIRATION_TIMESTAMP_IN_THE_PAST';
+
     // Error codes and messages
     public const ERRORS = [
         self::BAKONG_ACCOUNT_ID_REQUIRED => [1, 'Bakong Account ID cannot be null or empty'],
@@ -143,6 +155,12 @@ class KHQRException extends Exception
         self::PURPOSE_OF_TRANSACTION_LENGTH_INVALID => [42, 'Purpose of Transaction Length is invalid'],
         self::UPI_ACCOUNT_INFORMATION_LENGTH_INVALID => [43, 'Upi Account Information Length is invalid'],
         self::UPI_ACCOUNT_INFORMATION_INVALID_CURRENCY => [44, 'Upi Account Information Length does not accept USD'],
+        self::EXPIRATION_TIMESTAMP_REQUIRED => [45, 'Expiration timestamp is required for dynamic KHQR'],
+        self::KHQR_EXPIRED => [46, 'This dynamic KHQR has expired'],
+        self::INVALID_DYNAMIC_KHQR => [47, 'This dynamic KHQR has invalid field transaction amount'],
+        self::POINT_OF_INITIATION_METHOD_INVALID => [48, 'Point of Initiation Method is invalid'],
+        self::EXPIRATION_TIMESTAMP_LENGTH_INVALID => [49, 'Expiration timestamp length is invalid'],
+        self::EXPIRATION_TIMESTAMP_IN_THE_PAST => [50, 'Expiration timestamp is in the past'],
     ];
 
     /**
