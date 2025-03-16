@@ -107,6 +107,7 @@ final class KHQRData
         ],
         [
             'tag' => '99',
+            'sub' => true,
             'type' => 'timestamp',
             'required' => false,
             'instance' => Timestamp::class,
@@ -152,6 +153,13 @@ final class KHQRData
                     'languagePreference' => null,
                     'merchantNameAlternateLanguage' => null,
                     'merchantCityAlternateLanguage' => null,
+                ],
+            ],
+            [
+                'tag' => '99',
+                'data' => [
+                    'creationTimestamp' => null,
+                    'expirationTimestamp' => null,
                 ],
             ],
         ],
@@ -210,6 +218,16 @@ final class KHQRData
                 'tag' => '64',
                 'subTag' => EMV::MERCHANT_CITY_ALTERNATE_LANGUAGE,
                 'name' => 'merchantCityAlternateLanguage',
+            ],
+            [
+                'tag' => '99',
+                'subTag' => EMV::CREATION_TIMESTAMP,
+                'name' => 'creationTimestamp',
+            ],
+            [
+                'tag' => '99',
+                'subTag' => EMV::EXPIRATION_TIMESTAMP,
+                'name' => 'expirationTimestamp',
             ],
         ],
     ];

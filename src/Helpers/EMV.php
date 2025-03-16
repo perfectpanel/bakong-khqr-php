@@ -66,6 +66,10 @@ final class EMV
 
     public const TIMESTAMP_TAG = '99';
 
+    public const CREATION_TIMESTAMP = '00';
+
+    public const EXPIRATION_TIMESTAMP = '01';
+
     public const MERCHANT_INFORMATION_LANGUAGE_TEMPLATE = '64';
 
     public const LANGUAGE_PREFERENCE = '00';
@@ -91,7 +95,7 @@ final class EMV
 
     public const INVALID_LENGTH_MERCHANT_CITY = 15;
 
-    public const INVALID_LENGTH_TIMESTAMP = 13;
+    // public const INVALID_LENGTH_TIMESTAMP = 13;
 
     public const INVALID_LENGTH_TRANSACTION_AMOUNT = 14;
 

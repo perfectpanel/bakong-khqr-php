@@ -435,9 +435,9 @@ class BakongKHQR
                 }
             } else {
                 $decodeValue[$khqr['type']] = $value;
-                if ($tag === '99' && $value == null) {
-                    $decodeValue[$khqr['type']] = null;
-                }
+                // if ($tag === '99' && $value == null) {
+                //     $decodeValue[$khqr['type']] = null;
+                // }
             }
         }
 
@@ -555,4 +555,109 @@ class BakongKHQR
     {
         return Token::isExpiredToken($token);
     }
+
+    /*** Decode Non-KHQR String ***/
+
+    private static function isValidTLV(string $tag, int $length, string $value): bool
+    {
+        return \is_numeric($tag) && $length === strlen($value);
+    }
+
+    /**
+     * @return array<string, string|mixed>
+     */
+    private static function extractTLV(string $string): array
+    {
+        $tag = substr($string, 0, 2);
+        $length = (int) substr($string, 2, 2);
+        $value = substr($string, 4, $length);
+        $remainString = substr($string, 4 + $length);
+
+        return [
+            'tag' => $tag, // string
+            'length' => $length, // int
+            'value' => $value, // string
+            'remainString' => $remainString, // string
+        ];
+    }
+
+    public static function decodeNonKhqrString(string $qr): \KHQR\Models\KHQRResponse
+    {
+        $firstLevelData = [];
+        $finalData = [];
+        $remaningQR = $qr;
+
+        // First-level
+        do {
+            $result = self::extractTLV($remaningQR);
+            $tag = $result['tag'];
+            $length = $result['length'];
+            $value = $result['value'];
+            $remainString = $result['remainString'];
+
+            if (! self::isValidTLV($tag, $length, $value)) {
+                break;
+            }
+            $firstLevelData[$tag] = $value;
+            $remaningQR = $remainString;
+        } while (! empty($remaningQR));
+
+        // Second-level
+        foreach ($firstLevelData as $tag => $value) {
+            $remainingValue = $value;
+            $finalData[$tag] = $remainingValue;
+            $secondLevelData = [];
+            $thirdLevelData = [];
+
+            if (! ($tag >= 26 && $tag <= 51) && ! ($tag >= 80 && $tag <= 99) && $tag !== '64' && $tag !== '62') {
+                continue;
+            }
+
+            if (strlen($remainingValue) >= 6) {
+                do {
+                    $result = self::extractTLV($remainingValue);
+                    $subTag = $result['tag'];
+                    $length = $result['length'];
+                    $subValue = $result['value'];
+                    $remainString = $result['remainString'];
+
+                    if (! self::isValidTLV($subTag, $length, $subValue)) {
+                        break;
+                    }
+                    $remainingValue = $remainString;
+
+                    if ($tag === '62' && $subTag >= 50 && $subTag <= 99) {
+                        $remainingValueL3 = $subValue;
+                        do {
+                            $result = self::extractTLV($remainingValueL3);
+                            $subTagL3 = $result['tag'];
+                            $length = $result['length'];
+                            $valueL3 = $result['value'];
+                            $remainString = $result['remainString'];
+
+                            if (! self::isValidTLV($subTagL3, $length, $valueL3)) {
+                                break;
+                            }
+                            $thirdLevelData[$subTagL3] = $valueL3;
+                            $remainingValueL3 = $remainString;
+                        } while (! empty($remainingValueL3));
+                    }
+
+                    if (! empty($thirdLevelData)) {
+                        $secondLevelData[$subTag] = $thirdLevelData;
+                    } else {
+                        $secondLevelData[$subTag] = $subValue;
+                    }
+                } while (! empty($remainingValue));
+
+                if (! empty($secondLevelData)) {
+                    $finalData[$tag] = $secondLevelData;
+                }
+            }
+        }
+
+        return new KHQRResponse($finalData, null);
+    }
+
+    /*** END Decode Non-KHQR String ***/
 }
