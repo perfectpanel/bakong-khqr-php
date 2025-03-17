@@ -35,8 +35,6 @@ use KHQR\Models\TransactionAmount;
 use KHQR\Models\TransactionCurrency;
 use KHQR\Models\UnionpayMerchantAccount;
 
-use function PHPUnit\Framework\assertFalse;
-
 class BakongKHQR
 {
     private string $token;
@@ -152,8 +150,8 @@ class BakongKHQR
             return new CRCValidation(false);
         }
 
-        $crc = substr($KHQRString, -4);
-        $KHQRNoCrc = substr($KHQRString, 0, -4);
+        $crc = mb_substr(string: $KHQRString, start: -4, encoding: 'UTF-8');
+        $KHQRNoCrc = mb_substr($KHQRString, 0, -4, 'UTF-8');
         $validCRC = Utils::crc16($KHQRNoCrc) === strtoupper($crc);
         $isValidCRC = new CRCValidation($validCRC);
 
@@ -347,7 +345,7 @@ class BakongKHQR
 
                 // Check if the tag value is valid
                 if ($tagClass === Timestamp::class) {
-                    $timestampData = new TimestampData($inputValue['creationTimestamp'], $inputValue['expirationTimestamp']);
+                    $timestampData = new TimestampData((int) $inputValue['creationTimestamp'], (int) $inputValue['expirationTimestamp']);
                     new Timestamp($tag, $timestampData, $poi);
                 } else {
                     new $tagClass($tag, $inputValue);
@@ -355,7 +353,7 @@ class BakongKHQR
 
                 $decodeValue = array_merge($decodeValue, $inputValue);
             } else {
-                assertFalse($khqr['instance'] === Timestamp::class);
+                assert($khqr['instance'] !== Timestamp::class);
                 $instance = new $khqr['instance']($tag, $value);
                 $decodeValue[$khqr['type']] = $instance->value;
             }
@@ -523,31 +521,32 @@ class BakongKHQR
             $merchantCategoryCode,
             $currency,
         ];
+
         if (isset($amount) && $amount != 0) {
-            $amountInput = $amount;
             if ($info->currency == KHQRData::CURRENCY_KHR) {
-                if (floor($amountInput) == $amountInput) {
-                    $amountInput = round($amountInput);
-                } else {
+                if (floor($amount) !== $amount) {
                     throw new KHQRException(KHQRException::TRANSACTION_AMOUNT_INVALID);
                 }
-            } else {
-                // Removing trailing zeros after the decimal point
-                if (floor($amountInput) == $amountInput) {
-                    $amountInput = floor($amountInput);
-                }
 
-                $amountSplit = explode('.', (string) $amountInput);
-                if (isset($amountSplit[1])) {
-                    if (strlen($amountSplit[1]) > 2) {
+                $amountString = strval(round($amount)); // We use round() here as the npm package's Math.round()
+                $KHQRInstances[] = new TransactionAmount(EMV::TRANSACTION_AMOUNT, $amountString);
+            } else {
+                $amountString = strval($amount);
+                $hasDecimalPlaces = fmod($amount, 1) != 0;
+                if ($hasDecimalPlaces) {
+                    // Throw an error if the amount has more than 2 decimal places
+                    $amountString = number_format($amount, 2, '.', '');
+                    // In sync with JavaScript, substraction should be accurate up to 15 decimal places
+                    $epsilon = 0.000000000000001;
+                    if (abs($amount - floatval($amountString)) >= $epsilon) {
                         throw new KHQRException(KHQRException::TRANSACTION_AMOUNT_INVALID);
                     }
-
-                    $amountInput = number_format($amountInput, 2, '.', '');
                 }
+
+                $KHQRInstances[] = new TransactionAmount(EMV::TRANSACTION_AMOUNT, $amountString);
             }
-            $KHQRInstances[] = new TransactionAmount(EMV::TRANSACTION_AMOUNT, (string) $amountInput);
         }
+
         $countryCode = new CountryCode(EMV::COUNTRY_CODE, EMV::DEFAULT_COUNTRY_CODE);
         $KHQRInstances[] = $countryCode;
         $merchantName = new MerchantName(EMV::MERCHANT_NAME, $info->merchantName);
@@ -568,7 +567,8 @@ class BakongKHQR
                 throw new KHQRException(KHQRException::EXPIRATION_TIMESTAMP_REQUIRED);
             }
 
-            $timestampData = new TimestampData(time(), $info->expirationTimestamp);
+            $currentTimestampInMilliseconds = (int) (microtime(true) * 1000);
+            $timestampData = new TimestampData($currentTimestampInMilliseconds, (int) $info->expirationTimestamp);
             $timeStamp = new Timestamp(EMV::TIMESTAMP_TAG, $timestampData, $QRType);
             $KHQRInstances[] = $timeStamp;
         }
@@ -587,31 +587,6 @@ class BakongKHQR
         return Token::isExpiredToken($token);
     }
 
-    /*** Decode Non-KHQR String ***/
-
-    private static function isValidTLV(mixed $tag, int $length, string $value): bool
-    {
-        return \is_numeric($tag) && $length === strlen($value);
-    }
-
-    /**
-     * @return array<string, string|int>
-     */
-    private static function extractTLV(string $string): array
-    {
-        $tag = substr($string, 0, 2);
-        $length = (int) substr($string, 2, 2);
-        $value = substr($string, 4, $length);
-        $remainString = substr($string, 4 + $length);
-
-        return [
-            'tag' => $tag, // string
-            'length' => $length, // int
-            'value' => $value, // string
-            'remainString' => $remainString, // string
-        ];
-    }
-
     public static function decodeNonKhqrString(string $qr): \KHQR\Models\KHQRResponse
     {
         $firstLevelData = [];
@@ -620,13 +595,13 @@ class BakongKHQR
 
         // first-level
         do {
-            $result = self::extractTLV($remaningQR);
+            $result = Utils::extractTLV($remaningQR);
             $tag = (string) $result['tag'];
             $length = (int) $result['length'];
             $value = (string) $result['value'];
             $remainString = (string) $result['remainString'];
 
-            if (! self::isValidTLV($tag, $length, $value)) {
+            if (! Utils::isValidTLV($tag, $length, $value)) {
                 break;
             }
             $firstLevelData[$tag] = $value;
@@ -652,13 +627,13 @@ class BakongKHQR
             // check if value has emv format
             if (strlen($remainingValue) >= 6) {
                 do {
-                    $result = self::extractTLV($remainingValue);
+                    $result = Utils::extractTLV($remainingValue);
                     $subTag = (string) $result['tag'];
                     $length = (int) $result['length'];
                     $subValue = (string) $result['value'];
                     $remainString = (string) $result['remainString'];
 
-                    if (! self::isValidTLV($subTag, $length, $subValue)) {
+                    if (! Utils::isValidTLV($subTag, $length, $subValue)) {
                         break;
                     }
                     $remainingValue = $remainString;
@@ -669,13 +644,13 @@ class BakongKHQR
 
                         // third-level
                         do {
-                            $result = self::extractTLV($remainingValueL3);
+                            $result = Utils::extractTLV($remainingValueL3);
                             $subTagL3 = (string) $result['tag'];
                             $length = (int) $result['length'];
                             $valueL3 = (string) $result['value'];
                             $remainString = (string) $result['remainString'];
 
-                            if (! self::isValidTLV($subTagL3, $length, $valueL3)) {
+                            if (! Utils::isValidTLV($subTagL3, $length, $valueL3)) {
                                 break;
                             }
                             $thirdLevelData[$subTagL3] = $valueL3;
@@ -698,6 +673,4 @@ class BakongKHQR
 
         return new KHQRResponse($finalData, null);
     }
-
-    /*** END Decode Non-KHQR String ***/
 }

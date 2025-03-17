@@ -23,7 +23,7 @@ class Timestamp extends TagLengthString
                 throw new KHQRException(KHQRException::EXPIRATION_TIMESTAMP_LENGTH_INVALID);
             }
 
-            if (! is_numeric($expirationTimestamp) || strtotime(date('Y-m-d H:i:s', $expirationTimestamp)) === false) {
+            if (strtotime(date('Y-m-d H:i:s', $expirationTimestamp)) === false) {
                 throw new KHQRException(KHQRException::INVALID_DYNAMIC_KHQR);
             }
 
@@ -31,7 +31,8 @@ class Timestamp extends TagLengthString
                 throw new KHQRException(KHQRException::EXPIRATION_TIMESTAMP_IN_THE_PAST);
             }
 
-            if ($expirationTimestamp < time()) {
+            $currentTimestampInMilliseconds = (int) (microtime(true) * 1000);
+            if ($expirationTimestamp < $currentTimestampInMilliseconds) {
                 throw new KHQRException(KHQRException::KHQR_EXPIRED);
             }
         }

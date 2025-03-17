@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 class DecodeTest extends TestCase
 {
     private $testData = [
-        0 => [
+        [
             'statement' => 'Decode Test 1',
             'data' => '00020101021229190015john_smith@devb52045999530311654065000.05802KH5910jonh smith6010Phnom Penh62360109#INV-20030313Coffee Klaing0702#299170013161302797275763049ACF',
             'result' => [
@@ -27,6 +27,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => null,
                 'merchantNameAlternateLanguage' => null,
                 'merchantCityAlternateLanguage' => null,
+                'creationTimestamp' => '1613027972757',
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => '01',
                 'pointofInitiationMethod' => '12',
                 'unionPayMerchant' => null,
@@ -36,11 +38,10 @@ class DecodeTest extends TestCase
                 'countryCode' => 'KH',
                 'merchantName' => 'jonh smith',
                 'merchantCity' => 'Phnom Penh',
-                'timestamp' => '00131613027972757',
                 'crc' => '9ACF',
             ],
         ],
-        1 => [
+        [
             'statement' => 'Decode Test 2',
             'data' => '00020101021230410015john_smith@devb01061234560208Dev Bank52045999530384054035.05802KH5916john smith actor6010Phnom Penh62130709Counter 299170013161343857579463048EF2',
             'result' => [
@@ -57,6 +58,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => null,
                 'merchantNameAlternateLanguage' => null,
                 'merchantCityAlternateLanguage' => null,
+                'creationTimestamp' => '1613438575794',
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => '01',
                 'pointofInitiationMethod' => '12',
                 'unionPayMerchant' => null,
@@ -66,11 +69,10 @@ class DecodeTest extends TestCase
                 'countryCode' => 'KH',
                 'merchantName' => 'john smith actor',
                 'merchantCity' => 'Phnom Penh',
-                'timestamp' => '00131613438575794',
                 'crc' => '8EF2',
             ],
         ],
-        2 => [
+        [
             'statement' => 'Decode Test 3',
             'data' => '00020101021230410015john_smith@devb01061234560208Dev Bank52045999530384054035.05802KH5916john smith actor6010Phnom Penh62280111Invoice#0690709Counter 29917001316134385758926304384E',
             'result' => [
@@ -87,6 +89,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => null,
                 'merchantNameAlternateLanguage' => null,
                 'merchantCityAlternateLanguage' => null,
+                'creationTimestamp' => '1613438575892',
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => '01',
                 'pointofInitiationMethod' => '12',
                 'unionPayMerchant' => null,
@@ -96,11 +100,10 @@ class DecodeTest extends TestCase
                 'countryCode' => 'KH',
                 'merchantName' => 'john smith actor',
                 'merchantCity' => 'Phnom Penh',
-                'timestamp' => '00131613438575892',
                 'crc' => '384E',
             ],
         ],
-        3 => [
+        [
             'statement' => 'Decode Test 4',
             'data' => '00020101021230410015john_smith@devb01061234560208Dev Bank52045999530384054035.05802KH5916john smith actor6010Phnom Penh62150111Invoice#0699917001316134385758926304552D',
             'result' => [
@@ -117,6 +120,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => null,
                 'merchantNameAlternateLanguage' => null,
                 'merchantCityAlternateLanguage' => null,
+                'creationTimestamp' => '1613438575892',
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => '01',
                 'pointofInitiationMethod' => '12',
                 'unionPayMerchant' => null,
@@ -126,11 +131,10 @@ class DecodeTest extends TestCase
                 'countryCode' => 'KH',
                 'merchantName' => 'john smith actor',
                 'merchantCity' => 'Phnom Penh',
-                'timestamp' => '00131613438575892',
                 'crc' => '552D',
             ],
         ],
-        4 => [
+        [
             'statement' => 'Decode Test 5',
             'data' => '000201010211021641277800000000980416518352888000006030470016abaakhppxxx@abaa01153166007701102420204abaa5204224253038405802KH5910USD OUTLET6010PHNOM PENH62250509115B02750070827CE19809924001339CA026411FDA6803mmp63043870',
             'result' => [
@@ -147,6 +151,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => null,
                 'merchantNameAlternateLanguage' => null,
                 'merchantCityAlternateLanguage' => null,
+                'creationTimestamp' => '39CA026411FDA',
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => '01',
                 'pointofInitiationMethod' => '11',
                 'unionPayMerchant' => null,
@@ -156,11 +162,10 @@ class DecodeTest extends TestCase
                 'countryCode' => 'KH',
                 'merchantName' => 'USD OUTLET',
                 'merchantCity' => 'PHNOM PENH',
-                'timestamp' => '001339CA026411FDA6803mmp',
                 'crc' => '3870',
             ],
         ],
-        5 => [
+        [
             'statement' => 'Decode Test 6',
             'data' => '00020101021130470009khqr@aclb0111855124649170215ACLEDA Bank Plc5204599953038405802KH5907BUN MAO6010Phnom Penh6102126213020901050033164310002KM0107BUN MAO0210Phnom Penh6304E313',
             'result' => [
@@ -177,6 +182,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => 'KM',
                 'merchantNameAlternateLanguage' => 'BUN MAO',
                 'merchantCityAlternateLanguage' => 'Phnom Penh',
+                'creationTimestamp' => null,
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => '01',
                 'pointofInitiationMethod' => '11',
                 'unionPayMerchant' => null,
@@ -186,11 +193,10 @@ class DecodeTest extends TestCase
                 'countryCode' => 'KH',
                 'merchantName' => 'BUN MAO',
                 'merchantCity' => 'Phnom Penh',
-                'timestamp' => null,
                 'crc' => 'E313',
             ],
         ],
-        6 => [
+        [
             'statement' => 'Decode Test 7',
             'data' => '00020101021130640009khqr@aclb0111855124649060215ACLEDA Bank Plc051385500000019425204593153038405802KH5912KHQR TESTING6010Phnom Penh6102126213020901753577164360002KM0112KHQR TESTING0210Phnom Penh6304AC1C',
             'result' => [
@@ -207,6 +213,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => 'KM',
                 'merchantNameAlternateLanguage' => 'KHQR TESTING',
                 'merchantCityAlternateLanguage' => 'Phnom Penh',
+                'creationTimestamp' => null,
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => '01',
                 'pointofInitiationMethod' => '11',
                 'unionPayMerchant' => null,
@@ -216,11 +224,10 @@ class DecodeTest extends TestCase
                 'countryCode' => 'KH',
                 'merchantName' => 'KHQR TESTING',
                 'merchantCity' => 'Phnom Penh',
-                'timestamp' => null,
                 'crc' => 'AC1C',
             ],
         ],
-        7 => [
+        [
             'statement' => 'Decode Test 8',
             'data' => '00020101021229310014jonhsmith@nbcq0109012345678520459995303116540750000.05802KH5910Jonh Smith6009Siam Reap62550117INV-2021-07-658220211855123456780305BKK-1070601234599170013163039583850263041134',
             'result' => [
@@ -237,6 +244,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => null,
                 'merchantNameAlternateLanguage' => null,
                 'merchantCityAlternateLanguage' => null,
+                'creationTimestamp' => '1630395838502',
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => '01',
                 'pointofInitiationMethod' => '12',
                 'unionPayMerchant' => null,
@@ -246,11 +255,10 @@ class DecodeTest extends TestCase
                 'countryCode' => 'KH',
                 'merchantName' => 'Jonh Smith',
                 'merchantCity' => 'Siam Reap',
-                'timestamp' => '00131630395838502',
                 'crc' => '1134',
             ],
         ],
-        8 => [
+        [
             'statement' => 'Decode Test 9',
             'data' => 'EAB3',
             'result' => [
@@ -267,6 +275,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => null,
                 'merchantNameAlternateLanguage' => null,
                 'merchantCityAlternateLanguage' => null,
+                'creationTimestamp' => null,
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => null,
                 'pointofInitiationMethod' => null,
                 'unionPayMerchant' => null,
@@ -276,11 +286,10 @@ class DecodeTest extends TestCase
                 'countryCode' => null,
                 'merchantName' => null,
                 'merchantCity' => null,
-                'timestamp' => null,
                 'crc' => null,
             ],
         ],
-        9 => [
+        [
             'statement' => 'Decode Test 10',
             'data' => '00020101021230190015',
             'result' => [
@@ -297,6 +306,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => null,
                 'merchantNameAlternateLanguage' => null,
                 'merchantCityAlternateLanguage' => null,
+                'creationTimestamp' => null,
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => '01',
                 'pointofInitiationMethod' => '12',
                 'unionPayMerchant' => null,
@@ -306,11 +317,10 @@ class DecodeTest extends TestCase
                 'countryCode' => null,
                 'merchantName' => null,
                 'merchantCity' => null,
-                'timestamp' => null,
                 'crc' => null,
             ],
         ],
-        10 => [
+        [
             'statement' => 'Decode Test 11',
             'data' => '10263041234',
             'result' => [
@@ -327,6 +337,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => null,
                 'merchantNameAlternateLanguage' => null,
                 'merchantCityAlternateLanguage' => null,
+                'creationTimestamp' => null,
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => null,
                 'pointofInitiationMethod' => null,
                 'unionPayMerchant' => null,
@@ -336,11 +348,10 @@ class DecodeTest extends TestCase
                 'countryCode' => null,
                 'merchantName' => null,
                 'merchantCity' => null,
-                'timestamp' => null,
                 'crc' => null,
             ],
         ],
-        11 => [
+        [
             'statement' => 'Decode Test 12',
             'data' => '63041234',
             'result' => [
@@ -357,6 +368,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => null,
                 'merchantNameAlternateLanguage' => null,
                 'merchantCityAlternateLanguage' => null,
+                'creationTimestamp' => null,
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => null,
                 'pointofInitiationMethod' => null,
                 'unionPayMerchant' => null,
@@ -366,11 +379,10 @@ class DecodeTest extends TestCase
                 'countryCode' => null,
                 'merchantName' => null,
                 'merchantCity' => null,
-                'timestamp' => null,
                 'crc' => '1234',
             ],
         ],
-        12 => [
+        [
             'statement' => 'Decode Test 13',
             'data' => '00020101021230410015john_smith@devb01061234560208Dev Bank53038405204599954035.05802KH5916john smith actor6010Phnom Penh62150111Invoice#06999170013161343857589263040437',
             'result' => [
@@ -387,6 +399,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => null,
                 'merchantNameAlternateLanguage' => null,
                 'merchantCityAlternateLanguage' => null,
+                'creationTimestamp' => '1613438575892',
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => '01',
                 'pointofInitiationMethod' => '12',
                 'unionPayMerchant' => null,
@@ -396,11 +410,10 @@ class DecodeTest extends TestCase
                 'countryCode' => 'KH',
                 'merchantName' => 'john smith actor',
                 'merchantCity' => 'Phnom Penh',
-                'timestamp' => '00131613438575892',
                 'crc' => '0437',
             ],
         ],
-        13 => [
+        [
             'statement' => 'Decode Test 14',
             'data' => '00020101021252045999530384054035.05802KH5916john smith actor6010Phnom Penh62150111Invoice#06999170013161343857589263042494',
             'result' => [
@@ -417,6 +430,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => null,
                 'merchantNameAlternateLanguage' => null,
                 'merchantCityAlternateLanguage' => null,
+                'creationTimestamp' => '1613438575892',
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => '01',
                 'pointofInitiationMethod' => '12',
                 'unionPayMerchant' => null,
@@ -426,11 +441,10 @@ class DecodeTest extends TestCase
                 'countryCode' => 'KH',
                 'merchantName' => 'john smith actor',
                 'merchantCity' => 'Phnom Penh',
-                'timestamp' => '00131613438575892',
                 'crc' => '2494',
             ],
         ],
-        14 => [
+        [
             'statement' => 'Decode Test 15',
             'data' => '000201010212301900151234567890123456304D807',
             'result' => [
@@ -447,6 +461,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => null,
                 'merchantNameAlternateLanguage' => null,
                 'merchantCityAlternateLanguage' => null,
+                'creationTimestamp' => null,
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => '01',
                 'pointofInitiationMethod' => '12',
                 'unionPayMerchant' => null,
@@ -456,11 +472,10 @@ class DecodeTest extends TestCase
                 'countryCode' => null,
                 'merchantName' => null,
                 'merchantCity' => null,
-                'timestamp' => null,
                 'crc' => 'D807',
             ],
         ],
-        15 => [
+        [
             'statement' => 'Decode Test 16',
             'data' => '00020101021230440040123456789012345678901234567890123456789063041747',
             'result' => [
@@ -477,6 +492,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => null,
                 'merchantNameAlternateLanguage' => null,
                 'merchantCityAlternateLanguage' => null,
+                'creationTimestamp' => null,
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => '01',
                 'pointofInitiationMethod' => '12',
                 'unionPayMerchant' => null,
@@ -486,11 +503,10 @@ class DecodeTest extends TestCase
                 'countryCode' => null,
                 'merchantName' => null,
                 'merchantCity' => null,
-                'timestamp' => null,
                 'crc' => '1747',
             ],
         ],
-        16 => [
+        [
             'statement' => 'Decode Test 17',
             'data' => '000301001021230190015john_smith@devb630493FD',
             'result' => [
@@ -507,6 +523,8 @@ class DecodeTest extends TestCase
                 'languagePreference' => null,
                 'merchantNameAlternateLanguage' => null,
                 'merchantCityAlternateLanguage' => null,
+                'creationTimestamp' => null,
+                'expirationTimestamp' => null,
                 'payloadFormatIndicator' => '010',
                 'pointofInitiationMethod' => '12',
                 'unionPayMerchant' => null,
@@ -516,7 +534,6 @@ class DecodeTest extends TestCase
                 'countryCode' => null,
                 'merchantName' => null,
                 'merchantCity' => null,
-                'timestamp' => null,
                 'crc' => '93FD',
             ],
         ],

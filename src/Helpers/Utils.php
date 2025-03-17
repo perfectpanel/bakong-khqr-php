@@ -39,6 +39,31 @@ abstract class Utils
     }
 
     /**
+     * Extract Tag, Length and Value from a string to array
+     *
+     * @return array<string, string|int>
+     */
+    public static function extractTLV(string $string): array
+    {
+        $tag = substr($string, 0, 2);
+        $length = (int) substr($string, 2, 2);
+        $value = mb_substr($string, 4, $length, 'UTF-8');
+        $remainString = mb_substr($string, 4 + $length, null, 'UTF-8');
+
+        return [
+            'tag' => $tag, // string
+            'length' => $length, // int
+            'value' => $value, // string
+            'remainString' => $remainString, // string
+        ];
+    }
+
+    public static function isValidTLV(mixed $tag, int $length, string $value): bool
+    {
+        return \is_numeric($tag) && $length === strlen($value);
+    }
+
+    /**
      * @return array<string, string>
      */
     public static function cutString(string $string): array
@@ -47,8 +72,8 @@ abstract class Utils
 
         $tag = substr($string, 0, $sliceIndex);
         $length = (int) (substr($string, $sliceIndex, $sliceIndex));
-        $value = substr($string, $sliceIndex * 2, $length);
-        $slicedString = substr($string, $sliceIndex * 2 + $length);
+        $value = mb_substr($string, $sliceIndex * 2, $length, 'UTF-8');
+        $slicedString = mb_substr($string, $sliceIndex * 2 + $length, null, 'UTF-8');
 
         return [
             'tag' => $tag,

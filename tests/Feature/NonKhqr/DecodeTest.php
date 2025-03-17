@@ -147,7 +147,6 @@ class DecodeTest extends TestCase
     {
         foreach ($this->testData as $data) {
             $decoded = BakongKHQR::decodeNonKhqrString($data['data']);
-            var_dump($decoded);
             $this->assertEquals($data['result'], (array) $decoded->data, $data['statement']);
         }
     }

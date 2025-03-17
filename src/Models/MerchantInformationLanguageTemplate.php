@@ -30,10 +30,10 @@ class MerchantInformationLanguageTemplate extends TagLengthString
 
         $merchantInformationLanguageTemplateString = '';
 
-        $preference = new LanguagePreference(EMV::LANGUAGE_PREFERENCE, $value['languagePreference']);
-        $merchantInformationLanguageTemplateString .= $preference;
-
         if (! empty($value['merchantNameAlternateLanguage'])) {
+            $preference = new LanguagePreference(EMV::LANGUAGE_PREFERENCE, $value['languagePreference']);
+            $merchantInformationLanguageTemplateString .= $preference;
+
             $alterName = new MerchantNameAlternateLanguage(EMV::MERCHANT_NAME_ALTERNATE_LANGUAGE, $value['merchantNameAlternateLanguage']);
             $merchantInformationLanguageTemplateString .= $alterName;
         }

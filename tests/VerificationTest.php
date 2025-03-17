@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace KHQR\Tests;
 
 use KHQR\BakongKHQR;
+use KHQR\Helpers\EMV;
 use KHQR\Helpers\Utils;
+use KHQR\Models\Timestamp;
+use KHQR\Models\TimestampData;
 use PHPUnit\Framework\TestCase;
 
 class VerificationTest extends TestCase
@@ -13,22 +16,22 @@ class VerificationTest extends TestCase
     private $testData = [
         [
             'statement' => 'Valid KHQR 1',
-            'data' => '00020101021229180014jonhsmith@nbcq520459995303116540750000.05802KH5910Jonh Smith6010Phnom Penh62150211855123456789917001316257134678276304A96B',
+            'data' => '00020101021229180014jonhsmith@nbcq520459995303116540750000.05802KH5910Jonh Smith6010Phnom Penh6215021185512345678',
             'result' => true,
         ],
         [
             'statement' => 'Valid KHQR 2',
-            'data' => '00020101021229180014jonhsmith@nbcq52045999530384054031.05802KH5910Jonh Smith6010PHNOM PENH62210117INV-2021-07-65822991700131625713467827630451CF',
+            'data' => '00020101021229180014jonhsmith@nbcq52045999530384054031.05802KH5910Jonh Smith6010PHNOM PENH62210117INV-2021-07-65822',
             'result' => true,
         ],
         [
             'statement' => 'Valid KHQR 3',
-            'data' => '00020101021230400014jonhsmith@devb01061234560208Dev Bank520459995303840540410.05802KH5910Jonh Smith6010Phnom Penh62360117INV-2021-07-658220211855123456789917001316257134678276304ED60',
+            'data' => '00020101021230400014jonhsmith@devb01061234560208Dev Bank520459995303840540410.05802KH5910Jonh Smith6010Phnom Penh62360117INV-2021-07-65822021185512345678',
             'result' => true,
         ],
         [
             'statement' => 'Invalid KHQR 4',
-            'data' => '00020101021230400014jonhsmith@devb01061234560208Dev Bank520459995303840540410.05802KH5910Jonh Smith6010Phnom Penh62360117INV-2021-07-658220211855123456789917001316257134678276304ED60',
+            'data' => '00020101021230400014jonhsmith@devb01061234560208Dev Bank520459995303840540410.05802KH5910Jonh Smith6010Phnom Penh62360117INV-2021-07-65822021185512345678',
             'result' => true,
         ],
         [
@@ -38,12 +41,12 @@ class VerificationTest extends TestCase
         ],
         [
             'statement' => 'Invalid KHQR 6',
-            'data' => '00020101021230400014jonhsmith@devb01061234560208Dev Bank520459995303840540410.05802KH5910Jonh Smith6010Phnom Penh62360117INV-2021-07-658220211855123456789917001316257134678276304ED60',
+            'data' => '00020101021230400014jonhsmith@devb01061234560208Dev Bank520459995303840540410.05802KH5910Jonh Smith6010Phnom Penh62360117INV-2021-07-65822021185512345678',
             'result' => true,
         ],
         [
             'statement' => 'Invalid KHQR 2',
-            'data' => '00020101021126200016coffeeklang@pras63045927',
+            'data' => '00020101021126200016coffeeklang@pras',
             'result' => false,
         ],
         [
@@ -83,12 +86,12 @@ class VerificationTest extends TestCase
         ],
         [
             'statement' => 'Invalid KHQR 10',
-            'data' => '00020101021126150011jonhsmith@nbcq5204599953031165802KH5912Jonh Smith6010Phnom Penh63046D28',
+            'data' => '00020101021126150011jonhsmith@nbcq5204599953031165802KH5912Jonh Smith6010Phnom Penh',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 11',
-            'data' => '00020101021126150011jonhsmith@nbcq5204599953031165802KH5912Jonh Smith6010Phnom Penh63046D',
+            'data' => '00020101021126150011jonhsmith@nbcq5204599953031165802KH5912Jonh Smith6010Phnom Penh',
             'result' => false,
         ],
         [
@@ -113,117 +116,117 @@ class VerificationTest extends TestCase
         ],
         [
             'statement' => 'Valid KHQR 16',
-            'data' => '00020101021230410015john_smith@devb01061234560208Dev Bank53038405204599954035.05802KH5916john smith actor6010Phnom Penh62150111Invoice#06999170013161343857589263040437',
+            'data' => '00020101021230410015john_smith@devb01061234560208Dev Bank53038405204599954035.05802KH5916john smith actor6010Phnom Penh62150111Invoice#069',
             'result' => true,
         ],
         [
             'statement' => 'Invalid KHQR 17',
-            'data' => '00020101021252045999530384054035.05802KH5916john smith actor6010Phnom Penh62150111Invoice#06999170013161343857589263042494',
+            'data' => '00020101021252045999530384054035.05802KH5916john smith actor6010Phnom Penh62150111Invoice#069',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 18',
-            'data' => '000201010212301900151234567890123456304D807',
+            'data' => '00020101021230190015123456789012345',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 19',
-            'data' => '00020101021230440040123456789012345678901234567890123456789063041747',
+            'data' => '000201010212304400401234567890123456789012345678901234567890',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 20',
-            'data' => '000301001021230190015john_smith@devb630493FD',
+            'data' => '000301001021230190015john_smith@devb',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 21',
-            'data' => '01021230190015john_smith@devb52045999530384054035.05802KH5916john smith actor6010Phnom Penh62150111Invoice#06999170013161343857589263044598',
+            'data' => '01021230190015john_smith@devb52045999530384054035.05802KH5916john smith actor6010Phnom Penh62150111Invoice#069',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 22',
-            'data' => '000201010312330190015john_smith@devb63040FC8',
+            'data' => '000201010312330190015john_smith@devb',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 23',
-            'data' => '00020101021229190015john_smith@devb5203999630454EF',
+            'data' => '00020101021229190015john_smith@devb5203999',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 24',
-            'data' => '00020101021229190015john_smith@devb530384054035.05802KH5916john smith actor6010Phnom Penh62150111Invoice#0699917001316134385758926304F926',
+            'data' => '00020101021229190015john_smith@devb530384054035.05802KH5916john smith actor6010Phnom Penh62150111Invoice#069',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 25',
-            'data' => '00020101021229190015john_smith@devb52045999530488406304FEA6',
+            'data' => '00020101021229190015john_smith@devb5204599953048840',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 26',
-            'data' => '00020101021229190015john_smith@devb5204599954035.05802KH5916john smith actor6010Phnom Penh62150111Invoice#0699917001316134385758926304E7DF',
+            'data' => '00020101021229190015john_smith@devb5204599954035.05802KH5916john smith actor6010Phnom Penh62150111Invoice#069',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 27',
-            'data' => '00020101021229190015john_smith@devb52045999530384054035.05803KKH63042FD2',
+            'data' => '00020101021229190015john_smith@devb52045999530384054035.05803KKH',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 28',
-            'data' => '00020101021229190015john_smith@devb52045999530384054035.05916john smith actor6010Phnom Penh62150111Invoice#06999170013161343857589263040023',
+            'data' => '00020101021229190015john_smith@devb52045999530384054035.05916john smith actor6010Phnom Penh62150111Invoice#069',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 29',
-            'data' => '00020101021229190015john_smith@devb52045999530384054035.05802KH5916john smith actor60170123456789012345663040EF3',
+            'data' => '00020101021229190015john_smith@devb52045999530384054035.05802KH5916john smith actor601701234567890123456',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 30',
-            'data' => '00020101021229190015john_smith@devb52045999530384054035.05802KH5916john smith actor600062150111Invoice#0699917001316134385758926304389D',
+            'data' => '00020101021229190015john_smith@devb52045999530384054035.05802KH5916john smith actor600062150111Invoice#069',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 31',
-            'data' => '00020101021229190015john_smith@devb52045999530384054035.05802KH5916john smith actor62150111Invoice#06999170013161343857589263043B26',
+            'data' => '00020101021229190015john_smith@devb52045999530384054035.05802KH5916john smith actor62150111Invoice#069',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 32',
-            'data' => '00020101021229190015john_smith@devb52045999530384054035.05802KH59307PL7EvxHpgpP4jT4uMgegaYqgv3Ehb6010Phnom Penh6304399D',
+            'data' => '00020101021229190015john_smith@devb52045999530384054035.05802KH59307PL7EvxHpgpP4jT4uMgegaYqgv3Ehb6010Phnom Penh',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 33',
-            'data' => '00020101021229190015john_smith@devb52045999530384054035.05802KH59006010Phnom Penh630414A7',
+            'data' => '00020101021229190015john_smith@devb52045999530384054035.05802KH59006010Phnom Penh',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 34',
-            'data' => '00020101021229190015john_smith@devb52045999530384054035.05802KH6010Phnom Penh62150111Invoice#06999170013161343857589263043518',
+            'data' => '00020101021229190015john_smith@devb52045999530384054035.05802KH6010Phnom Penh62150111Invoice#069',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 35',
-            'data' => '00020101021229190015john_smith@devb52045999530311654065000.05802KH5910jonh smith6010Phnom Penh622701000313Coffee Klaing0702#29917001316130279727576304D219',
+            'data' => '00020101021229190015john_smith@devb52045999530311654065000.05802KH5910jonh smith6010Phnom Penh622701000313Coffee Klaing0702#2',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 36',
-            'data' => '00020101021229190015john_smith@devb52045999530311654065000.05802KH5910jonh smith6010Phnom Penh62230109#INV-200303000702#299170013161302797275763049BD2',
+            'data' => '00020101021229190015john_smith@devb52045999530311654065000.05802KH5910jonh smith6010Phnom Penh62230109#INV-200303000702#2',
             'result' => false,
         ],
         [
             'statement' => 'Invalid KHQR 37',
-            'data' => '00020101021229190015john_smith@devb52045999530311654065000.05802KH5910jonh smith6010Phnom Penh62340109#INV-20030313Coffee Klaing07009917001316130279727576304F593',
+            'data' => '00020101021229190015john_smith@devb52045999530311654065000.05802KH5910jonh smith6010Phnom Penh62340109#INV-20030313Coffee Klaing0700',
             'result' => false,
         ],
         [
             'statement' => 'Valid KHQR 38',
-            'data' => '00020101021229190015john_smith@devb52045999530384954035.05802KH5916john smith actor6010Phnom Penh9917001316134385758926304951E',
+            'data' => '00020101021229190015john_smith@devb52045999530384954035.05802KH5916john smith actor6010Phnom Penh',
             'result' => false,
         ],
     ];
@@ -359,7 +362,13 @@ class VerificationTest extends TestCase
     public function test_khqr_verification()
     {
         foreach ($this->testData as $data) {
-            $crcValidation = BakongKHQR::verify($data['data']);
+            $currentTimestampInMilliseconds = (int) (microtime(true) * 1000);
+            $timestampData = new TimestampData($currentTimestampInMilliseconds, $currentTimestampInMilliseconds + 60 * 1000);
+            $timestamp = new Timestamp(EMV::TIMESTAMP_TAG, $timestampData, EMV::DYNAMIC_QR);
+            $khqr = $data['data'].$timestamp.EMV::CRC.EMV::CRC_LENGTH;
+            $khqr .= Utils::crc16($khqr);
+
+            $crcValidation = BakongKHQR::verify($khqr);
             $this->assertEquals($data['result'], $crcValidation->isValid, $data['statement']);
         }
     }
