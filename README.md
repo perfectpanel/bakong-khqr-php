@@ -14,6 +14,30 @@ composer require fidele007/bakong-khqr-php
 
 All available methods are exposed through the `BakongKHQR` class:
 
+**Static methods (no token is required):**
+
+- [`generateIndividual(IndividualInfo $individualInfo)`](#generate-khqr-for-an-individual)
+- [`generateMerchant(MerchantInfo $merchantInfo)`](#generate-khqr-for-a-merchant)
+- [`decode(string $khqrString)`](#decode-khqr)
+- [`decodeNonKhqr(string $qr)`](#decode-non-khqr)
+- [`verify(string $KHQRString)`](#verify-khqr)
+- [`generateDeepLink(string $qr, ?SourceInfo $sourceInfo, bool $isTest = false)`](#api---generate-khqr-with-deep-link)
+- [`generateDeepLinkWithUrl(string $url, string $qr, ?SourceInfo $sourceInfo)`](#api---generate-khqr-with-deep-link-by-providing-url)
+- [`isExpiredToken(string $token)`](#api---checking-if-a-bakong-api-token-is-expired)
+- [`renewToken(string $email, bool $isTest = false)`](#api---renewing-an-expired-bakong-api-token)
+- [`checkBakongAccount(string $bakongID, bool $isTest = false)`](#api---check-bakong-account-existence)
+- [`checkBakongAccountWithUrl(string $url, string $bakongID)`](#api---check-bakong-account-existence-by-providing-url)
+
+**Non-static methods (token is required):**
+
+- [`checkTransactionByMD5(string $md5, bool $isTest = false)`](#check-transaction-by-md5)
+- [`checkTransactionByMD5List(array $md5Array, bool $isTest = false)`](#check-transaction-by-md5-list)
+- [`checkTransactionByFullHash(string $fullHash, bool $isTest = false)`](#check-transaction-by-full-hash)
+- [`checkTransactionByFullHashList(array $fullHashArrray, bool $isTest = false)`](#check-transaction-by-full-hash-list)
+- [`checkTransactionByShortHash(string $shortHash, float $amount, string $currency, bool $isTest = false)`](#check-transaction-by-short-hash)
+- [`checkTransactionByInstructionReference(string $ref, bool $isTest = false)`](#check-transaction-by-instruction-reference)
+- [`checkTransactionByExternalReference(string $ref, bool $isTest = false)`](#check-transaction-by-external-reference)
+
 ### Generate KHQR for an individual
 
 ```php
@@ -26,16 +50,20 @@ $individualInfo = new IndividualInfo(
     merchantName: 'Jonh Smith',
     merchantCity: 'PHNOM PENH',
     currency: KHQRData::CURRENCY_KHR,
-    amount: 500
+    amount: 500,
+    expirationTimestamp: (int) (microtime(true) * 1000) + 60 * 1000 // Expire in 1 minute
 );
 
 var_dump(BakongKHQR::generateIndividual($individualInfo));
 ```
 
+> [!IMPORTANT]
+> Starting from v1.1.0 (the v1.0.18 equivalent of the npm package) The `expirationTimestamp` parameter is required for dynamic KHQR, i.e. KHQR with a transaction amount. The expected format is a timestamp in **milliseconds**.
+
 Output:
 
 ```shell
-object(KHQR\Models\KHQRResponse)#15 (2) {
+object(KHQR\Models\KHQRResponse)#16 (2) {
   ["status"]=>
   array(3) {
     ["code"]=>
@@ -48,9 +76,9 @@ object(KHQR\Models\KHQRResponse)#15 (2) {
   ["data"]=>
   array(2) {
     ["qr"]=>
-    string(119) "00020101021229180014jonhsmith@nbcq52045999530311654035005802KH5910Jonh Smith6010PHNOM PENH99170013173949577872263046894"
+    string(136) "00020101021229180014jonhsmith@nbcq52045999530311654035005802KH5910Jonh Smith6010PHNOM PENH993400131742250594187011317422506541846304EA38"
     ["md5"]=>
-    string(32) "b1c250304b8594e4c6b53dd44791b57a"
+    string(32) "838f6d998f6d700c42391aab5c5be555"
   }
 }
 ```
@@ -89,9 +117,9 @@ object(KHQR\Models\KHQRResponse)#19 (2) {
   ["data"]=>
   array(2) {
     ["qr"]=>
-    string(152) "00020101021130400014jonhsmith@nbcq01061234560208Dev Bank5204599953031165802KH5910Jonh Smith6009Siem Reap6215021185512345678991700131739495778722630433E1"
+    string(152) "00020101021130400014jonhsmith@nbcq01061234560208Dev Bank5204599953031165802KH5910Jonh Smith6009Siem Reap621502118551234567863048C75"
     ["md5"]=>
-    string(32) "c0d2d74726f8e887f37a585cda3b3a79"
+    string(32) "3a1d545dfba97b39817bf43337e621ec"
   }
 }
 ```
@@ -171,6 +199,70 @@ object(KHQR\Models\KHQRResponse)#19 (2) {
 }
 ```
 
+### Decode Non-KHQR
+
+```php
+$result = BakongKHQR::decodeNonKhqr('00020101021229190015john_smith@devb52045999530311654065000.05802KH5910jonh smith6010Phnom Penh62360109#INV-20030313Coffee Klaing0702#299170013161302797275763049ACF');
+
+var_dump($result);
+```
+
+Output:
+
+```shell
+object(KHQR\Models\KHQRResponse)#2 (2) {
+  ["status"]=>
+  array(3) {
+    ["code"]=>
+    int(0)
+    ["errorCode"]=>
+    NULL
+    ["message"]=>
+    NULL
+  }
+  ["data"]=>
+  array(12) {
+    ["00"]=>
+    string(2) "01"
+    ["01"]=>
+    string(2) "12"
+    [29]=>
+    array(1) {
+      ["00"]=>
+      string(15) "john_smith@devb"
+    }
+    [52]=>
+    string(4) "5999"
+    [53]=>
+    string(3) "116"
+    [54]=>
+    string(6) "5000.0"
+    [58]=>
+    string(2) "KH"
+    [59]=>
+    string(10) "jonh smith"
+    [60]=>
+    string(10) "Phnom Penh"
+    [62]=>
+    array(3) {
+      ["01"]=>
+      string(9) "#INV-2003"
+      ["03"]=>
+      string(13) "Coffee Klaing"
+      ["07"]=>
+      string(2) "#2"
+    }
+    [99]=>
+    array(1) {
+      ["00"]=>
+      string(13) "1613027972757"
+    }
+    [63]=>
+    string(4) "9ACF"
+  }
+}
+```
+
 ### Verify KHQR
 
 ```php
@@ -222,6 +314,52 @@ object(KHQR\Models\KHQRResponse)#5 (2) {
 }
 ```
 
+### API - Generate KHQR with Deep Link by Providing URL
+
+Bakong API has two available URLs:
+
+- Production URL: https://api-bakong.nbc.gov.kh
+- SIT URL (for testing): https://sit-api-bakong.nbc.gov.kh
+
+So the deep link API URLs can be different according to the environment you want to use:
+
+- Production URL: https://api-bakong.nbc.gov.kh/v1/generate_deeplink_by_qr
+- SIT URL (for testing): https://sit-api-bakong.nbc.gov.kh/v1/generate_deeplink_by_qr
+
+This method can be used with any of the above URLs. For example:
+
+```php
+$sourceInfo = new SourceInfo(
+    appIconUrl: 'https://bakong.nbc.gov.kh/images/logo.svg',
+    appName: 'Bakong',
+    appDeepLinkCallback: 'https://bakong.nbc.gov.kh'
+);
+$result = BakongKHQR::generateDeepLinkWithUrl('https://sit-api-bakong.nbc.gov.kh/v1/generate_deeplink_by_qr', '00020101021229190015john_smith@devb5204599953038405405100.05802KH5910John Smith6010Phnom Penh993400131742249567316011317422496273166304B418', $sourceInfo);
+
+var_dump($result);
+```
+
+Output:
+
+```shell
+object(KHQR\Models\KHQRResponse)#8 (2) {
+  ["status"]=>
+  array(3) {
+    ["code"]=>
+    int(0)
+    ["errorCode"]=>
+    NULL
+    ["message"]=>
+    NULL
+  }
+  ["data"]=>
+  object(KHQR\Models\KHQRDeepLinkData)#6 (1) {
+    ["shortLink"]=>
+    string(45) "https://bakongsit.page.link/wNA2pzfnMCZYVnJr6"
+  }
+}
+```
+
 ### API - Check Bakong Account Existence
 
 ```php
@@ -248,6 +386,106 @@ object(KHQR\Models\KHQRResponse)#16 (2) {
     ["bakongAccountExists"]=>
     bool(false)
   }
+}
+```
+
+### API - Check Bakong Account Existence by Providing URL
+
+Just like the [Deep Link API](#api---generate-khqr-with-deep-link-by-providing-url), you can use any of the available Bakong API URLs to check for a Bakong account existence:
+
+```php
+$result = BakongKHQR::checkBakongAccountWithUrl('https://sit-api-bakong.nbc.gov.kh', 'dave@devb');
+
+var_dump($result);
+```
+
+Output:
+
+```shell
+object(KHQR\Models\KHQRResponse)#16 (2) {
+  ["status"]=>
+  array(3) {
+    ["code"]=>
+    int(0)
+    ["errorCode"]=>
+    NULL
+    ["message"]=>
+    NULL
+  }
+  ["data"]=>
+  array(1) {
+    ["bakongAccountExists"]=>
+    bool(false)
+  }
+}
+```
+
+### API - Checking if a Bakong API Token is Expired
+
+```php
+$result = BakongKHQR::isExpiredToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...');
+```
+
+Output:
+
+```shell
+bool(true)
+```
+
+### API - Renewing an expired Bakong API Token
+
+If your token has expired, you will get a `KHQRException` when calling authorized Bakong API requests:
+
+```shell
+object(KHQR\Exceptions\KHQRException)#51 (7) {
+  ["message":protected]=>
+  string(57) "Unauthorized, not yet requested for token or code invalid"
+  ["string":"Exception":private]=>
+  string(0) ""
+  ["code":protected]=>
+  int(6)
+  ...
+}
+```
+
+You can renew your token with the `renewToken` method:
+
+```php
+$result = BakongKHQR::renewToken('john.smith@gmail.com');
+
+var_dump($result);
+```
+
+Output:
+
+```shell
+array(4) {
+  ["responseCode"]=>
+  int(0)
+  ["responseMessage"]=>
+  string(21) "Token has been issued"
+  ["errorCode"]=>
+  NULL
+  ["data"]=>
+  array(1) {
+    ["token"]=>
+    string(172) "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+```
+
+In case your email is not registered:
+
+```shell
+array(4) {
+  ["responseCode"]=>
+  int(1)
+  ["responseMessage"]=>
+  string(18) "Not registered yet"
+  ["errorCode"]=>
+  int(10)
+  ["data"]=>
+  NULL
 }
 ```
 
@@ -307,63 +545,6 @@ $response = $bakongKhqr->checkTransactionByInstructionReference('00001234');
 
 ```php
 $response = $bakongKhqr->checkTransactionByExternalReference('DEV123456ZTH');
-```
-
-### API - Renewing an expired Bakong API Token
-
-If your token has expired, you will get a `KHQRException` when calling authorized Bakong API requests:
-
-```shell
-object(KHQR\Exceptions\KHQRException)#51 (7) {
-  ["message":protected]=>
-  string(57) "Unauthorized, not yet requested for token or code invalid"
-  ["string":"Exception":private]=>
-  string(0) ""
-  ["code":protected]=>
-  int(6)
-  ...
-}
-```
-
-You can renew your token with the `renewToken` method:
-
-```php
-$result = BakongKHQR::renewToken('john.smith@gmail.com');
-
-var_dump($result);
-```
-
-Output:
-
-```shell
-array(4) {
-  ["responseCode"]=>
-  int(0)
-  ["responseMessage"]=>
-  string(21) "Token has been issued"
-  ["errorCode"]=>
-  NULL
-  ["data"]=>
-  array(1) {
-    ["token"]=>
-    string(172) "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-  }
-}
-```
-
-In case your email is not registered:
-
-```shell
-array(4) {
-  ["responseCode"]=>
-  int(1)
-  ["responseMessage"]=>
-  string(18) "Not registered yet"
-  ["errorCode"]=>
-  int(10)
-  ["data"]=>
-  NULL
-}
 ```
 
 ## Testing

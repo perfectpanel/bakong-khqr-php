@@ -587,7 +587,7 @@ class BakongKHQR
         return Token::isExpiredToken($token);
     }
 
-    public static function decodeNonKhqrString(string $qr): \KHQR\Models\KHQRResponse
+    public static function decodeNonKhqr(string $qr): \KHQR\Models\KHQRResponse
     {
         $firstLevelData = [];
         $finalData = [];
