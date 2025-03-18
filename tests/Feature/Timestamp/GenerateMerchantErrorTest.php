@@ -45,7 +45,7 @@ class GenerateMerchantErrorTest extends TestCase
                 'optional' => [
                     'currency' => KHQRData::CURRENCY_USD,
                     'amount' => 102.3,
-                    'expirationTimestamp' => 1727260807000,
+                    'expirationTimestamp' => '1727260807000',
                 ],
             ],
             'result' => [
@@ -65,7 +65,7 @@ class GenerateMerchantErrorTest extends TestCase
                 'optional' => [
                     'currency' => KHQRData::CURRENCY_USD,
                     'amount' => 102.3,
-                    'expirationTimestamp' => 1727260807,
+                    'expirationTimestamp' => '1727260807',
                 ],
             ],
             'result' => [

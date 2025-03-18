@@ -51,14 +51,14 @@ $individualInfo = new IndividualInfo(
     merchantCity: 'PHNOM PENH',
     currency: KHQRData::CURRENCY_KHR,
     amount: 500,
-    expirationTimestamp: (int) (microtime(true) * 1000) + 60 * 1000 // Expire in 1 minute
+    expirationTimestamp: strval(floor(microtime(true) * 1000) + 60 * 1000) // Expire in 1 minute
 );
 
 var_dump(BakongKHQR::generateIndividual($individualInfo));
 ```
 
 > [!IMPORTANT]
-> Starting from v1.1.0 (the v1.0.18 equivalent of the npm package) The `expirationTimestamp` parameter is required for dynamic KHQR, i.e. KHQR with a transaction amount. The expected format is a timestamp in **milliseconds**.
+> Starting from v1.1.0 (the v1.0.18 equivalent of the npm package) The `expirationTimestamp` parameter is required for dynamic KHQR, i.e. KHQR with a transaction amount. The expected format is a timestamp string in **milliseconds**.
 
 Output:
 

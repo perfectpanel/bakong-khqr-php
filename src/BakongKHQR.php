@@ -345,7 +345,7 @@ class BakongKHQR
 
                 // Check if the tag value is valid
                 if ($tagClass === Timestamp::class) {
-                    $timestampData = new TimestampData((int) $inputValue['creationTimestamp'], (int) $inputValue['expirationTimestamp']);
+                    $timestampData = new TimestampData($inputValue['creationTimestamp'], $inputValue['expirationTimestamp']);
                     new Timestamp($tag, $timestampData, $poi);
                 } else {
                     new $tagClass($tag, $inputValue);
@@ -567,8 +567,8 @@ class BakongKHQR
                 throw new KHQRException(KHQRException::EXPIRATION_TIMESTAMP_REQUIRED);
             }
 
-            $currentTimestampInMilliseconds = (int) (microtime(true) * 1000);
-            $timestampData = new TimestampData($currentTimestampInMilliseconds, (int) $info->expirationTimestamp);
+            $currentTimestampInMilliseconds = strval(floor(microtime(true) * 1000));
+            $timestampData = new TimestampData($currentTimestampInMilliseconds, $info->expirationTimestamp);
             $timeStamp = new Timestamp(EMV::TIMESTAMP_TAG, $timestampData, $QRType);
             $KHQRInstances[] = $timeStamp;
         }

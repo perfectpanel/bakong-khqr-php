@@ -41,7 +41,7 @@ class GenerateIndividualErrorTest extends TestCase
                 'optional' => [
                     'currency' => KHQRData::CURRENCY_USD,
                     'amount' => 101.3,
-                    'expirationTimestamp' => 1727260807000,
+                    'expirationTimestamp' => '1727260807000',
                 ],
             ],
             'result' => [
@@ -59,7 +59,7 @@ class GenerateIndividualErrorTest extends TestCase
                 'optional' => [
                     'currency' => KHQRData::CURRENCY_USD,
                     'amount' => 101.3,
-                    'expirationTimestamp' => 1727260807,
+                    'expirationTimestamp' => '1727260807',
                 ],
             ],
             'result' => [

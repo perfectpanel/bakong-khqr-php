@@ -362,8 +362,8 @@ class VerificationTest extends TestCase
     public function test_khqr_verification()
     {
         foreach ($this->testData as $data) {
-            $currentTimestampInMilliseconds = (int) (microtime(true) * 1000);
-            $timestampData = new TimestampData($currentTimestampInMilliseconds, $currentTimestampInMilliseconds + 60 * 1000);
+            $currentTimestampInMilliseconds = floor(microtime(true) * 1000);
+            $timestampData = new TimestampData(strval($currentTimestampInMilliseconds), strval($currentTimestampInMilliseconds + 60 * 1000));
             $timestamp = new Timestamp(EMV::TIMESTAMP_TAG, $timestampData, EMV::DYNAMIC_QR);
             $khqr = $data['data'].$timestamp.EMV::CRC.EMV::CRC_LENGTH;
             $khqr .= Utils::crc16($khqr);

@@ -17,8 +17,8 @@ class DeepLinkTest extends TestCase
 {
     private function test_deep_link($data): void
     {
-        $currentTimestampInMilliseconds = (int) (microtime(true) * 1000);
-        $timestampData = new TimestampData($currentTimestampInMilliseconds, $currentTimestampInMilliseconds + 60 * 1000);
+        $currentTimestampInMilliseconds = floor(microtime(true) * 1000);
+        $timestampData = new TimestampData(strval($currentTimestampInMilliseconds), strval($currentTimestampInMilliseconds + 60 * 1000));
         $timestamp = new Timestamp(EMV::TIMESTAMP_TAG, $timestampData, EMV::DYNAMIC_QR);
 
         try {

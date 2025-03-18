@@ -6,11 +6,11 @@ namespace KHQR\Models;
 
 class TimestampData
 {
-    public ?int $creationTimestamp;
+    public ?string $creationTimestamp;
 
-    public ?int $expirationTimestamp;
+    public ?string $expirationTimestamp;
 
-    public function __construct(?int $creationTimestamp, ?int $expirationTimestamp)
+    public function __construct(?string $creationTimestamp, ?string $expirationTimestamp)
     {
         $this->creationTimestamp = $creationTimestamp;
         $this->expirationTimestamp = $expirationTimestamp;

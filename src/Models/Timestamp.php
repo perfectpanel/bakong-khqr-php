@@ -19,11 +19,11 @@ class Timestamp extends TagLengthString
                 throw new KHQRException(KHQRException::EXPIRATION_TIMESTAMP_REQUIRED);
             }
 
-            if (strlen((string) $timestampData->expirationTimestamp) !== EMV::INVALID_LENGTH_TIMESTAMP) {
+            if (strlen($timestampData->expirationTimestamp ?? '') !== EMV::INVALID_LENGTH_TIMESTAMP) {
                 throw new KHQRException(KHQRException::EXPIRATION_TIMESTAMP_LENGTH_INVALID);
             }
 
-            if (strtotime(date('Y-m-d H:i:s', $expirationTimestamp)) === false) {
+            if (! ctype_digit($timestampData->expirationTimestamp ?? '')) {
                 throw new KHQRException(KHQRException::INVALID_DYNAMIC_KHQR);
             }
 
@@ -31,7 +31,7 @@ class Timestamp extends TagLengthString
                 throw new KHQRException(KHQRException::EXPIRATION_TIMESTAMP_IN_THE_PAST);
             }
 
-            $currentTimestampInMilliseconds = (int) (microtime(true) * 1000);
+            $currentTimestampInMilliseconds = strval(floor(microtime(true) * 1000));
             if ($expirationTimestamp < $currentTimestampInMilliseconds) {
                 throw new KHQRException(KHQRException::KHQR_EXPIRED);
             }

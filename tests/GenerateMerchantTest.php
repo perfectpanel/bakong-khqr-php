@@ -10,11 +10,11 @@ use PHPUnit\Framework\TestCase;
 
 class GenerateMerchantTest extends TestCase
 {
-    private int $expirationTimestamp;
+    private string $expirationTimestamp;
 
     protected function setUp(): void
     {
-        $this->expirationTimestamp = (int) (microtime(true) * 1000) + 60 * 1000;
+        $this->expirationTimestamp = strval(floor(microtime(true) * 1000) + 60 * 1000);
     }
 
     public function test_generate_merchant_qr()

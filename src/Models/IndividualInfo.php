@@ -46,7 +46,7 @@ class IndividualInfo
 
     public ?string $upiMerchantAccount;
 
-    public ?int $expirationTimestamp;
+    public ?string $expirationTimestamp;
 
     public function __construct(
         string $bakongAccountID,
@@ -65,7 +65,7 @@ class IndividualInfo
         ?string $merchantNameAlternateLanguage = null,
         ?string $merchantCityAlternateLanguage = null,
         ?string $upiMerchantAccount = null,
-        ?int $expirationTimestamp = null
+        ?string $expirationTimestamp = null
     ) {
         if (Utils::isBlank($bakongAccountID)) {
             throw new KHQRException(KHQRException::BAKONG_ACCOUNT_ID_REQUIRED);
@@ -114,7 +114,7 @@ class IndividualInfo
      *     merchantNameAlternateLanguage?: string|null,
      *     merchantCityAlternateLanguage?: string|null,
      *     upiMerchantAccount?: string|null,
-     *     expirationTimestamp?: int|null
+     *     expirationTimestamp?: string|null
      * } $optionalData
      */
     public static function withOptionalArray(
