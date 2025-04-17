@@ -149,24 +149,24 @@ class MerchantInfo
         $expirationTimestamp = $optionalData['expirationTimestamp'] ?? null;
 
         return new self(
-            bakongAccountID: $bakongAccountID,
-            merchantName: $merchantName,
-            merchantCity: $merchantCity,
-            merchantID: $merchantID,
-            acquiringBank: $acquiringBank,
-            accountInformation: $accountInformation,
-            currency: $currency,
-            amount: $amount,
-            billNumber: $billNumber,
-            storeLabel: $storeLabel,
-            terminalLabel: $terminalLabel,
-            mobileNumber: $mobileNumber,
-            purposeOfTransaction: $purposeOfTransaction,
-            languagePreference: $languagePreference,
-            merchantNameAlternateLanguage: $merchantNameAlternateLanguage,
-            merchantCityAlternateLanguage: $merchantCityAlternateLanguage,
-            upiMerchantAccount: $upiMerchantAccount,
-            expirationTimestamp: $expirationTimestamp
+            $bakongAccountID,
+            $merchantName,
+            $merchantCity,
+            $merchantID,
+            $acquiringBank,
+            $accountInformation,
+            $currency,
+            $amount,
+            $billNumber,
+            $storeLabel,
+            $terminalLabel,
+            $mobileNumber,
+            $purposeOfTransaction,
+            $languagePreference,
+            $merchantNameAlternateLanguage,
+            $merchantCityAlternateLanguage,
+            $upiMerchantAccount,
+            $expirationTimestamp
         );
     }
 }

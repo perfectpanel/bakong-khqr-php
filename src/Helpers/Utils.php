@@ -58,7 +58,10 @@ abstract class Utils
         ];
     }
 
-    public static function isValidTLV(mixed $tag, int $length, string $value): bool
+    /**
+     * @param mixed $tag
+     */
+    public static function isValidTLV($tag, int $length, string $value): bool
     {
         return \is_numeric($tag) && $length === strlen($value);
     }
