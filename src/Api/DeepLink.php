@@ -28,7 +28,7 @@ class DeepLink
      * @param  array<string, mixed>  $data  payload to send
      * @return mixed response body
      */
-    public static function callDeepLinkAPI(string $url, array $data): mixed
+    public static function callDeepLinkAPI(string $url, array $data)
     {
         try {
             $ch = curl_init($url);

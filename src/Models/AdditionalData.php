@@ -28,7 +28,10 @@ class AdditionalData extends TagLengthString
      */
     public array $data;
 
-    public function __construct(string $tag, mixed $additionalData)
+    /**
+     * @param mixed $additionalData
+     */
+    public function __construct(string $tag, $additionalData)
     {
         if ($additionalData == null) {
             $additionalData = [

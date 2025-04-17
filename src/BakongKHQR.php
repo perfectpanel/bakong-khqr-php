@@ -150,7 +150,7 @@ class BakongKHQR
             return new CRCValidation(false);
         }
 
-        $crc = mb_substr(string: $KHQRString, start: -4, encoding: 'UTF-8');
+        $crc = mb_substr($KHQRString, -4, null, 'UTF-8');
         $KHQRNoCrc = mb_substr($KHQRString, 0, -4, 'UTF-8');
         $validCRC = Utils::crc16($KHQRNoCrc) === strtoupper($crc);
         $isValidCRC = new CRCValidation($validCRC);
@@ -464,7 +464,10 @@ class BakongKHQR
         return $decodeValue;
     }
 
-    private static function generateKHQR(MerchantInfo|IndividualInfo $info, string $type): string
+    /**
+     * @param \KHQR\Models\MerchantInfo|\KHQR\Models\IndividualInfo $info
+     */
+    private static function generateKHQR($info, string $type): string
     {
         if ($type === KHQRData::MERCHANT_TYPE_MERCHANT) {
             $merchantInfo = [
