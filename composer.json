@@ -1,5 +1,5 @@
 {
-    "name": "fidele007/bakong-khqr-php",
+    "name": "perfectpanel/bakong-khqr-php",
     "description": "A pure PHP implementation of the Bakong KHQR SDK",
     "type": "library",
     "keywords": [
