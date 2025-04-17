@@ -15,12 +15,16 @@ class KHQRResponse
      */
     public array $status;
 
-    public mixed $data;
+    /**
+     * @var mixed
+     */
+    public $data;
 
     /**
      * @param  array{code: string, message: string}|null  $errorObject
+     * @param mixed $data
      */
-    public function __construct(mixed $data, ?array $errorObject)
+    public function __construct($data, ?array $errorObject)
     {
         $this->data = $data;
 

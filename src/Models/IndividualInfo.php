@@ -124,23 +124,23 @@ class IndividualInfo
         array $optionalData
     ): self {
         return new self(
-            bakongAccountID: $bakongAccountID,
-            merchantName: $merchantName,
-            merchantCity: $merchantCity,
-            acquiringBank: $optionalData['acquiringBank'] ?? null,
-            accountInformation: $optionalData['accountInformation'] ?? null,
-            currency: $optionalData['currency'] ?? null,
-            amount: $optionalData['amount'] ?? 0.0,
-            billNumber: $optionalData['billNumber'] ?? null,
-            storeLabel: $optionalData['storeLabel'] ?? null,
-            terminalLabel: $optionalData['terminalLabel'] ?? null,
-            mobileNumber: $optionalData['mobileNumber'] ?? null,
-            purposeOfTransaction: $optionalData['purposeOfTransaction'] ?? null,
-            languagePreference: $optionalData['languagePreference'] ?? null,
-            merchantNameAlternateLanguage: $optionalData['merchantNameAlternateLanguage'] ?? null,
-            merchantCityAlternateLanguage: $optionalData['merchantCityAlternateLanguage'] ?? null,
-            upiMerchantAccount: $optionalData['upiMerchantAccount'] ?? null,
-            expirationTimestamp: $optionalData['expirationTimestamp'] ?? null
+            $bakongAccountID,
+            $merchantName,
+            $merchantCity,
+            $optionalData['acquiringBank'] ?? null,
+            $optionalData['accountInformation'] ?? null,
+            $optionalData['currency'] ?? null,
+            $optionalData['amount'] ?? 0.0,
+            $optionalData['billNumber'] ?? null,
+            $optionalData['storeLabel'] ?? null,
+            $optionalData['terminalLabel'] ?? null,
+            $optionalData['mobileNumber'] ?? null,
+            $optionalData['purposeOfTransaction'] ?? null,
+            $optionalData['languagePreference'] ?? null,
+            $optionalData['merchantNameAlternateLanguage'] ?? null,
+            $optionalData['merchantCityAlternateLanguage'] ?? null,
+            $optionalData['upiMerchantAccount'] ?? null,
+            $optionalData['expirationTimestamp'] ?? null
         );
     }
 }

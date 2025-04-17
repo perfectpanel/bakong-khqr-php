@@ -12,7 +12,10 @@ class MerchantInformationLanguageTemplate extends TagLengthString
     /** @var array<string, ?string> */
     public array $data;
 
-    public function __construct(string $tag, mixed $value)
+    /**
+     * @param mixed $value
+     */
+    public function __construct(string $tag, $value)
     {
         if ($value === null) {
             $value = [

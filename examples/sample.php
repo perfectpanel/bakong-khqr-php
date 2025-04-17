@@ -10,23 +10,31 @@ use KHQR\Models\SourceInfo;
 
 // Generate KHQR for an individual
 $individualInfo = new IndividualInfo(
-    bakongAccountID: 'jonhsmith@nbcq',
-    merchantName: 'Jonh Smith',
-    merchantCity: 'PHNOM PENH',
-    currency: KHQRData::CURRENCY_KHR,
-    amount: 500
+    'jonhsmith@nbcq',
+    'Jonh Smith',
+    'PHNOM PENH',
+    null,
+    null,
+    KHQRData::CURRENCY_KHR,
+    500
 );
 
 var_dump(BakongKHQR::generateIndividual($individualInfo));
 
 // Generate KHQR for a merchant
 $merchantInfo = new MerchantInfo(
-    bakongAccountID: 'jonhsmith@nbcq',
-    merchantName: 'Jonh Smith',
-    merchantCity: 'Siem Reap',
-    merchantID: '123456',
-    acquiringBank: 'Dev Bank',
-    mobileNumber: '85512345678',
+    'jonhsmith@nbcq',
+    'Jonh Smith',
+    'Siem Reap',
+    '123456',
+    'Dev Bank',
+    null,
+    null,
+    0.0,
+    null,
+    null,
+    null,
+    '85512345678',
 );
 
 var_dump(BakongKHQR::generateMerchant($merchantInfo));
@@ -41,9 +49,9 @@ var_dump($result);
 
 // API - Generate KHQR with Deep Link
 $sourceInfo = new SourceInfo(
-    appIconUrl: 'https://bakong.nbc.gov.kh/images/logo.svg',
-    appName: 'Bakong',
-    appDeepLinkCallback: 'https://bakong.nbc.gov.kh'
+    'https://bakong.nbc.gov.kh/images/logo.svg',
+    'Bakong',
+    'https://bakong.nbc.gov.kh'
 );
 $result = BakongKHQR::generateDeepLink('00020101021229190015john_smith@devb5204599953038405405100.05802KH5910John Smith6010Phnom Penh6304BF30', $sourceInfo);
 var_dump($result);
